@@ -5,9 +5,9 @@
 
 There are many password managers available. But their common weak point is
 the master password. In a developer circle, where team members keep joining and
-leaving projects, it can become cumbersome forthe remaining team members to
+leaving projects, it can become cumbersome for the remaining team members to
 remember the new master password after a member left.
 
-We propose to use the GPG keyring technolgy instead of a master password to
+We propose to use the GPG keyring technology instead of a master password to
 unlock the vault. Using our application, the use of master passwords is
 completely mitigated.
