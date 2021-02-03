@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import { IndexController } from "./routes/index";
+import { userRouter } from "./routes/user";
 
 const app = express();
 const result = dotenv.config();
@@ -17,6 +18,7 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 
 app.use("/", IndexController);
+app.use("/", userRouter);
 
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
