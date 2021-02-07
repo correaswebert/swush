@@ -14,13 +14,21 @@ router.post("/signup", async (req, res) => {
     }
 });
 
-router.post("/login", (req, res) => {
-    const credentials = req.body;
+router.post("/login", async(req, res) => {
 
     try{
-        res.status(200).send({credentials});
+        const user = await User.findOne({ email: req.body.email });
+    
+        if(user){
+            if(req.body.password == user.password){
+                res.status(200).send({ user });
+            }
+            else{
+                res.status(400).send({Error: 'Unable to login'});
+            }
+        }
     }catch(error){
-        res.status(400).send(error);
+        res.status(400).send({Error: 'Unable to login'});
     }
 });
 
