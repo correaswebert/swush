@@ -1,14 +1,18 @@
-import mongoose from 'mongoose'
+import { connect } from "mongoose";
 
-const uri = "mongodb://127.0.0.1:27017/swush";
-
-const connectDB = async() => {
-    await mongoose.connect(uri, {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false
+const connectDB = async (mongoUri: string) => {
+  try {
+    await connect(mongoUri, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
     });
-}
+    console.log(`Database connected at ${mongoUri}`);
+  } catch (error) {
+    console.error("Error connecting database", error.message);
+    process.exit(1);
+  }
+};
 
-export { connectDB }
+export { connectDB };

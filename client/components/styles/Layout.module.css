@@ -1,0 +1,21 @@
+.footer_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.footer_container {
+  margin: 3rem 0.25rem;
+  width: 100%;
+  max-width: 1280px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer_item {
+  display: inline-flex;
+  justify-content: space-evenly;
+}
