@@ -17,7 +17,10 @@ export default async (req, res) => {
       return;
     }
 
-    res.status(200).send({ user });
+    /* generate token for the user */
+    await user.generateAuthToken();
+
+    res.status(200).send({ Info: 'Logged in successfully!' });
   } catch (error) {
     res.status(500).send({ Error: "Internal server error." });
   }

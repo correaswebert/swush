@@ -23,7 +23,12 @@ export default async (req, res) => {
       email: email,
       password: password,
     });
+    
     await user.save();
+
+    /* generate token for the user */
+    await user.generateAuthToken();
+
     res.status(200).send({ Info: "User successfully created!" });
   } catch (error) {
     res.status(500).send({ Error: "Internal server error." });
