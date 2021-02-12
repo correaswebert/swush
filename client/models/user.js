@@ -1,5 +1,5 @@
 import { Schema, models, model } from "mongoose";
-import Team from "./teams"
+// import Team from "./teams"
 const jwt = require('jsonwebtoken');
 
 const UserSchema = new Schema({
@@ -28,11 +28,11 @@ const UserSchema = new Schema({
   }]
 });
 
-// UserSchema.virtual('teamOwner', {
-//   ref: 'Team',
-//   localField: '_id',
-//   foreignField: 'owner'
-// });
+UserSchema.virtual('teamOwner', {
+  ref: 'Team',
+  localField: '_id',
+  foreignField: 'owner'
+});
 
 /* create a jsonwebtoken */
 UserSchema.methods.generateAuthToken = async function(){
