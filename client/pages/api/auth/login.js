@@ -1,12 +1,12 @@
 import { connectToDatabase } from "../../../utils/connectDb";
-import User from "../../../models/user";
+import UserAuth from "../../../models/UserAuth";
 
 export default async (req, res) => {
   try {
     await connectToDatabase();
 
     const { email, password } = req.body;
-    const user = await User.findOne({ email: email });
+    const user = await UserAuth.findOne({ email: email });
 
     if (!user) {
       res.status(400).send({ Error: "User not found!" });
@@ -20,7 +20,7 @@ export default async (req, res) => {
     /* generate token for the user */
     await user.generateAuthToken();
 
-    res.status(200).send({ Info: 'Logged in successfully!' });
+    res.status(200).send({ Info: "Logged in successfully!" });
   } catch (error) {
     res.status(500).send({ Error: "Internal server error." });
   }

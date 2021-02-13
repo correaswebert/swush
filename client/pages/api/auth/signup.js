@@ -1,5 +1,5 @@
 import { connectToDatabase } from "../../../utils/connectDb";
-import User from "../../../models/user";
+import UserAuth from "../../../models/UserAuth";
 
 export default async (req, res) => {
   try {
@@ -7,27 +7,28 @@ export default async (req, res) => {
 
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
-      res.status(400).send({ Error: "Enter all fields!" });
-      return;
+      return res.status(400).send({ Error: "Enter all fields!" });
     }
 
-    const doesUserExist = await User.findOne({ email: email });
+    const doesUserExist = await UserAuth.findOne({ email: email });
 
     if (doesUserExist) {
-      res.status(400).send({ Error: "User already exists!" });
-      return;
+      return res.status(400).send({ Error: "User already exists!" });
     }
 
-    const user = new User({
+    const newUser = new UserAuth({
       name: name,
       email: email,
       password: password,
     });
-    
-    await user.save();
 
-    /* generate token for the user */
-    await user.generateAuthToken();
+    await newUser.save();
+
+    // TODO: using the above newUser instance, create a UserDetails instance
+    //       by sharing the objectId.
+
+    /* generate token for the newUser */
+    await newUser.generateAuthToken();
 
     res.status(200).send({ Info: "User successfully created!" });
   } catch (error) {
