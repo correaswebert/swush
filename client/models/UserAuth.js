@@ -1,39 +1,33 @@
-import { Schema, models, model } from "mongoose";
+import { Schema, models, model } from 'mongoose';
 // import TeamDetails from "./TeamDetails"
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 const UserAuth = new Schema({
   name: {
     type: String,
     required: true,
-    trim: true,
+    trim: true
   },
   email: {
     type: String,
     required: true,
     trim: true,
     unique: true,
-    lowercase: true,
+    lowercase: true
   },
   password: {
     type: String,
     required: true,
-    trim: true,
+    trim: true
   },
   tokens: [
     {
       token: {
         type: String,
-        required: true,
-      },
-    },
-  ],
-});
-
-UserAuth.virtual("teamOwner", {
-  ref: "Team",
-  localField: "_id",
-  foreignField: "owner",
+        required: true
+      }
+    }
+  ]
 });
 
 /* create a jsonwebtoken */
@@ -45,4 +39,4 @@ UserAuth.methods.generateAuthToken = async function () {
 };
 
 /* if User schema already exists, don't overwrite it */
-export default models.UserAuth || model("UserAuth", UserAuth);
+export default models.UserAuth || model('UserAuth', UserAuth);

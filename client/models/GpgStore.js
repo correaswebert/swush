@@ -1,8 +1,12 @@
-import { Schema, models, model } from "mongoose";
+import { Schema, models, model } from 'mongoose';
 
 const GpgStore = new Schema({
-  GpgKeys: Schema.Types.Array,
+  GpgKeys: [
+    {
+      value: String
+    }
+  ]
 });
 
 /* if GpgStore schema already exists, don't overwrite it */
-export default models.GpgStore || model("GpgStore", GpgStore);
+export default models.GpgStore || model('GpgStore', GpgStore);
