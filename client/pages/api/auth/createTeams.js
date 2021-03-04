@@ -7,13 +7,15 @@ export default async (req, res) => {
     await connectToDatabase();
 
     const { name, jwt } = req.body;
-
+    
     /* authenticate the user */
     const user = await auth(jwt);
-
+    admin = user._id;
+    console.log(admin);
+  
     const team = new TeamDetails({
       name,
-      owner: user._id,
+      admins: admins.concat({ admin })
     });
 
     await team.save();

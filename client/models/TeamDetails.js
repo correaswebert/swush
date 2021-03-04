@@ -8,8 +8,10 @@ const TeamDetails = new Schema({
   },
   admins: [
     {
-      member_id: Schema.Types.ObjectId,
-      required: true
+      admin: {
+        type: Schema.Types.ObjectId,
+        required: true
+      }
     }
   ]
 });
