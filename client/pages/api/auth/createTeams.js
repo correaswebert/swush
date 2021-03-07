@@ -10,17 +10,22 @@ export default async (req, res) => {
     
     /* authenticate the user */
     const user = await auth(jwt);
-    admin = user._id;
-    console.log(admin);
-  
+    
+    if(!user){
+      return res.status(401).send({Error: 'Please authenticate'});
+    }
+
     const team = new TeamDetails({
-      name,
-      admins: admins.concat({ admin })
+      name
     });
-
+    
     await team.save();
+  
+    await team.assignAdmin(user._id);
 
-    res.status(201).send({ Msg: "Created a new team!" });
+    if(user){
+      return res.status(201).send({ Msg: "Created a new team!" });
+    }
   } catch (error) {
     res.status(400).send({ Error: "Unable to create team" });
   }
