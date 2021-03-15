@@ -33,8 +33,8 @@ const UserAuth = new Schema({
 /* create a jsonwebtoken */
 UserAuth.methods.generateAuthToken = async function () {
   const user = this;
-  const token = await jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-  user.tokens = user.tokens.concat({ token });
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+  user.tokens.push(token);
   await user.save();
 };
 

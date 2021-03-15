@@ -1,4 +1,4 @@
-import auth from "../../../utils/auth";
+import auth from 'utils/auth';
 
 export default async (req, res) => {
   const { jwt } = req.body;
@@ -10,8 +10,8 @@ export default async (req, res) => {
     });
 
     await user.save();
-    res.status(200).send({ Info: "Logged out successfully" });
+    res.status(200).send({ Info: 'Logged out successfully' });
   } catch (error) {
-    res.status(500).send({ Error: "Internal server error" });
+    res.status(500).send({ Error: 'Internal server error' });
   }
 };

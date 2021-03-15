@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,scss,md,json}\"",
     "start": "next start"
   },
   "dependencies": {

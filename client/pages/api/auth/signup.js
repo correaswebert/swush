@@ -1,37 +1,39 @@
-import { connectToDatabase } from "../../../utils/connectDb";
-import UserAuth from "../../../models/UserAuth";
+import { connectToDatabase } from 'utils/connectDb';
+import UserAuth from 'models/UserAuth';
 
 export default async (req, res) => {
   try {
     await connectToDatabase();
 
-    const { name, email, password } = req.body;
+    let { name, email, password } = req.body;
     if (!name || !email || !password) {
-      return res.status(400).send({ Error: "Enter all fields!" });
+      return res.status(400).send({ Error: 'Enter all fields!' });
     }
 
-    const doesUserExist = await UserAuth.findOne({ email: email });
+    // sanitize input
+    name = name.toString();
+    email = email.toString();
+    password = password.toString();
 
-    if (doesUserExist) {
-      return res.status(400).send({ Error: "User already exists!" });
+    const currUser = await UserAuth.findOne({ email: email });
+    if (currUser) {
+      return res.status(409).send({ Error: 'User already exists!' });
     }
 
-    const newUser = new UserAuth({
+    const userAuthInfo = {
       name: name,
       email: email,
-      password: password,
-    });
+      password: password
+    };
 
-    await newUser.save();
+    const newUser = new UserAuth(userAuthInfo);
+    const user = await newUser.save();
 
-    // TODO: using the above newUser instance, create a UserDetails instance
-    //       by sharing the objectId.
+    await user.generateAuthToken();
 
-    /* generate token for the newUser */
-    await newUser.generateAuthToken();
-
-    res.status(200).send({ Info: "User successfully created!" });
+    res.status(200).send({ Info: 'User successfully created!' });
   } catch (error) {
-    res.status(500).send({ Error: "Internal server error." });
+    console.log(error);
+    res.status(500).send({ Error: 'Internal server error.' });
   }
 };

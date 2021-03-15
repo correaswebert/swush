@@ -1,7 +1,7 @@
-import Head from "next/head";
-import Link from "next/link";
+import Head from 'next/head';
+import Link from 'next/link';
 
-import styles from "./styles/Layout.module.css";
+import styles from './styles/Layout.module.css';
 
 const Layout = ({ children }) => {
   return (
@@ -17,7 +17,7 @@ const Layout = ({ children }) => {
         <div className={styles.footer_container}>
           <div className={styles.footer_item}>
             &copy; {new Date().getFullYear()} - A product of
-            <Link href="https://github.com/aayushhyadav"> Aayush Yadav</Link> and{" "}
+            <Link href="https://github.com/aayushhyadav"> Aayush Yadav</Link> and{' '}
             <Link href="https://swebert.codes"> Swebert Correa</Link>
           </div>
 
