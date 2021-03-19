@@ -1,5 +1,6 @@
 import { connectToDatabase } from 'utils/connectDb';
 import UserAuth from 'models/UserAuth';
+import generateKeys from 'utils/generateKeys';
 
 export default async (req, res) => {
   try {
@@ -29,9 +30,13 @@ export default async (req, res) => {
     const newUser = new UserAuth(userAuthInfo);
     const user = await newUser.save();
 
+    /* generate jwt token for the user */
     await user.generateAuthToken();
 
-    res.status(200).send({ Info: 'User successfully created!' });
+    /* generate key pair for the user */
+    const {privateKey, publicKey} = await generateKeys(user);
+
+    res.status(200).send({ Info: 'User successfully created!', PublicKey: publicKey, PrivateKey: privateKey });
   } catch (error) {
     console.log(error);
     res.status(500).send({ Error: 'Internal server error.' });
