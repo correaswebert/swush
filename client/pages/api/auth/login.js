@@ -9,11 +9,11 @@ export default async (req, res) => {
     const user = await UserAuth.findOne({ email: email });
 
     if (!user) {
-      res.status(400).send({ Error: 'User not found!' });
+      res.status(400).json({ Error: 'User not found!' });
       return;
     }
     if (password !== user.password) {
-      res.status(400).send({ Error: 'Unable to login' });
+      res.status(400).json({ Error: 'Unable to login' });
       return;
     }
 
