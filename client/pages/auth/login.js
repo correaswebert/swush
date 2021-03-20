@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import styles from 'styles/auth/Login.module.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
@@ -12,15 +14,21 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-        password
-      })
-    });
+    const raw = JSON.stringify({ email: 'example@domain.com', password: 'password' });
 
-    console.log(res.body);
+    const requestOptions = {
+      method: 'POST',
+      body: raw,
+      redirect: 'follow'
+    };
+
+    const res = await fetch('/api/auth/login', requestOptions);
+    const result = await res.json();
+    console.log(result);
+
+    if (res.status === '200') {
+      router.push('/');
+    }
   }
 
   return (

@@ -5,7 +5,9 @@ export default async (req, res) => {
   try {
     await connectToDatabase();
 
-    const { email, password } = req.body;
+    const reqData = JSON.parse(req.body);
+    const { email, password } = reqData;
+    console.log(email, password);
     const user = await UserAuth.findOne({ email: email });
 
     if (!user) {
