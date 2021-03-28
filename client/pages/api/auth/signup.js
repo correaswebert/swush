@@ -24,7 +24,9 @@ export default async (req, res) => {
     const userAuthInfo = {
       name: name,
       email: email,
-      password: password
+      password: password,
+      publicKey: 'MyPublicKey',
+      privateKey: 'MyPrivateKey'
     };
 
     const newUser = new UserAuth(userAuthInfo);
@@ -36,7 +38,10 @@ export default async (req, res) => {
     /* generate key pair for the user */
     const {privateKey, publicKey} = await generateKeys(user);
 
-    res.status(200).send({ Info: 'User successfully created!', PublicKey: publicKey, PrivateKey: privateKey });
+    /* store user's keys */
+    await user.storeKeys(publicKey, privateKey);
+
+    res.status(200).send({ Info: 'User successfully created!', PublicKey: user.publicKey, PrivateKey: user.privateKey });
   } catch (error) {
     console.log(error);
     res.status(500).send({ Error: 'Internal server error.' });

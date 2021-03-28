@@ -11,6 +11,12 @@ const TeamDetails = new Schema({
       type: Schema.Types.ObjectId,
       required: true
     }
+  }],
+  members: [{
+    member: {
+      type: Schema.Types.ObjectId,
+      required: true
+    }
   }]
 });
 
@@ -18,7 +24,9 @@ const TeamDetails = new Schema({
 TeamDetails.methods.assignAdmin = async function(id) {
   const team = this;
   const admin = id;
+  const member = id;
   team.admins = team.admins.concat({ admin });
+  team.members = team.members.concat({ member });
   await team.save();
 };
 

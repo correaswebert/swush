@@ -5,15 +5,17 @@ export default async (req, res) => {
   try {
     await connectToDatabase();
 
-    const { email, password } = req.body;
+    const reqData = JSON.parse(req.body);
+    const { email, password } = reqData;
+    console.log(email, password);
     const user = await UserAuth.findOne({ email: email });
 
     if (!user) {
-      res.status(400).send({ Error: 'User not found!' });
+      res.status(400).json({ Error: 'User not found!' });
       return;
     }
     if (password !== user.password) {
-      res.status(400).send({ Error: 'Unable to login' });
+      res.status(400).json({ Error: 'Unable to login' });
       return;
     }
 

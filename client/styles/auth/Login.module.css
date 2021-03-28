@@ -1,0 +1,25 @@
+.main {
+  height: 100vh;
+  padding: 5rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.input {
+  font-size: 2em;
+  padding: 0.5em;
+  margin-bottom: 1em;
+}
+
+.submit {
+  background-color: #eaeaea;
+  color: #0070f3;
+  font-size: 2em;
+  margin-top: 1em;
+  padding: 0.5em;
+  border: none;
+  cursor: pointer;
+}
