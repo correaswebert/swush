@@ -14,7 +14,7 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const raw = JSON.stringify({ email: 'example@domain.com', password: 'password' });
+    const raw = JSON.stringify({ email, password});
 
     const requestOptions = {
       method: 'POST',
