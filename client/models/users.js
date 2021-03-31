@@ -1,5 +1,4 @@
 import { Schema, models, model } from 'mongoose';
-import TeamDetails from './TeamDetails';
 const jwt = require('jsonwebtoken');
 const openpgp = require('openpgp');
 

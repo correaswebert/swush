@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-import UserAuth from 'models/UserAuth';
+import UserAuth from 'models/users';
 
 /**
  * Check if the token provided is valid. If yes, then get the corresponding

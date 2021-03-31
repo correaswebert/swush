@@ -1,5 +1,5 @@
 import { connectToDatabase } from 'utils/connectDb';
-import UserAuth from 'models/UserAuth';
+import UserAuth from 'models/users';
 
 export default async (req, res) => {
   try {

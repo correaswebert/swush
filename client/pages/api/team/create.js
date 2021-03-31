@@ -1,6 +1,6 @@
 import { connectToDatabase } from 'utils/connectDb';
-import TeamDetails from 'models/TeamDetails';
-import UserAuth from 'models/UserAuth';
+import TeamDetails from 'models/teams';
+import UserAuth from 'models/users';
 import getAuthenticatedUser from 'utils/auth';
 
 export default async (req, res) => {

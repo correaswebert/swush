@@ -1,5 +1,5 @@
 import { connectToDatabase } from 'utils/connectDb';
-import UserAuth from 'models/UserAuth';
+import UserAuth from 'models/users';
 import generateKeys from 'utils/generateKeys';
 
 export default async (req, res) => {
