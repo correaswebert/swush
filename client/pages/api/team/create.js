@@ -1,32 +1,55 @@
 import { connectToDatabase } from 'utils/connectDb';
 import TeamDetails from 'models/TeamDetails';
-import auth from 'utils/auth';
+import UserAuth from 'models/UserAuth';
+import getAuthenticatedUser from 'utils/auth';
 
 export default async (req, res) => {
   try {
     await connectToDatabase();
 
-    const { name, jwt } = req.body;
+    const { team_name: teamName, jwt } = req.body;
 
-    /* authenticate the user */
-    const user = await auth(jwt);
+    const user = await getAuthenticatedUser(jwt);
 
-    if (!user) {
-      return res.status(401).send({ Error: 'Please authenticate' });
-    }
-
-    const team = new TeamDetails({
-      name
-    });
+    const team = new TeamDetails({ name: teamName });
+    // const team = new TeamDetails(
+    //   {
+    //     name: teamName,
+    //     admins: [{adminId: user._id}],
+    //     members: [{memberId: user._id}]
+    //   }
+    // );
+    team.admins.push({ adminId: user._id });
+    team.members.push({ memberId: user._id });
+    team.users.push(user._id);
 
     await team.save();
 
-    await team.assignAdmin(user._id);
+    // const members = await TeamDetails.findOne({ name: 'team' }).populate('userauths');
+    // console.log(members);
 
-    if (user) {
-      return res.status(201).send({ Msg: 'Created a new team!' });
-    }
+    const tempteam = await TeamDetails.findOne({ name: 'team' });
+    let members = [];
+    tempteam.members.forEach(async (member) => {
+      members.push(member);
+      // const user = await UserAuth.findOne({ _id: member.memberId });
+      // members.push(user.publicKey);
+    });
+
+    // const memberPromise =
+    members = await Promise.all(
+      members.map(async (member) => {
+        const user = await UserAuth.findOne({ _id: member.memberId });
+        return user.publicKey;
+      })
+    );
+
+    // Promise.all(memberPromise);
+    console.log(members);
+
+    res.status(201).json({ msg: `Created team ${teamName}!` });
   } catch (error) {
-    res.status(400).send({ Error: 'Unable to create team' });
+    console.error(error);
+    res.status(400).json({ msg: error.message });
   }
 };

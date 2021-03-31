@@ -14,10 +14,13 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const raw = JSON.stringify({ email, password});
+    const raw = JSON.stringify({ email, password });
 
     const requestOptions = {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: raw,
       redirect: 'follow'
     };

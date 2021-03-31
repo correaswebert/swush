@@ -33,15 +33,20 @@ export default async (req, res) => {
     const user = await newUser.save();
 
     /* generate jwt token for the user */
-    await user.generateAuthToken();
+    const jwt = await user.generateAuthToken();
 
     /* generate key pair for the user */
-    const {privateKey, publicKey} = await generateKeys(user);
+    const { privateKey, publicKey } = await generateKeys(user);
 
     /* store user's keys */
     await user.storeKeys(publicKey, privateKey);
 
-    res.status(200).send({ Info: 'User successfully created!', PublicKey: user.publicKey, PrivateKey: user.privateKey });
+    res.status(200).send({
+      Info: 'User successfully created!',
+      PublicKey: user.publicKey,
+      PrivateKey: user.privateKey,
+      jwt: jwt
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send({ Error: 'Internal server error.' });

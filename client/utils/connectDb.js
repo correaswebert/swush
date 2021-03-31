@@ -1,30 +1,31 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const { MONGODB_URI, MONGODB_DB } = process.env;
+const ERR_DB_CONN = 'Error connecting to database!';
 
 if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
+  console.error('MONGODB_URI not defined!');
+  throw new Error(ERR_DB_CONN);
 }
 
 if (!MONGODB_DB) {
-  throw new Error("Please define the MONGODB_DB environment variable inside .env.local");
+  console.error('MONGODB_DB not defined!');
+  throw new Error(ERR_DB_CONN);
 }
 
 export async function connectToDatabase() {
-  // if not disconnected, do not connect
-  if (mongoose.connection.readyState >= 1) {
-    return;
-  }
+  // if already connected, do not reconnect
+  if (mongoose.connection.readyState >= 1) return;
 
   try {
-    mongoose.connect(process.env.MONGODB_URI, {
+    await mongoose.connect(MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
-      useCreateIndex: true,
+      useCreateIndex: true
     });
-    console.log(`Database connected!`);
+    console.log('Database connected!');
   } catch (error) {
-    throw new Error(error);
+    throw new Error(ERR_DB_CONN);
   }
 }

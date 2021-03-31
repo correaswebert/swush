@@ -1,22 +1,74 @@
-export default function Signup() {
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import styles from 'styles/auth/Login.module.css';
+
+export default function Login() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
+
+  function validateForm() {
+    return name.length > 0 && email.length > 0 && password.length > 0;
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const raw = JSON.stringify({ name, email, password });
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: raw,
+      redirect: 'follow'
+    };
+
+    const res = await fetch('/api/auth/signup', requestOptions);
+    const result = await res.json();
+    console.log(result.status, result);
+
+    if (res.status === '200') {
+      router.push('/');
+    }
+  }
+
   return (
-    <>
-      <form method="post" action="">
-        <label htmlFor="email">Email</label>
-        <input type="email" name="email" id="email" />
+    <div className={styles.container}>
+      <form className={styles.main} onSubmit={handleSubmit}>
+        <input
+          className={styles.input}
+          type="text"
+          name="name"
+          placeholder="John Doe"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-        <label htmlFor="password">Password</label>
-        <input type="password" name="password" id="password" />
+        <input
+          className={styles.input}
+          type="email"
+          name="email"
+          placeholder="example@domain.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-        <button type="submit">Signup</button>
+        <input
+          className={styles.input}
+          type="password"
+          name="password"
+          placeholder="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button className={styles.submit} type="submit" disabled={!validateForm()}>
+          Login
+        </button>
       </form>
-
-      <style jsx>{`
-        form {
-          display: flex;
-          flex-direction: column;
-        }
-      `}</style>
-    </>
+    </div>
   );
 }

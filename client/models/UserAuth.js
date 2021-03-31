@@ -1,5 +1,5 @@
 import { Schema, models, model } from 'mongoose';
-// import TeamDetails from "./TeamDetails"
+import TeamDetails from './TeamDetails';
 const jwt = require('jsonwebtoken');
 const openpgp = require('openpgp');
 
@@ -21,33 +21,39 @@ const UserAuth = new Schema({
     required: true,
     trim: true
   },
-  tokens: [{
+  tokens: [
+    {
       token: {
         type: String,
         required: true
       }
-  }],
-  teams: [{
-    team: {
-      type: Schema.Types.ObjectId
     }
-  }],
+  ],
+  teams: [
+    {
+      team: {
+        type: Schema.Types.ObjectId,
+        ref: 'TeamDetails'
+      }
+    }
+  ],
   publicKey: {
     type: String,
     required: true
   },
   privateKey: {
     type: String,
-    required: true 
+    required: true
   }
 });
 
 /* create a jsonwebtoken */
 UserAuth.methods.generateAuthToken = async function () {
   const user = this;
-  const token = await jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
   user.tokens.push({ token });
   await user.save();
+  return token;
 };
 
 UserAuth.methods.storeKeys = async function (publicKey, privateKey) {
@@ -55,15 +61,13 @@ UserAuth.methods.storeKeys = async function (publicKey, privateKey) {
 
   /* convert private key into message object for encryption */
   const message = openpgp.Message.fromText(privateKey);
-  
+
   user.publicKey = publicKey;
   user.privateKey = await openpgp.encrypt({
     message,
     passwords: user.password
   });
 
-  console.log(privateKey);
-  console.log(user.privateKey);
   await user.save();
 };
 

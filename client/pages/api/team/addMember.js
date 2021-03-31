@@ -29,7 +29,7 @@ export default async (req, res) => {
     
     /* check if the user is an admin */
     team.admins.forEach(admin => {
-      if(admin.admin.equals(curUser._id)){
+      if(admin.adminId.equals(curUser._id)){
         isAdmin = true;
       }
     });

@@ -6,22 +6,40 @@ const TeamDetails = new Schema({
     required: true,
     trim: true
   },
-  admins: [{
-    admin: {
+  admins: [
+    {
+      adminId: {
+        type: Schema.Types.ObjectId,
+        ref: 'UserAuth',
+        required: true
+      }
+    }
+  ],
+  users: [
+    {
       type: Schema.Types.ObjectId,
+      ref: 'UserAuth',
       required: true
     }
-  }],
-  members: [{
-    member: {
-      type: Schema.Types.ObjectId,
-      required: true
+  ],
+  members: [
+    {
+      memberId: {
+        type: Schema.Types.ObjectId,
+        ref: 'UserAuth',
+        required: true
+      }
     }
-  }]
+  ],
+  secrets: [
+    {
+      name: String
+    }
+  ]
 });
 
 /* assign admin for the team */
-TeamDetails.methods.assignAdmin = async function(id) {
+TeamDetails.methods.assignAdmin = async function (id) {
   const team = this;
   const admin = id;
   const member = id;
