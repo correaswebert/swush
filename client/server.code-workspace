@@ -1,0 +1,13 @@
+{
+  "folders": [
+    {
+      "path": "./pages/api"
+    },
+    {
+      "path": "./models"
+    },
+    {
+      "path": "./utils"
+    }
+  ]
+}

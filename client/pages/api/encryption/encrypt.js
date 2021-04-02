@@ -12,18 +12,15 @@ export default async function (req, res) {
 
     // check if user part of team
 
-    const team = await TeamDetails.findOne({ name: teamName });
-    var isMember = false;
+    const members = await TeamDetails.findOne({ name: teamName }, 'members').exec();
 
-    team.members.forEach((member) => {
-      console.log(member);
-      if (member.memberId.equals(user._id)) isMember = true;
-    });
+    // members.filter((member) => member.memberId === user._id);
+    console.log(members);
 
-    if (!isMember) return res.send('Not a team member');
+    // if (!isMember) return res.send('Not a team member');
 
-    team.secrets.push({ name: cipherText });
-    await team.save();
+    // team.secrets.push({ name: cipherText });
+    // await team.save();
 
     return res.send('Done!');
   } catch (error) {

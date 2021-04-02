@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "path": "./pages",
+      "ignore": "./pages/api"
+    },
+    {
+      "path": "./models"
+    },
+    {
+      "path": "./utils"
+    }
+  ],
+  "folders.exclude": [
+    {
+      "path": "./pages/api"
+    }
+  ]
+}

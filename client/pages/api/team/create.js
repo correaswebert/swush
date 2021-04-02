@@ -10,6 +10,7 @@ export default async (req, res) => {
     const { name, jwt } = req.body;
 
     const user = await getAuthenticatedUser(jwt);
+    console.log(user);
 
     const team = new TeamDetails({ name });
     // const team = new TeamDetails(

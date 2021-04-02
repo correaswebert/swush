@@ -1,31 +1,25 @@
 import { connectToDatabase } from 'utils/connectDb';
-import UserAuth from 'models/users';
+import User from 'models/users';
 
 export default async (req, res) => {
   try {
     await connectToDatabase();
 
-    // console.log(req.body);
-    // const reqData = JSON.parse(req.body);
-    // console.log(reqData);
-    // const { email, password } = reqData;
     const { email, password } = req.body;
-    console.log(email, password);
-    const user = await UserAuth.findOne({ email: email });
 
+    const user = await User.findOne({ email: email }, 'password tokens').exec();
     if (!user) {
-      res.status(400).json({ Error: 'User not found!' });
-      return;
+      return res.status(400).json({ Error: 'User not found!' });
     }
+
     if (password !== user.password) {
-      res.status(400).json({ Error: 'Unable to login' });
-      return;
+      return res.status(400).json({ Error: 'Unable to login' });
     }
 
-    /* generate token for the user */
-    await user.generateAuthToken();
+    /* generate new token for the user */
+    const newJwt = await user.generateAuthToken();
 
-    res.status(200).send({ Info: 'Logged in successfully!', jwt: user.tokens[0] });
+    res.status(200).send({ Info: 'Logged in successfully!', jwt: newJwt });
   } catch (error) {
     res.status(500).send({ Error: 'Internal server error.' });
     console.error(error);

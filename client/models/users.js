@@ -2,52 +2,53 @@ import { Schema, models, model } from 'mongoose';
 const jwt = require('jsonwebtoken');
 const openpgp = require('openpgp');
 
-const UserAuth = new Schema({
+const UserSchema = new Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   email: {
     type: String,
     required: true,
     trim: true,
     unique: true,
-    lowercase: true
+    lowercase: true,
   },
   password: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   tokens: [
     {
       token: {
+        _id: false,
         type: String,
-        required: true
-      }
-    }
+        required: true,
+      },
+    },
   ],
   teams: [
     {
-      team: {
+      _id: {
         type: Schema.Types.ObjectId,
-        ref: 'TeamDetails'
-      }
-    }
+        ref: 'Team',
+      },
+    },
   ],
   publicKey: {
     type: String,
-    required: true
+    required: true,
   },
   privateKey: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 /* create a jsonwebtoken */
-UserAuth.methods.generateAuthToken = async function () {
+UserSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
   user.tokens.push({ token });
@@ -55,8 +56,7 @@ UserAuth.methods.generateAuthToken = async function () {
   return token;
 };
 
-/* store the public and private keys */
-UserAuth.methods.storeKeys = async function (publicKey, privateKey) {
+UserSchema.methods.storeKeys = async function (publicKey, privateKey) {
   const user = this;
 
   /* convert private key into message object for encryption */
@@ -65,11 +65,11 @@ UserAuth.methods.storeKeys = async function (publicKey, privateKey) {
   user.publicKey = publicKey;
   user.privateKey = await openpgp.encrypt({
     message,
-    passwords: user.password
+    passwords: user.password,
   });
 
   await user.save();
 };
 
-/* if User schema already exists, don't overwrite it */
-export default models.UserAuth || model('UserAuth', UserAuth);
+/* if UserSchema already exists, don't overwrite it */
+export default models.User || model('User', UserSchema);

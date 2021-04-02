@@ -1,13 +1,11 @@
 import auth from 'utils/auth';
 
 export default async (req, res) => {
-  const { jwt } = req.body;
-  const user = await auth(jwt);
-
   try {
-    user.tokens = user.tokens.filter((token) => {
-      return jwt != token.token;
-    });
+    const { jwt } = req.body;
+    const user = await getAuthenticatedUser(jwt);
+
+    user.tokens = user.tokens.filter((token) => jwt != token.token);
 
     await user.save();
     res.status(200).send({ Info: 'Logged out successfully' });
