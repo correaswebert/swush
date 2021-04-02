@@ -1,7 +1,7 @@
 import { connectToDatabase } from 'utils/connectDb';
 import UserAuth from 'models/users';
 import TeamDetails from 'models/teams';
-import auth from 'utils/auth';
+import getAuthenticatedUser from 'utils/auth';
 
 export default async (req, res) => {
   try {
@@ -9,40 +9,22 @@ export default async (req, res) => {
 
     const { jwt, name, email } = req.body;
 
-    const curUser = await auth(jwt);
-    const user = await UserAuth.findOne({ email });
-    const team = await TeamDetails.findOne({ name });
+    const admin = await getAuthenticatedUser(jwt);
+    const team = await TeamDetails.findOne({ name }).exec();
 
-    var isAdmin = false;
-
-    /* if user does not exist */
-    if (!user) {
-      res.status(200).send({ Error: 'User does not exist' });
-      return;
-    }
-
-    /* if team does not exist */
     if (!team) {
-      res.status(200).send({ Error: 'Team does not exist' });
-      return;
+      return res.status(400).json({ Error: 'Team does not exist' });
     }
 
-    /* check if the user is an admin */
-    team.admins.forEach((admin) => {
-      if (admin.adminId.equals(curUser._id)) {
-        isAdmin = true;
-      }
-    });
+    const adminDoc = await team.admins.id(admin._id);
 
     if (!isAdmin) {
-      return res.status(200).send({ Error: 'Only admins can add members!' });
+      return res.status(400).json({ Error: 'Only admins can add members!' });
     }
 
-    const member = user._id;
-    team.members = team.members.concat({ member });
-    await team.save();
-    return res.status(200).send({ Msg: 'Added new member successfully!' });
+    await team.addMember(user._id);
+    return res.status(200).json({ Info: 'Added new member successfully!' });
   } catch (error) {
-    return res.status(500).send({ Error: 'Unable to add member' });
+    return res.status(500).json({ Error: 'Unable to add member' });
   }
 };

@@ -1,15 +1,16 @@
 import { connectToDatabase } from 'utils/connectDb';
-import UserAuth from 'models/users';
+import User from 'models/users';
 import generateKeys from 'utils/generateKeys';
+import { generateJwt, decodeJwt } from 'utils/generateJwt';
 import { sendWelcomeEmail } from 'utils/sendEmail';
 
 export default async (req, res) => {
   try {
     await connectToDatabase();
 
-    let { name, email, password } = req.body;
+    let { name, email, password, store_priv: storePrivateKey } = req.body;
     if (!name || !email || !password) {
-      return res.status(400).send({ Error: 'Enter all fields!' });
+      return res.status(400).json({ Error: 'Enter all fields!' });
     }
 
     // sanitize input
@@ -17,42 +18,37 @@ export default async (req, res) => {
     email = email.toString();
     password = password.toString();
 
-    const currUser = await UserAuth.findOne({ email: email });
-    if (currUser) {
-      return res.status(409).send({ Error: 'User already exists!' });
+    const jwt = generateJwt(email);
+    const { privateKey, publicKey } = await generateKeys(email);
+
+    const userInfo = {
+      name,
+      email,
+      password,
+      publicKey,
+    };
+    if (storePrivateKey) {
+      userInfo.privateKey = privateKey;
     }
 
-    const userAuthInfo = {
-      name: name,
-      email: email,
-      password: password,
-      publicKey: 'MyPublicKey',
-      privateKey: 'MyPrivateKey'
-    };
-
-    const newUser = new UserAuth(userAuthInfo);
-    const user = await newUser.save();
-
-    /* generate jwt token for the user */
-    const jwt = await user.generateAuthToken();
-
-    /* generate key pair for the user */
-    const { privateKey, publicKey } = await generateKeys(user);
-
-    /* store user's keys */
-    await user.storeKeys(publicKey, privateKey);
+    const user = new User(userInfo);
+    await user.save();
 
     /* send welcome email to the user */
-    sendWelcomeEmail(user.email, user.name);
-    
-    res.status(200).send({
+    // sendWelcomeEmail(user.email, user.name);
+
+    res.status(200).json({
       Info: 'User successfully created!',
-      PublicKey: user.publicKey,
-      PrivateKey: user.privateKey,
-      jwt: jwt
+      publicKey,
+      privateKey,
+      jwt,
     });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({ Error: 'Internal server error.' });
+  } catch (e) {
+    if (e.name === 'MongoError' && e.code === 11000) {
+      return res.status(400).json({ Error: 'User already exists!' });
+    }
+
+    console.error(e);
+    res.status(500).json({ Error: 'Internal server error.' });
   }
 };

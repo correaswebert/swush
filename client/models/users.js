@@ -1,6 +1,12 @@
 import { Schema, models, model } from 'mongoose';
-const jwt = require('jsonwebtoken');
-const openpgp = require('openpgp');
+import openpgp from 'openpgp';
+
+const TeamRefSchema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Team',
+  },
+});
 
 const UserSchema = new Schema({
   name: {
@@ -18,58 +24,60 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: true,
-    trim: true,
   },
-  tokens: [
-    {
-      token: {
-        _id: false,
-        type: String,
-        required: true,
-      },
-    },
-  ],
-  teams: [
-    {
-      _id: {
-        type: Schema.Types.ObjectId,
-        ref: 'Team',
-      },
-    },
-  ],
+
+  teams: [TeamRefSchema],
+
   publicKey: {
     type: String,
     required: true,
   },
-  privateKey: {
-    type: String,
-    required: true,
-  },
+  privateKey: String,
 });
 
-/* create a jsonwebtoken */
-UserSchema.methods.generateAuthToken = async function () {
-  const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-  user.tokens.push({ token });
-  await user.save();
-  return token;
-};
-
-UserSchema.methods.storeKeys = async function (publicKey, privateKey) {
+/**
+ * Store the key(s) provided in the users collection.
+ *
+ * @param publicKey the public encryption key
+ * @param privateKey (optional) the private encryption key
+ */
+UserSchema.methods.storeKeys = async function (publicKey, privateKey = null) {
   const user = this;
 
   /* convert private key into message object for encryption */
   const message = openpgp.Message.fromText(privateKey);
 
   user.publicKey = publicKey;
-  user.privateKey = await openpgp.encrypt({
-    message,
-    passwords: user.password,
-  });
+
+  /* saving private key is optional */
+  if (privateKey) {
+    user.privateKey = await openpgp.encrypt({
+      message,
+      passwords: user.password,
+    });
+  }
 
   await user.save();
 };
 
-/* if UserSchema already exists, don't overwrite it */
+/* must be better ways using mongoose functions rather than JS Array methods */
+
+/**
+ * Add the given team to the user's teams array.
+ *
+ * @param teamId the
+ */
+UserSchema.methods.addTeam = async function (teamId) {
+  const user = this;
+  user.teams.push({ _id: teamId });
+  await user.save();
+};
+
+UserSchema.methods.removeTeam = async function (teamId) {
+  const user = this;
+  user.teams = user.teams.filter((id) => _id !== teamId);
+  await user.save();
+};
+
+/* if User model already exists, don't overwrite it */
 export default models.User || model('User', UserSchema);
