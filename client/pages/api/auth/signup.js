@@ -1,6 +1,7 @@
 import { connectToDatabase } from 'utils/connectDb';
 import UserAuth from 'models/users';
 import generateKeys from 'utils/generateKeys';
+import { sendWelcomeEmail } from 'utils/sendEmail';
 
 export default async (req, res) => {
   try {
@@ -41,6 +42,9 @@ export default async (req, res) => {
     /* store user's keys */
     await user.storeKeys(publicKey, privateKey);
 
+    /* send welcome email to the user */
+    sendWelcomeEmail(user.email, user.name);
+    
     res.status(200).send({
       Info: 'User successfully created!',
       PublicKey: user.publicKey,

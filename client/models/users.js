@@ -55,6 +55,7 @@ UserAuth.methods.generateAuthToken = async function () {
   return token;
 };
 
+/* store the public and private keys */
 UserAuth.methods.storeKeys = async function (publicKey, privateKey) {
   const user = this;
 

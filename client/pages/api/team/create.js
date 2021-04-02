@@ -7,11 +7,11 @@ export default async (req, res) => {
   try {
     await connectToDatabase();
 
-    const { team_name: teamName, jwt } = req.body;
+    const { name, jwt } = req.body;
 
     const user = await getAuthenticatedUser(jwt);
 
-    const team = new TeamDetails({ name: teamName });
+    const team = new TeamDetails({ name });
     // const team = new TeamDetails(
     //   {
     //     name: teamName,
@@ -47,7 +47,7 @@ export default async (req, res) => {
     // Promise.all(memberPromise);
     console.log(members);
 
-    res.status(201).json({ msg: `Created team ${teamName}!` });
+    res.status(201).json({ msg: `Created team ${name}!` });
   } catch (error) {
     console.error(error);
     res.status(400).json({ msg: error.message });
