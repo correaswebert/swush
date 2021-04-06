@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import axios from 'axios';
+
 import styles from 'styles/auth/Login.module.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
   function validateForm() {
@@ -12,31 +16,32 @@ export default function Login() {
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const raw = JSON.stringify({ email, password });
+      const res = await axios.post(
+        '/api/auth/login',
+        { email, password },
+        { redirect: 'follow' }
+      );
 
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: raw,
-      redirect: 'follow'
-    };
-
-    const res = await fetch('/api/auth/login', requestOptions);
-    const result = await res.json();
-    console.log(result);
-
-    if (res.status == '200') {
-      router.push('/dashboard');
+      if (res.status === 200) {
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        setError(error.response.data.Error);
+      } else {
+        setError('Some error occured!');
+      }
     }
   }
 
   return (
     <div className={styles.main}>
       <div className={styles.main__box}>
+        <p className={styles.error}>{error}</p>
+
         <form onSubmit={handleSubmit}>
           <input
             className={styles.input}
@@ -60,6 +65,10 @@ export default function Login() {
             Login
           </button>
         </form>
+
+        <p className={styles.signup}>
+          <Link href="/auth/signup">Sign Up</Link>
+        </p>
       </div>
     </div>
   );

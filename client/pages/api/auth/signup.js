@@ -10,7 +10,7 @@ export default async (req, res) => {
 
     let { name, email, password, store_priv: storePrivateKey } = req.body;
     if (!name || !email || !password) {
-      return res.status(400).json({ Error: 'Enter all fields!' });
+      return res.status(422).json({ Error: 'Enter all fields!' });
     }
 
     // sanitize input
@@ -45,7 +45,7 @@ export default async (req, res) => {
     });
   } catch (e) {
     if (e.name === 'MongoError' && e.code === 11000) {
-      return res.status(400).json({ Error: 'User already exists!' });
+      return res.status(409).json({ Error: 'User already exists!' });
     }
 
     console.error(e);
