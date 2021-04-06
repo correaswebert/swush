@@ -29,36 +29,38 @@ export default function Login() {
     const result = await res.json();
     console.log(result);
 
-    if (res.status === '200') {
-      router.push('/');
+    if (res.status == '200') {
+      router.push('/dashboard');
     }
   }
 
   return (
-    <div className={styles.container}>
-      <form className={styles.main} onSubmit={handleSubmit}>
-        <input
-          className={styles.input}
-          type="email"
-          name="email"
-          placeholder="example@domain.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+    <div className={styles.main}>
+      <div className={styles.main__box}>
+        <form onSubmit={handleSubmit}>
+          <input
+            className={styles.input}
+            type="email"
+            name="email"
+            placeholder="example@domain.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <input
-          className={styles.input}
-          type="password"
-          name="password"
-          placeholder="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <input
+            className={styles.input}
+            type="password"
+            name="password"
+            placeholder="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <button className={styles.submit} type="submit" disabled={!validateForm()}>
-          Login
-        </button>
-      </form>
+          <button className={styles.submit} type="submit" disabled={!validateForm()}>
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

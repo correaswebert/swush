@@ -10,7 +10,9 @@ export default function Home() {
         </h1>
 
         <p>
-          <Link href="/auth/login">Login</Link>
+          <Link href="/auth/login" className={styles.link}>Login</Link>
+          <br></br>
+          <Link href="/auth/signup" className={styles.link}>Sign Up</Link>
         </p>
       </main>
     </div>

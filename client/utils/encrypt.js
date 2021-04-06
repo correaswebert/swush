@@ -1,30 +1,30 @@
-export default async function () {
-  const publicKeysArmored = [
-    `-----BEGIN PGP PUBLIC KEY BLOCK-----
-...
------END PGP PUBLIC KEY BLOCK-----`,
-    `-----BEGIN PGP PUBLIC KEY BLOCK-----
-...
------END PGP PUBLIC KEY BLOCK-----`
-  ];
-  const privateKeyArmored = `-----BEGIN PGP PRIVATE KEY BLOCK-----
-...
------END PGP PRIVATE KEY BLOCK-----`;
-  const passphrase = `yourPassphrase`;
-  const message = 'Hello, World!';
+const openpgp = require('openpgp');
 
-  const publicKeys = await Promise.all(
+export default async function encryptSecret(publicKeys, ssh=null, oauth=null, password=null) {
+  const publicKeysArmored = publicKeys;
+  var msg = "";
+  
+  /* check the type of secret */
+  if(ssh){
+    msg = ssh;
+  }
+  else if(oauth){
+    msg = oauth;
+  }
+  else if(password){
+    msg = password;
+  }
+
+  const pubKeys = await Promise.all(
     publicKeysArmored.map((armoredKey) => openpgp.readKey({ armoredKey }))
   );
 
-  const privateKey = await openpgp.readKey({ armoredKey: privateKeyArmored });
-  await privateKey.decrypt(passphrase);
-
-  const message = openpgp.Message.fromText(message);
+  const message = openpgp.Message.fromText(msg);
   const encrypted = await openpgp.encrypt({
     message,
-    publicKeys,
-    privateKeys: privateKey
+    publicKeys: pubKeys
   });
-  console.log(encrypted); // '-----BEGIN PGP MESSAGE ... END PGP MESSAGE-----'
+
+  console.log(encrypted);
+  return encrypted;
 }

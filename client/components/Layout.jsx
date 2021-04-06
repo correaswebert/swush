@@ -22,7 +22,6 @@ const Layout = ({ children }) => {
           </div>
 
           <div className={styles.footer_item}>
-            <Link href="#">Homepage</Link>
             <Link href="#">What is Swush?</Link>
           </div>
         </div>
