@@ -27,6 +27,12 @@ export default function Login() {
       );
 
       if (res.status === 200) {
+        const { jwt, publicKey, privateKey } = res.data;
+
+        localStorage.setItem('jwt', jwt);
+        localStorage.setItem('publicKey', publicKey);
+        localStorage.setItem('privateKey', privateKey);
+
         router.push('/dashboard');
       }
     } catch (err) {

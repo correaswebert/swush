@@ -26,6 +26,8 @@ export default function Login() {
       );
 
       if (res.status === 200) {
+        const { jwt } = res.data;
+        localStorage.setItem('jwt', jwt);
         router.push('/dashboard');
       }
     } catch (error) {
