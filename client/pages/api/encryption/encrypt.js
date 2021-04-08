@@ -23,7 +23,7 @@ export default async function (req, res) {
     if (!isMember) return res.send('Not a team member');
 
     /* get details of all the team members */
-    const teamMembers = await TeamDetails.findOne({name: teamName}).populate('members._id');
+    const teamMembers = await team.populate('members._id').execPopulate();
     
     const publicKeys = [];
 
@@ -39,17 +39,14 @@ export default async function (req, res) {
     
     if(ssh){
       const vault = await Vault.findOne(team.vaults._id).exec();
-      console.log(vault);
       await vault.addSecret('ssh', description, encryptedSecret);
     }
     else if(oauth){
       const vault = await Vault.findOne(team.vaults._id).exec();
-      console.log(vault);
       await vault.addSecret('oauth', description, encryptedSecret);
     }
     else if(password){
       const vault = await Vault.findOne(team.vaults._id).exec();
-      console.log(vault);
       await vault.addSecret('password', description, encryptedSecret);
     }
 

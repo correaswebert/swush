@@ -23,6 +23,9 @@ export default async (req, res) => {
     });
 
     await team.save();
+    
+    const getTeam = await Team.findOne({ name: teamName });
+    await user.addTeam(getTeam._id);
 
     res.status(201).json({ msg: `Created team: ${teamName}!` });
   } catch (e) {

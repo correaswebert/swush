@@ -1,5 +1,6 @@
 import { connectToDatabase } from 'utils/connectDb';
-import auth from 'utils/auth';
+import getAuthenticatedUser from 'utils/auth';
+import User from 'models/users';
 
 export default async (req, res) => {
   try {
@@ -8,11 +9,12 @@ export default async (req, res) => {
     const { jwt } = req.body;
 
     /* authenticate the user */
-    const user = await auth(jwt);
+    const user = await getAuthenticatedUser(jwt);
 
-    await user.populate('teamOwner').execPopulate();
-
-    res.status(201).send(user.teamOwner);
+    /* get the teams of the user */
+    const teams = await user.populate('teams._id').execPopulate();
+    
+    res.status(200).json(teams.teams);
   } catch (error) {
     res.status(500).send({ Error: 'Internal server error!' });
   }
