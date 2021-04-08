@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import axios from 'axios';
+
 import styles from 'styles/auth/Login.module.css';
 
 export default function Login() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
   function validateForm() {
@@ -13,31 +17,35 @@ export default function Login() {
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const raw = JSON.stringify({ name, email, password });
+      const res = await axios.post(
+        '/api/auth/signup',
+        { name, email, password },
+        { redirect: 'follow' }
+      );
 
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: raw,
-      redirect: 'follow'
-    };
+      if (res.status === 200) {
+        const { jwt, publicKey, privateKey } = res.data;
 
-    const res = await fetch('/api/auth/signup', requestOptions);
-    const result = await res.json();
-    console.log(result.status, result);
+        localStorage.setItem('jwt', jwt);
+        localStorage.setItem('publicKey', publicKey);
+        localStorage.setItem('privateKey', privateKey);
 
-    if (res.status == '200') {
-      router.push('/auth/dashboard');
+        router.push('/dashboard');
+      }
+    } catch (err) {
+      const errMessage = err.response.data.Error ?? 'Some error occured!';
+      setError(errMessage);
     }
   }
 
   return (
     <div className={styles.main}>
       <div className={styles.main__box}>
+        <p className={styles.error}>{error}</p>
+
         <form onSubmit={handleSubmit}>
           <input
             className={styles.input}
@@ -70,6 +78,10 @@ export default function Login() {
             Sign Up
           </button>
         </form>
+
+        <p className={styles.signup}>
+          <Link href="/auth/login">Login</Link>
+        </p>
       </div>
     </div>
   );

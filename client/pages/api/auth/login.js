@@ -10,10 +10,10 @@ export default async (req, res) => {
 
     const user = await User.findOne({ email: email }, 'password tokens').exec();
     if (!user) {
-      return res.status(400).json({ Error: 'User not found!' });
+      return res.status(401).json({ Error: 'User not found!' });
     }
     if (password !== user.password) {
-      return res.status(400).json({ Error: 'Incorrect password!' });
+      return res.status(401).json({ Error: 'Incorrect password!' });
     }
 
     const jwt = generateJwt(email);
