@@ -1,0 +1,29 @@
+:is(.user_teams, .team_vaults) ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+:is(.user_teams, .team_vaults) li {
+  padding: 1em;
+}
+:is(.user_teams, .team_vaults) li:hover {
+  background-color: gray;
+}
+
+.three_col_layout {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(100px, auto);
+}
+
+.user_teams {
+  grid-column: 1 / 3;
+}
+
+.team_vaults {
+  grid-column: 3 / 6;
+}
+
+.vault_data {
+  grid-column: 6 / 12;
+}
