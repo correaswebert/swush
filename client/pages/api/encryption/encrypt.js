@@ -16,11 +16,11 @@ export default async function (req, res) {
 
     // check if the team exists
     const team = await TeamDetails.findOne({ name: teamName }).exec();
-    if(!team) return res.send('Team does not exists');
+    if(!team) return res.json('Team does not exists');
 
     // check if the user is a member of the team
     isMember = await team.members.id(user._id);
-    if (!isMember) return res.send('Not a team member');
+    if (!isMember) return res.json('Not a team member');
 
     /* get details of all the team members */
     const teamMembers = await team.populate('members._id').execPopulate();
@@ -50,9 +50,9 @@ export default async function (req, res) {
       await vault.addSecret('password', description, encryptedSecret);
     }
 
-    return res.send('Done!');
+    return res.json('Done!');
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal server error.');
+    res.status(500).json('Internal server error.');
   }
 }

@@ -1,5 +1,5 @@
 import { Schema, models, model } from 'mongoose';
-import openpgp from 'openpgp';
+const openpgp = require('openpgp');
 
 const TeamRefSchema = new Schema({
   _id: {
@@ -41,13 +41,13 @@ const UserSchema = new Schema({
  * @param publicKey the public encryption key
  * @param privateKey (optional) the private encryption key
  */
-UserSchema.methods.storeKeys = async function (publicKey, privateKey = null) {
+UserSchema.methods.storeKeys = async function (privateKey = null) {
   const user = this;
 
   /* convert private key into message object for encryption */
   const message = openpgp.Message.fromText(privateKey);
 
-  user.publicKey = publicKey;
+  // user.publicKey = publicKey;
 
   /* saving private key is optional */
   if (privateKey) {

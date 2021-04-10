@@ -1,4 +1,5 @@
 import { Schema, models, model } from 'mongoose';
+const openpgp = require('openpgp');
 
 const UserRefSchema = new Schema({
   _id: {
@@ -37,12 +38,22 @@ TeamSchema.methods.assignAdmin = async function (id) {
   await team.save();
 };
 
-/* assign admin for the team */
+/* adds a member in the team */
 TeamSchema.methods.addMember = async function (userId) {
   const team = this;
   team.members.push({ _id: userId });
   await team.save();
 };
 
+/* removes a member from the team */
+TeamSchema.methods.removeMember = async function (userId) {
+  const team = this;
+  team.members = team.members.filter((member) => {
+    if (member._id && !member._id.equals(userId)) {
+      return member;
+    }
+  });
+  await team.save();
+}
 /* if TeamSchema schema already exists, don't overwrite it */
 export default models.Team || model('Team', TeamSchema);

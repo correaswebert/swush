@@ -12,7 +12,7 @@ export default async function generateKeys(email) {
     type: 'ecc',
     curve: 'curve25519',
     userIds: { email },
-    passphrase: 'secret',
+    passphrase: process.env.PASSPHRASE,
   });
 
   return { privateKey: privateKeyArmored, publicKey: publicKeyArmored };

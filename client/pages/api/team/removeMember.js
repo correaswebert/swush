@@ -1,50 +1,71 @@
 import { connectToDatabase } from 'utils/connectDb';
-import UserAuth from 'models/users';
-import TeamDetails from 'models/teams';
-import auth from 'utils/auth';
+import User from 'models/users';
+import Team from 'models/teams';
+import Vault from 'models/vaults';
+import getAuthenticatedUser from 'utils/auth';
+const openpgp = require('openpgp');
 
 export default async (req, res) => {
   try {
     await connectToDatabase();
     const { jwt, name, email } = req.body;
 
-    const curUser = await auth(jwt);
-    const user = await UserAuth.findOne({ email });
-    const team = await TeamDetails.findOne({ name });
-
-    var isAdmin = false;
+    const curUser = await getAuthenticatedUser(jwt);
+    const user = await User.findOne({ email }).exec();
+    const team = await Team.findOne({ name }).exec();
 
     /* if user does not exist */
     if (!user) {
-      res.status(200).send({ Error: 'User does not exist' });
+      res.status(200).json({ Error: 'User does not exist' });
       return;
     }
 
     /* if team does not exist */
     if (!team) {
-      res.status(200).send({ Error: 'Team does not exist' });
+      res.status(200).json({ Error: 'Team does not exist' });
       return;
     }
 
-    /* check if the user is an admin */
-    team.admins.forEach((admin) => {
-      if (admin.admin.equals(curUser._id)) {
-        isAdmin = true;
-      }
-    });
+    var isAdmin = team.admins.id(curUser._id);
 
     if (!isAdmin) {
-      return res.status(200).send({ Error: 'Only admins can remove members!' });
+      return res.status(200).json({ Error: 'Only admins can remove members!' });
     }
 
-    team.members = team.members.filter((member) => {
-      if (member.member && !member.member.equals(user._id)) {
-        return member;
-      }
+    /* remove user's id from the member's array */
+    await team.removeMember(curUser._id);
+
+    /* get details of all the team members */
+    const teamMembers = await team.populate('members._id').execPopulate();
+    
+    const publicKeys = [];
+
+    /* get the public keys of all the team members */
+    teamMembers.members.forEach(member => {
+      publicKeys.push(member._id.publicKey);
     });
-    await team.save();
-    return res.status(200).send({ Msg: 'Removed member successfully!' });
+    
+    /* get the vault data */
+    const vault = await Vault.findById(team.vaults[0]._id).exec();
+    
+    /* admin private key */
+    const enPrivateKey = curUser.privateKey;
+
+    /* read the encrypted pgp message */
+    const privateKey = await openpgp.readMessage({ armoredMessage: enPrivateKey });
+
+    /* decrypt the stored private key */
+    const decrypted = await openpgp.decrypt({
+      message: privateKey,
+      passwords: curUser.password
+    });
+
+    /* re-encrypt all the secrets */
+    await vault.reEncrypt(publicKeys, decrypted.data);
+
+    return res.status(200).json({ Msg: 'Removed member successfully!' });
   } catch (error) {
-    return res.status(500).send({ Error: 'Unable to remove member' });
+    console.log(error);
+    return res.status(500).json({ Error: 'Unable to remove member' });
   }
 };

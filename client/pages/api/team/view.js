@@ -1,6 +1,5 @@
 import { connectToDatabase } from 'utils/connectDb';
 import getAuthenticatedUser from 'utils/auth';
-import User from 'models/users';
 
 export default async (req, res) => {
   try {
@@ -16,6 +15,6 @@ export default async (req, res) => {
     
     res.status(200).json(teams.teams);
   } catch (error) {
-    res.status(500).send({ Error: 'Internal server error!' });
+    res.status(500).json({ Error: 'Internal server error!' });
   }
 };

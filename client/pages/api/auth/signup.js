@@ -10,7 +10,7 @@ export default async (req, res) => {
 
     let { name, email, password, store_priv: storePrivateKey } = req.body;
     if (!name || !email || !password) {
-      return res.status(422).json({ Error: 'Enter all fields!' });
+      return res.status(200).json({ Error: 'Enter all fields!' });
     }
 
     // sanitize input
@@ -25,7 +25,7 @@ export default async (req, res) => {
       name,
       email,
       password,
-      publicKey,
+      publicKey
     };
     if (storePrivateKey) {
       userInfo.privateKey = privateKey;
@@ -33,6 +33,9 @@ export default async (req, res) => {
 
     const user = new User(userInfo);
     await user.save();
+
+    /* store the private key in encrypted form */
+    await user.storeKeys(privateKey);
 
     /* send welcome email to the user */
     // sendWelcomeEmail(user.email, user.name);
