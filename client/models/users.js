@@ -33,6 +33,7 @@ const UserSchema = new Schema({
     required: true,
   },
   privateKey: String,
+  notifications: [String]
 });
 
 /**
@@ -78,6 +79,13 @@ UserSchema.methods.removeTeam = async function (teamId) {
   user.teams = user.teams.filter((id) => _id !== teamId);
   await user.save();
 };
+
+/* adds notifications */
+UserSchema.methods.notify = async function (message) {
+  const user = this;
+  user.notifications.push(message);
+  await user.save();
+}
 
 /* if User model already exists, don't overwrite it */
 export default models.User || model('User', UserSchema);

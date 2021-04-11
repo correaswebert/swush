@@ -58,6 +58,8 @@ export default async (req, res) => {
     /* re-encrypt all the secrets */
     await vault.reEncrypt(publicKeys, decrypted.data);
 
+    await user.notify(`You were added to a new team ${name}`);
+    
     return res.status(200).json({ Info: 'Added new member successfully!' });
   } catch (error) {
     console.log(error);
