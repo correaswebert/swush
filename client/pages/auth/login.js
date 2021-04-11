@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
 
+// import Context from 'store/context';
 import styles from 'styles/auth/Login.module.css';
 
 export default function Login() {
+  // const { globalState, globalDispatch } = useContext(Context);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -28,10 +30,11 @@ export default function Login() {
       if (res.status === 200) {
         const { jwt } = res.data;
         localStorage.setItem('jwt', jwt);
+        // globalDispatch({ type: 'LOGIN' });
         router.push('/dashboard');
       }
     } catch (error) {
-      if (error.response.status === 401) {
+      if (error?.response?.status === 401) {
         setError(error.response.data.Error);
       } else {
         setError('Some error occured!');

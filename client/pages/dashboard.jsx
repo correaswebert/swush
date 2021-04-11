@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import axios from 'axios';
 
 import dashboardData from 'mocks/dashboard.json';
 import LazyList from 'components/List/Lazy';
+import TeamsList from 'components/List/TeamsList';
 import styles from 'styles/Dashboard.module.css';
+import Context from 'store/context';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -25,6 +28,13 @@ const useStyles = makeStyles((theme) => ({
 const fetcher = (url, jwt) => axios.post(url, { jwt }).then((res) => res.data);
 
 export default function Dashboard() {
+  // const { globalState } = useContext(Context);
+  const router = useRouter();
+
+  // useEffect(() => {
+  //   if (!globalState.isLoggedIn) router.push('/auth/login');
+  // }, []);
+
   // const [jwt, setJwt] = useState('');
   // const { data, error } = useSWR('/api/team/view', jwt, fetcher);
 
@@ -38,41 +48,12 @@ export default function Dashboard() {
   const classes = useStyles();
 
   return (
-    // <main className={styles.three_col_layout}>
-    //   <div className={styles.user_teams}>
-    //     <LazyList data="team" />
-    //   </div>
-    //   <div className={styles.team_vaults}>
-    //     <LazyList data="secret" />
-    //   </div>
-    //   <div className={styles.vault_data}>
-    //     <p>
-    //       Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sint
-    //       consequuntur consectetur vero ullam architecto, veniam modi laboriosam qui
-    //       tenetur praesentium odit. Asperiores ea doloremque provident dolores velit
-    //       expedita laboriosam?
-    //     </p>
-    //     <p>
-    //       Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sint
-    //       consequuntur consectetur vero ullam architecto, veniam modi laboriosam qui
-    //       tenetur praesentium odit. Asperiores ea doloremque provident dolores velit
-    //       expedita laboriosam?
-    //     </p>
-    //     <p>
-    //       Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sint
-    //       consequuntur consectetur vero ullam architecto, veniam modi laboriosam qui
-    //       tenetur praesentium odit. Asperiores ea doloremque provident dolores velit
-    //       expedita laboriosam?
-    //     </p>
-    //   </div>
-    // </main>
-
-    <div className={classes.root}>
+    <main className={classes.root}>
       <Grid container>
         <Grid item xs>
           <Container fixed>
             {/* <Paper className={classes.paper}>xs</Paper> */}
-            <LazyList data="team" />
+            <TeamsList />
           </Container>
         </Grid>
         <Grid item xs>
@@ -85,6 +66,6 @@ export default function Dashboard() {
           <Paper className={classes.paper}>xs=6</Paper>
         </Grid>
       </Grid>
-    </div>
+    </main>
   );
 }
