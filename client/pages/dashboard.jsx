@@ -11,6 +11,7 @@ import useFetch from 'hooks/useFetch';
 
 import LazyList from 'components/List/Lazy';
 import TeamsList from 'components/List/TeamsList';
+import AppBar from 'components/Appbar';
 
 import AddMemberModal from 'components/Modal/AddMember';
 import RemoveMemberModal from 'components/Modal/RemoveMember';
@@ -46,27 +47,30 @@ export default function Dashboard() {
   if (loading) return <div>loading...</div>;
 
   return (
-    <main className={classes.root}>
-      <Grid container>
-        <Grid item xs>
-          <Container fixed>
-            <TeamsList />
-          </Container>
-        </Grid>
+    <>
+      <AppBar />
+      <main className={classes.root}>
+        <Grid container>
+          <Grid item xs>
+            <Container fixed>
+              <TeamsList />
+            </Container>
+          </Grid>
 
-        <Grid item xs>
-          <Container fixed>
-            <LazyList data={['secret']} />
-          </Container>
-        </Grid>
+          <Grid item xs>
+            <Container fixed>
+              <LazyList data={['secret']} />
+            </Container>
+          </Grid>
 
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>xs=6</Paper>
-          <AddMemberModal />
-          <RemoveMemberModal />
-          <AddSSHModal />
+          <Grid item xs={6}>
+            <Paper className={classes.paper}>xs=6</Paper>
+            <AddMemberModal />
+            <RemoveMemberModal />
+            <AddSSHModal />
+          </Grid>
         </Grid>
-      </Grid>
-    </main>
+      </main>
+    </>
   );
 }
