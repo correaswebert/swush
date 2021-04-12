@@ -26,6 +26,17 @@ export default function LazyList({ data }) {
   return (
     <div className={classes.root}>
       <List component="ul" aria-label="user teams">
+        {[...data].map((item, index) => (
+          <ListItem
+            button
+            key={index}
+            selected={selectedIndex === index}
+            onClick={(ev) => handleClick(ev, index)}
+          >
+            <ListItemText primary={data} />
+          </ListItem>
+        ))}
+
         {[...Array(30)].map((item, index) => (
           <ListItem
             button

@@ -3,7 +3,7 @@ import Context from "./context"
 
 const GlobalStateProvider = ({children}) => {
     return (
-        <Context.Provider value={useGlobalState}>
+        <Context.Provider value={useGlobalState()}>
             {children}
         </Context.Provider>
     )

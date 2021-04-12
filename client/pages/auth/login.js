@@ -1,17 +1,22 @@
-import { useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
 
-// import Context from 'store/context';
+import Context from 'store/context';
 import styles from 'styles/auth/Login.module.css';
 
 export default function Login() {
-  // const { globalState, globalDispatch } = useContext(Context);
+  const { globalState, globalDispatch } = useContext(Context);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    console.log(globalState);
+    if (globalState.isLoggedIn) router.push('/dashboard');
+  }, []);
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
@@ -30,7 +35,7 @@ export default function Login() {
       if (res.status === 200) {
         const { jwt } = res.data;
         localStorage.setItem('jwt', jwt);
-        // globalDispatch({ type: 'LOGIN' });
+        globalDispatch({ type: 'LOGIN' });
         router.push('/dashboard');
       }
     } catch (error) {

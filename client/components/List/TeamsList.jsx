@@ -1,9 +1,16 @@
-import LazyList from "./Lazy"
+import { useContext } from 'react';
+import LazyList from './Lazy';
+import Context from 'store/context';
 
 const TeamsList = () => {
-    return (
-        <LazyList data={'team'} />
-    )
-}
+  const { globalState } = useContext(Context);
 
-export default TeamsList
+  const teamNames = [];
+  globalState.teams.forEach((team) => {
+    teamNames.push(team._id.name);
+  });
+
+  return <LazyList data={globalState.teams} />;
+};
+
+export default TeamsList;

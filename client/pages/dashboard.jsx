@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
 import axios from 'axios';
 
 import dashboardData from 'mocks/dashboard.json';
@@ -25,25 +24,71 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const fetcher = (url, jwt) => axios.post(url, { jwt }).then((res) => res.data);
+const useFetch = (query) => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (!query) return;
+
+    const fetchData = async () => {
+      setLoading(true);
+      const response = await axios.post('/api/team/view', { jwt });
+      const data = await response.json();
+      setData(data.hits);
+      setStatus(false);
+    };
+
+    fetchData();
+  }, [query]);
+
+  return { status, data };
+};
+
+// const fetcher = (url, jwt) =>
+//   axios
+//     .post(url, {
+//       jwt:
+//         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNvcnJlYXN3ZWJlcnRAZ21haWwuY29tIiwiaWF0IjoxNjE4MTcxNzkyLCJleHAiOjE2MTg3NzY1OTJ9.2rgdMwBURX8p4UFhHj7Oe02db1L_UbzNXtXvgRCdBv8',
+//     })
+//     .then((res) => res.data);
 
 export default function Dashboard() {
-  // const { globalState } = useContext(Context);
+  const { globalState, globalDispatch } = useContext(Context);
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (!globalState.isLoggedIn) router.push('/auth/login');
-  // }, []);
+  useEffect(() => {
+    if (!globalState.isLoggedIn) router.push('/auth/login');
+  }, []);
 
-  // const [jwt, setJwt] = useState('');
-  // const { data, error } = useSWR('/api/team/view', jwt, fetcher);
+  const [jwt, setJwt] = useState('');
+  // const { data, error } = useSWR(['/api/team/view', jwt], fetcher);
+
+  const [data, setData] = useState({});
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function fetcher() {
+      try {
+        const res = await axios.post('/api/team/view', {
+          jwt: globalState.jwt,
+        });
+        setData(res.data);
+        globalDispatch({ type: 'GOT_TEAM', payload: res.data });
+      } catch (err) {
+        console.error(error);
+        setError(error);
+      }
+    }
+    fetcher();
+  }, []);
 
   // if (error) return <div>failed to load</div>;
   // if (!data) return <div>loading...</div>;
 
-  // useEffect(() => {
-  //   setJwt(localStorage.getItem('jwt'));
-  // }, []);
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const classes = useStyles();
 
