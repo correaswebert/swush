@@ -75,6 +75,9 @@ export default function Dashboard() {
         });
         setData(res.data);
         globalDispatch({ type: 'GOT_TEAM', payload: res.data });
+        console.log('dashboard');
+        console.table(globalState);
+        console.table(globalState.teams[0]);
       } catch (err) {
         console.error(error);
         setError(error);

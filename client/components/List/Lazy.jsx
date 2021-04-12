@@ -37,7 +37,7 @@ export default function LazyList({ data }) {
           </ListItem>
         ))}
 
-        {[...Array(30)].map((item, index) => (
+        {/* {[...Array(30)].map((item, index) => (
           <ListItem
             button
             key={index}
@@ -46,7 +46,7 @@ export default function LazyList({ data }) {
           >
             <ListItemText primary={`${data} ${index}`} />
           </ListItem>
-        ))}
+        ))} */}
       </List>
     </div>
   );
