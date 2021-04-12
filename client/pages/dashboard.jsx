@@ -12,6 +12,10 @@ import useFetch from 'hooks/useFetch';
 import LazyList from 'components/List/Lazy';
 import TeamsList from 'components/List/TeamsList';
 
+import AddMemberModal from 'components/Modal/AddMember';
+import RemoveMemberModal from 'components/Modal/RemoveMember';
+import AddSSHModal from 'components/Modal/AddSSH';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -28,9 +32,7 @@ export default function Dashboard() {
   const router = useRouter();
   const classes = useStyles();
 
-  const { loading, data, error } = useFetch('/api/team/view', {
-    jwt: globalState.jwt,
-  });
+  const { loading, data, error } = useFetch('/api/team/view');
 
   useEffect(() => {
     globalDispatch({ type: 'GOT_TEAM', payload: data });
@@ -54,12 +56,15 @@ export default function Dashboard() {
 
         <Grid item xs>
           <Container fixed>
-            <LazyList data="secret" />
+            <LazyList data={['secret']} />
           </Container>
         </Grid>
 
         <Grid item xs={6}>
           <Paper className={classes.paper}>xs=6</Paper>
+          <AddMemberModal />
+          <RemoveMemberModal />
+          <AddSSHModal />
         </Grid>
       </Grid>
     </main>
