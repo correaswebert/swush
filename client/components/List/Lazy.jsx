@@ -48,7 +48,7 @@ export default function LazyList({ data }) {
             <ListItemText primary={data} />
             <ListItemSecondaryAction>
               <IconButton edge="end" aria-label="delete">
-                <DeleteIcon />
+                <DeleteIcon fontSize="small"/>
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>

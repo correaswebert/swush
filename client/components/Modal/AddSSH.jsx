@@ -5,6 +5,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import styles from 'styles/Modal.module.css'
 import { useState } from 'react';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -50,8 +51,7 @@ export default function AddSSHModal() {
 
       const res = await axios.post(
         '/api/encryption/encrypt',
-        { jwt, teamName, ssh, description },
-        { redirect: 'follow' }
+        { jwt, teamName, ssh, description }
       );
 
       alert(res.data);
@@ -97,7 +97,7 @@ export default function AddSSHModal() {
               <label>SSH key</label>
               <br></br>
               <input type='text'
-                type='text'
+                type='password'
                 name='ssh'
                 value={ssh}
                 onChange={(e) => setSSH(e.target.value)}

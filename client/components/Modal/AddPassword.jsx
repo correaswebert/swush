@@ -4,8 +4,8 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import styles from 'styles/Modal.module.css'
-import axios from 'axios';
 import { useState } from 'react';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -21,16 +21,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddMemberModal() {
-  const [email, setEmail] = useState('');
-  const [name, setTeamName] = useState('');
+export default function AddSSHModal() {
+  const [teamName, setTeamName] = useState('');
+  const [password, setPassword] = useState('');
+  const [description, setDescription] = useState('');
   const [error, setError] = useState('');
+
+  // const router = useRouter();
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  
+
   function validateForm() {
-    return name.length > 0 && email.length > 0;
+    return teamName.length > 0 && password.length > 0;
   }
 
   const handleOpen = () => {
@@ -47,11 +50,11 @@ export default function AddMemberModal() {
       const jwt = localStorage.getItem('jwt');
 
       const res = await axios.post(
-        '/api/team/addMember',
-        { jwt, name, email }
+        '/api/encryption/encrypt',
+        { jwt, teamName, password, description }
       );
-      
-      alert(res.data.Info);
+
+      alert(res.data);
       handleClose();
     } catch (error) {
       if (error?.response?.status === 500) {
@@ -61,11 +64,10 @@ export default function AddMemberModal() {
       }
     }
   }
-
   return (
     <div>
       <button onClick={handleOpen}>
-        Add Member
+        Add Password
       </button>
       <Modal
         aria-labelledby="modal-title"
@@ -81,26 +83,34 @@ export default function AddMemberModal() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="modal-title">Add Member</h2>
+            <h2 id="modal-title">Add Password</h2>
             <form id="modal-description" onSubmit={handleSubmit}>
-              <label>Email</label>
-              <br></br>
-              <input 
-                type='email'
-                name='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <br></br>
               <label>Team Name</label>
               <br></br>
               <input 
                 type='text'
                 name='teamName'
-                value={name}
+                value={teamName}
                 onChange={(e) => setTeamName(e.target.value)}
               />
               <br></br>
+              <label>Password</label>
+              <br></br>
+              <input type='text'
+                type='password'
+                name='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <br></br>
+              <label>Description</label>
+              <br></br>
+              <input type='text'
+                type='text'
+                name='description'
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
               <button type='submit' disabled={!validateForm()}>Add</button>
             </form>
           </div>

@@ -4,6 +4,8 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import styles from 'styles/Modal.module.css'
+import axios from 'axios';
+import { useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -20,8 +22,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function RemoveMemberModal() {
+  const [email, setEmail] = useState('');
+  const [name, setTeamName] = useState('');
+  const [error, setError] = useState('');
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  
+  function validateForm() {
+    return name.length > 0 && email.length > 0;
+  }
 
   const handleOpen = () => {
     setOpen(true);
@@ -31,14 +41,36 @@ export default function RemoveMemberModal() {
     setOpen(false);
   };
 
+  async function handleSubmit(e) {
+    try {
+      e.preventDefault();
+
+      const jwt = localStorage.getItem('jwt');
+
+      const res = await axios.post(
+        '/api/team/removeMember',
+        { jwt, name, email }
+      );
+      
+      alert(res.data.Msg);
+      handleClose();
+    } catch (error) {
+      if (error?.response?.status === 500) {
+        setError(error.response.data.Error);
+      } else {
+        setError('Some error occured!');
+      }
+    }
+  }
+
   return (
     <div>
       <button onClick={handleOpen}>
         Remove Member
       </button>
       <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
         className={classes.modal}
         open={open}
         onClose={handleClose}
@@ -50,17 +82,27 @@ export default function RemoveMemberModal() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="transition-modal-title">Remove Member</h2>
-            <form id="transition-modal-description">
+            <h2 id="modal-title">Remove Member</h2>
+            <form id="modal-description" onSubmit={handleSubmit}>
               <label>Email</label>
               <br></br>
-              <input type='email'></input>
+              <input 
+                type='email'
+                name='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
               <br></br>
               <label>Team Name</label>
               <br></br>
-              <input type='text'></input>
+              <input 
+                type='text'
+                name='teamName'
+                value={name}
+                onChange={(e) => setTeamName(e.target.value)}
+              />
               <br></br>
-              <button type='submit'>Remove</button>
+              <button type='submit' disabled={!validateForm()}>Remove</button>
             </form>
           </div>
         </Fade>

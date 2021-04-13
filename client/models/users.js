@@ -76,7 +76,9 @@ UserSchema.methods.addTeam = async function (teamId) {
 
 UserSchema.methods.removeTeam = async function (teamId) {
   const user = this;
-  user.teams = user.teams.filter((id) => _id !== teamId);
+  user.teams = user.teams.filter((team) => {
+      return !team._id.equals(teamId)
+    });
   await user.save();
 };
 

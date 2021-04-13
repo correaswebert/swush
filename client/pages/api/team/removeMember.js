@@ -33,7 +33,7 @@ export default async (req, res) => {
     }
 
     /* remove user's id from the member's array */
-    await team.removeMember(curUser._id);
+    await team.removeMember(user._id);
 
     /* get details of all the team members */
     const teamMembers = await team.populate('members._id').execPopulate();
@@ -63,6 +63,9 @@ export default async (req, res) => {
     /* re-encrypt all the secrets */
     await vault.reEncrypt(publicKeys, decrypted.data);
 
+    /* remove the team from removed member's team array */
+    await user.removeTeam(team._id);
+    
     await user.notify(`You were removed from the team ${name}`);
 
     return res.status(200).json({ Msg: 'Removed member successfully!' });

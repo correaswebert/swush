@@ -55,6 +55,9 @@ export default async (req, res) => {
       passwords: admin.password
     });
     
+    /* add the team id to the new member's team array */
+    await user.addTeam(team._id);
+    
     /* re-encrypt all the secrets */
     await vault.reEncrypt(publicKeys, decrypted.data);
 
