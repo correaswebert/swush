@@ -8,15 +8,14 @@ const TeamsList = () => {
 
   useEffect(() => {
     if (!globalState.teams) return;
-    console.log('teamlist', globalState.teams);
-    setTeamNames([]);
+    const teamNamesArr = [];
     globalState.teams.forEach((team) => {
-      setTeamNames([...teamNames, team._id.name]);
+      setTeamNames(teamNamesArr.push(team._id.name));
     });
+    setTeamNames(teamNamesArr);
   }, []);
 
   return <LazyList data={teamNames} />;
-  // return <LazyList data="team" />;
 };
 
 export default TeamsList;
