@@ -3,7 +3,6 @@ import Team from 'models/teams';
 import Vault from 'models/vaults';
 import getAuthenticatedUser from 'utils/auth';
 
-/* BUG: In case of error in team creation, the vault created is not deleted */
 export default async (req, res) => {
   try {
     await connectToDatabase();
@@ -30,10 +29,10 @@ export default async (req, res) => {
     res.status(201).json({ msg: `Created team: ${teamName}!` });
   } catch (e) {
     if (e.name === 'MongoError' && e.code === 11000) {
-      return res.status(400).json({ Error: 'Team name taken!' });
+      return res.status(200).json({ Error: 'Team name taken!' });
     }
 
     console.error(e);
-    res.status(400).json({ Error: 'Internal server error!' });
+    res.status(500).json({ Error: 'Internal server error!' });
   }
 };

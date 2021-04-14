@@ -43,11 +43,10 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: '500',
     alignItems: 'center',
     padding: '10px',
-  }
+  },
 }));
 
-export default function AddMemberModal() {
-  const [email, setEmail] = useState('');
+export default function CreateTeamModal() {
   const [name, setTeamName] = useState('');
   const [error, setError] = useState('');
 
@@ -55,7 +54,7 @@ export default function AddMemberModal() {
   const [open, setOpen] = React.useState(false);
   
   function validateForm() {
-    return name.length > 0 && email.length > 0;
+    return name.length > 0;
   }
 
   const handleOpen = () => {
@@ -72,11 +71,11 @@ export default function AddMemberModal() {
       const jwt = localStorage.getItem('jwt');
 
       const res = await axios.post(
-        '/api/team/addMember',
-        { jwt, name, email }
+        '/api/team/create',
+        { name, jwt }
       );
       
-      alert(res.data.Info);
+      alert(res.data.msg);
       handleClose();
     } catch (error) {
       if (error?.response?.status === 500) {
@@ -90,7 +89,7 @@ export default function AddMemberModal() {
   return (
     <div>
       <Button variant="contained" color="primary" onClick={handleOpen}>
-        Add Member
+        Create Team
       </Button>
       <Modal
         aria-labelledby="modal-title"
@@ -106,18 +105,8 @@ export default function AddMemberModal() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="modal-title" className={classes.h2}>Add Member</h2>
+            <h2 id="modal-title" className={classes.h2}>Create Team</h2>
             <form id="modal-description" onSubmit={handleSubmit}>
-              <label className={classes.label}>Email</label>
-              <br></br>
-              <input 
-                className={classes.input}
-                type='email'
-                name='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <br></br>
               <label className={classes.label}>Team Name</label>
               <br></br>
               <input 
@@ -128,7 +117,7 @@ export default function AddMemberModal() {
                 onChange={(e) => setTeamName(e.target.value)}
               />
               <br></br>
-              <button className={classes.button} type='submit' disabled={!validateForm()}>Add</button>
+              <button className={classes.button} type='submit' disabled={!validateForm()}>Create</button>
             </form>
           </div>
         </Fade>

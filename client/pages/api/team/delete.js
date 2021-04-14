@@ -2,6 +2,7 @@ import { connectToDatabase } from 'utils/connectDb';
 import Team from 'models/teams';
 import getAuthenticatedUser from 'utils/auth';
 import Vault from 'models/vaults';
+import User from 'models/users';
 
 export default async (req, res) => {
   try{
@@ -34,6 +35,13 @@ export default async (req, res) => {
     
     /* delete the vault associated with the team */
     await vault.remove();
+
+    /* remove the team from all member's team array */
+    team.members.forEach(async (member) => {
+      // console.log(member._id);
+      const mem = await User.findById(member._id);
+      await mem.removeTeam(team._id);
+    });
 
     /* delete the team */
     await team.remove();

@@ -18,6 +18,9 @@ import AppBar from 'components/Appbar';
 import AddMemberModal from 'components/Modal/AddMember';
 import RemoveMemberModal from 'components/Modal/RemoveMember';
 import AddSSHModal from 'components/Modal/AddSSH';
+import AddOAuthModal from 'components/Modal/AddOAuth';
+import AddPasswordModal from 'components/Modal/AddPassword';
+import CreateTeamModal from 'components/Modal/CreateTeam';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -77,9 +80,18 @@ export default function Dashboard() {
 
           <Grid item xs={6}>
             <Paper className={classes.paper}>xs=6</Paper>
+            <br></br>
             <AddMemberModal />
+            <br></br>
             <RemoveMemberModal />
+            <br></br>
             <AddSSHModal />
+            <br></br>
+            <AddOAuthModal />
+            <br></br>
+            <AddPasswordModal />
+            <br></br>
+            <CreateTeamModal />
           </Grid>
         </Grid>
       </main>

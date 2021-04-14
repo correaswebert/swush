@@ -5,6 +5,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,17 +37,20 @@ export default function LazyList({ data }) {
     <div className={classes.root}>
       <List component="ul" aria-label="user teams">
         {[...data].map((item, index) => (
-          <>
-            <ListItem
-              button
-              divider={index < dataMaxIndex}
-              key={index}
-              selected={selectedIndex === index}
-              onClick={(_ev) => handleClick(index)}
-            >
-              <ListItemText primary={item} />
-            </ListItem>
-          </>
+          <ListItem
+            button
+            divider={index < dataMaxIndex}
+            key={index}
+            selected={selectedIndex === index}
+            onClick={(_ev) => handleClick(index)}
+          >
+            <ListItemText primary={item} />
+            <ListItemSecondaryAction>
+              <IconButton edge="end" aria-label="delete">
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
         ))}
       </List>
     </div>
