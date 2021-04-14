@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import { useState } from 'react';
 import axios from 'axios';
+import { useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -45,19 +45,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddPasswordModal() {
-  const [teamName, setTeamName] = useState('');
-  const [password, setPassword] = useState('');
-  const [description, setDescription] = useState('');
+export default function CreateTeamModal() {
+  const [name, setTeamName] = useState('');
   const [error, setError] = useState('');
-
-  // const router = useRouter();
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-
+  
   function validateForm() {
-    return teamName.length > 0 && password.length > 0;
+    return name.length > 0;
   }
 
   const handleOpen = () => {
@@ -74,11 +70,11 @@ export default function AddPasswordModal() {
       const jwt = localStorage.getItem('jwt');
 
       const res = await axios.post(
-        '/api/encryption/encrypt',
-        { jwt, teamName, password, description }
+        '/api/team/create',
+        { name, jwt }
       );
-
-      alert(res.data);
+      
+      alert(res.data.msg);
       handleClose();
     } catch (error) {
       if (error?.response?.status === 500) {
@@ -88,10 +84,11 @@ export default function AddPasswordModal() {
       }
     }
   }
+
   return (
     <div>
       <button onClick={handleOpen}>
-        Add Password
+        Create Team
       </button>
       <Modal
         aria-labelledby="modal-title"
@@ -107,7 +104,7 @@ export default function AddPasswordModal() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="modal-title" className={classes.h2}>Add Password</h2>
+            <h2 id="modal-title" className={classes.h2}>Create Team</h2>
             <form id="modal-description" onSubmit={handleSubmit}>
               <label className={classes.label}>Team Name</label>
               <br></br>
@@ -115,31 +112,11 @@ export default function AddPasswordModal() {
                 className={classes.input}
                 type='text'
                 name='teamName'
-                value={teamName}
+                value={name}
                 onChange={(e) => setTeamName(e.target.value)}
               />
               <br></br>
-              <label className={classes.label}>Password</label>
-              <br></br>
-              <input 
-                className={classes.input}
-                type='password'
-                name='password'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <br></br>
-              <label className={classes.label}>Description</label>
-              <br></br>
-              <input
-                className={classes.input}
-                type='text'
-                name='description'
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-              <br></br>
-              <button className={classes.button} type='submit' disabled={!validateForm()}>Add</button>
+              <button className={classes.button} type='submit' disabled={!validateForm()}>Create</button>
             </form>
           </div>
         </Fade>

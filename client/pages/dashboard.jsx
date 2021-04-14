@@ -17,6 +17,7 @@ import RemoveMemberModal from 'components/Modal/RemoveMember';
 import AddSSHModal from 'components/Modal/AddSSH';
 import AddOAuthModal from 'components/Modal/AddOAuth';
 import AddPasswordModal from 'components/Modal/AddPassword';
+import CreateTeamModal from 'components/Modal/CreateTeam';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,6 +70,7 @@ export default function Dashboard() {
           <AddSSHModal />
           <AddOAuthModal />
           <AddPasswordModal />
+          <CreateTeamModal />
         </Grid>
       </Grid>
     </main>

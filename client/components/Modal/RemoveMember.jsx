@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import styles from 'styles/Modal.module.css'
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -12,12 +11,37 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    color: 'white',
   },
   paper: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: '#464b5e',
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+  },
+  input: {
+    border: '1px solid #eeeeee',
+    padding: '12px',
+    outline: 'none',
+    marginBottom: '10px',
+  },
+  label: {
+    display: 'block',
+    fontSize: '14px',
+    marginBottom: '2px',
+    marginTop: '4px',
+    color: 'white',
+  },
+  h2: {
+    textAlign: 'center',
+  },
+  button: {
+    background: '#8357c5',
+    border: 'none',
+    color: 'white',
+    fontWeight: '500',
+    alignItems: 'center',
+    padding: '10px',
   },
 }));
 
@@ -82,27 +106,29 @@ export default function RemoveMemberModal() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="modal-title">Remove Member</h2>
+            <h2 id="modal-title" className={classes.h2}>Remove Member</h2>
             <form id="modal-description" onSubmit={handleSubmit}>
-              <label>Email</label>
+              <label className={classes.label}>Email</label>
               <br></br>
               <input 
+                className={classes.input}
                 type='email'
                 name='email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <br></br>
-              <label>Team Name</label>
+              <label className={classes.label}>Team Name</label>
               <br></br>
               <input 
+                className={classes.input}
                 type='text'
                 name='teamName'
                 value={name}
                 onChange={(e) => setTeamName(e.target.value)}
               />
               <br></br>
-              <button type='submit' disabled={!validateForm()}>Remove</button>
+              <button className={classes.button} type='submit' disabled={!validateForm()}>Remove</button>
             </form>
           </div>
         </Fade>

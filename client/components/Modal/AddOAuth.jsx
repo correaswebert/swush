@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import styles from 'styles/Modal.module.css'
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -12,16 +11,41 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    color: 'white',
   },
   paper: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: '#464b5e',
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  input: {
+    border: '1px solid #eeeeee',
+    padding: '12px',
+    outline: 'none',
+    marginBottom: '10px',
+  },
+  label: {
+    display: 'block',
+    fontSize: '14px',
+    marginBottom: '2px',
+    marginTop: '4px',
+    color: 'white',
+  },
+  h2: {
+    textAlign: 'center',
+  },
+  button: {
+    background: '#8357c5',
+    border: 'none',
+    color: 'white',
+    fontWeight: '500',
+    alignItems: 'center',
+    padding: '10px',
+  },
 }));
 
-export default function AddSSHModal() {
+export default function AddOAuthModal() {
   const [teamName, setTeamName] = useState('');
   const [oauth, setOAuth] = useState('');
   const [description, setDescription] = useState('');
@@ -83,35 +107,39 @@ export default function AddSSHModal() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="modal-title">Add OAuth Token</h2>
+            <h2 id="modal-title" className={classes.h2}>Add OAuth Token</h2>
             <form id="modal-description" onSubmit={handleSubmit}>
-              <label>Team Name</label>
+              <label className={classes.label}>Team Name</label>
               <br></br>
               <input 
+                className={classes.input}
                 type='text'
                 name='teamName'
                 value={teamName}
                 onChange={(e) => setTeamName(e.target.value)}
               />
               <br></br>
-              <label>OAuth Token</label>
+              <label className={classes.label}>OAuth Token</label>
               <br></br>
-              <input type='text'
+              <input 
+                className={classes.input}
                 type='password'
                 name='oauth'
                 value={oauth}
                 onChange={(e) => setOAuth(e.target.value)}
               />
               <br></br>
-              <label>Description</label>
+              <label className={classes.label}>Description</label>
               <br></br>
-              <input type='text'
+              <input
+                className={classes.input}
                 type='text'
                 name='description'
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              <button type='submit' disabled={!validateForm()}>Add</button>
+              <br></br>
+              <button className={classes.button} type='submit' disabled={!validateForm()}>Add</button>
             </form>
           </div>
         </Fade>
