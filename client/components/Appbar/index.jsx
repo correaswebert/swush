@@ -8,6 +8,9 @@ import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import Menu from '@material-ui/core/Menu';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
@@ -80,6 +83,10 @@ const useStyles = makeStyles((theme) => ({
   typography: {
     padding: theme.spacing(2),
   },
+  notifList: {
+    maxWidth: 500,
+    maxHeight: 750,
+  },
 }));
 
 export default function PrimarySearchAppBar() {
@@ -131,8 +138,7 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
     </Menu>
   );
 
@@ -155,6 +161,7 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <p>Messages</p>
       </MenuItem>
+
       <MenuItem>
         <IconButton
           aria-describedby={id}
@@ -166,7 +173,9 @@ export default function PrimarySearchAppBar() {
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <Popover
+        <p>Notifications</p>
+
+        {/* <Popover
           id={id}
           open={open}
           anchorEl={notifAnchorEl}
@@ -181,11 +190,15 @@ export default function PrimarySearchAppBar() {
           }}
         >
           <Typography className={classes.typography}>
-            The content of the Popover.
+            <List>
+              <ListItem>
+                <ListItemText primary="Single-line item" />
+              </ListItem>
+            </List>
           </Typography>
-        </Popover>
-        <p>Notifications</p>
+        </Popover> */}
       </MenuItem>
+
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
@@ -233,17 +246,25 @@ export default function PrimarySearchAppBar() {
               onClose={handleNotifClose}
               anchorOrigin={{
                 vertical: 'bottom',
-                horizontal: 'center',
+                horizontal: 'right',
               }}
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'center',
+                horizontal: 'right',
               }}
             >
-              <Typography className={classes.typography}>
-                The content of the Popover.
-              </Typography>
+              <List className={classes.notifList}>
+                {[...Array(5)].map((_item, idx) => (
+                  <>
+                    <ListItem key={idx}>
+                      <ListItemText primary="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nostrum nam quam culpa at accusamus iste dolorem qui est ut deserunt exercitationem recusandae ab ipsum suscipit aliquid, id aut fugit porro adipisci molestiae! Ipsa voluptatibus voluptatum ipsum quam, corporis porro ex in voluptates quas praesentium explicabo neque necessitatibus, nihil nesciunt fugit" />
+                    </ListItem>
+                    <Divider />
+                  </>
+                ))}
+              </List>
             </Popover>
+
             <IconButton
               edge="end"
               aria-label="account of current user"
