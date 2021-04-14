@@ -5,6 +5,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import axios from 'axios';
 import { useState } from 'react';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -87,9 +88,9 @@ export default function CreateTeamModal() {
 
   return (
     <div>
-      <button onClick={handleOpen}>
+      <Button variant="contained" color="primary" onClick={handleOpen}>
         Create Team
-      </button>
+      </Button>
       <Modal
         aria-labelledby="modal-title"
         aria-describedby="modal-description"

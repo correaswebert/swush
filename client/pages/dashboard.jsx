@@ -65,11 +65,17 @@ export default function Dashboard() {
 
         <Grid item xs={6}>
           <Paper className={classes.paper}>xs=6</Paper>
+          <br></br>
           <AddMemberModal />
+          <br></br>
           <RemoveMemberModal />
+          <br></br>
           <AddSSHModal />
+          <br></br>
           <AddOAuthModal />
+          <br></br>
           <AddPasswordModal />
+          <br></br>
           <CreateTeamModal />
         </Grid>
       </Grid>

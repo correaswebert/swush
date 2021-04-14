@@ -5,6 +5,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import { useState } from 'react';
 import axios from 'axios';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -90,9 +91,9 @@ export default function AddPasswordModal() {
   }
   return (
     <div>
-      <button onClick={handleOpen}>
+      <Button variant="contained" color="primary" onClick={handleOpen}>
         Add Password
-      </button>
+      </Button>
       <Modal
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
