@@ -1,4 +1,3 @@
-import useSwr from 'swr';
 import { Skeleton } from '@material-ui/lab';
 import SkeletonList from './SkeletonList';
 import { useState } from 'react';
@@ -6,11 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,8 +24,9 @@ const useStyles = makeStyles((theme) => ({
 export default function LazyList({ data }) {
   const classes = useStyles();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const dataMaxIndex = data.length - 1;
 
-  function handleClick(ev, index) {
+  function handleClick(index) {
     setSelectedIndex(index);
   }
 
@@ -39,31 +34,18 @@ export default function LazyList({ data }) {
     <div className={classes.root}>
       <List component="ul" aria-label="user teams">
         {[...data].map((item, index) => (
-          <ListItem
-            button
-            key={index}
-            selected={selectedIndex === index}
-            onClick={(ev) => handleClick(ev, index)}
-          >
-            <ListItemText primary={data} />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
-                <DeleteIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
+          <>
+            <ListItem
+              button
+              divider={index < dataMaxIndex}
+              key={index}
+              selected={selectedIndex === index}
+              onClick={(_ev) => handleClick(index)}
+            >
+              <ListItemText primary={item} />
+            </ListItem>
+          </>
         ))}
-
-        {/* {[...Array(30)].map((item, index) => (
-          <ListItem
-            button
-            key={index}
-            selected={selectedIndex === index}
-            onClick={(ev) => handleClick(ev, index)}
-          >
-            <ListItemText primary={`${data} ${index}`} />
-          </ListItem>
-        ))} */}
       </List>
     </div>
   );

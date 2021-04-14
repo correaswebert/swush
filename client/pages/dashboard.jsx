@@ -5,12 +5,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Context from 'store/context';
 import useFetch from 'hooks/useFetch';
 
 import LazyList from 'components/List/Lazy';
 import TeamsList from 'components/List/TeamsList';
+import AppBar from 'components/Appbar';
 
 import AddMemberModal from 'components/Modal/AddMember';
 import RemoveMemberModal from 'components/Modal/RemoveMember';
@@ -24,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   },
 }));
 
@@ -43,30 +50,39 @@ export default function Dashboard() {
   }, []);
 
   if (error) return <div>failed to load</div>;
-  if (loading) return <div>loading...</div>;
+  if (loading) {
+    return (
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
 
   return (
-    <main className={classes.root}>
-      <Grid container>
-        <Grid item xs>
-          <Container fixed>
-            <TeamsList />
-          </Container>
-        </Grid>
+    <>
+      <AppBar />
+      <main className={classes.root}>
+        <Grid container>
+          <Grid item xs>
+            <Container fixed>
+              <TeamsList />
+            </Container>
+          </Grid>
 
-        <Grid item xs>
-          <Container fixed>
-            <LazyList data={['secret']} />
-          </Container>
-        </Grid>
+          <Grid item xs>
+            <Container fixed>
+              <LazyList data={['secret']} />
+            </Container>
+          </Grid>
 
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>xs=6</Paper>
-          <AddMemberModal />
-          <RemoveMemberModal />
-          <AddSSHModal />
+          <Grid item xs={6}>
+            <Paper className={classes.paper}>xs=6</Paper>
+            <AddMemberModal />
+            <RemoveMemberModal />
+            <AddSSHModal />
+          </Grid>
         </Grid>
-      </Grid>
-    </main>
+      </main>
+    </>
   );
 }
