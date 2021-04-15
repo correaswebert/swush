@@ -8,6 +8,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ClearIcon from '@material-ui/icons/Clear';
+import GlobalContext from 'store/context';
+import { useContext } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,32 +25,58 @@ const useStyles = makeStyles((theme) => ({
   title: {
     margin: theme.spacing(4, 0, 2),
   },
+  list: {
+    padding: 0,
+  },
 }));
 
-export default function LazyList({ data }) {
+export default function LazyList({ data: listData, type: listType }) {
   const classes = useStyles();
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const dataMaxIndex = data.length - 1;
+  const { globalState, globalDispatch } = useContext(GlobalContext);
 
-  function handleClick(index) {
+  let initialIndex =
+    listType === 'teams' ? globalState.teamIndex : globalState.secretIndex;
+  initialIndex = initialIndex ?? 0;
+
+  const [selectedIndex, setSelectedIndex] = useState(initialIndex);
+  const dataMaxIndex = listData.length - 1;
+
+  function handleListItemClick(index) {
     setSelectedIndex(index);
+
+    switch (listType) {
+      case 'teams':
+        sessionStorage.setItem('teamIndex', index);
+        globalDispatch({ type: 'SELECT_TEAM', payload: selectedIndex });
+        break;
+      case 'secrets':
+        sessionStorage.setItem('secretIndex', index);
+        globalDispatch({ type: 'SELECT_SECRET', payload: selectedIndex });
+        break;
+      default:
+        break;
+    }
   }
 
   return (
     <div className={classes.root}>
-      <List component="ul" aria-label="user teams">
-        {[...data].map((item, index) => (
+      <List component="ul" aria-label={listType} className={classes.list}>
+        {[...listData].map((item, index) => (
           <ListItem
             button
             divider={index < dataMaxIndex}
             key={index}
             selected={selectedIndex === index}
-            onClick={(_ev) => handleClick(index)}
+            onClick={(_ev) => handleListItemClick(index)}
           >
             <ListItemText primary={item} />
             <ListItemSecondaryAction>
               <IconButton edge="end" aria-label="delete">
-                <DeleteIcon fontSize="small" />
+                {listType === 'teams' ? (
+                  <ClearIcon fontSize="small" />
+                ) : (
+                  <DeleteIcon fontSize="small" />
+                )}
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>

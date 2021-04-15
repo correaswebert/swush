@@ -14,7 +14,6 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(globalState);
     if (globalState.isLoggedIn) router.push('/dashboard');
   }, []);
 

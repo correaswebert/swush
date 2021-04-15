@@ -3,6 +3,16 @@ import { initialAppState } from 'store/initialAppState';
 
 function init(initialValues) {
   const initialState = initialValues;
+
+  try {
+    for (const key in initialValues) {
+      const index = sessionStorage.getItem(key) ?? initialValues[key];
+      initialState[key] = parseInt(index);
+    }
+  } catch (error) {
+    // console.log(error);
+  }
+
   try {
     const storedJwt = localStorage.getItem('jwt');
     initialState['jwt'] = storedJwt ?? null;
@@ -25,6 +35,8 @@ const reducer = (state, action) => {
       };
 
     case 'LOGOUT':
+      localStorage.clear();
+      sessionStorage.clear();
       return {
         ...state,
         isLoggedIn: false,
@@ -37,6 +49,20 @@ const reducer = (state, action) => {
         teams: action.payload,
       };
 
+    case 'SELECT_TEAM':
+      // sessionStorage.setItem('teamIndex', action.payload);
+      return {
+        ...state,
+        teamIndex: action.payload,
+      };
+
+    case 'SELECT_SECRET':
+      // sessionStorage.setItem('secretIndex', action.payload);
+      return {
+        ...state,
+        secretIndex: action.payload,
+      };
+
     default:
       return state;
   }
@@ -45,14 +71,13 @@ const reducer = (state, action) => {
 export function usePersistentReducer() {
   const [state, dispatch] = useReducer(reducer, initialAppState, init);
 
-  const setValue = (value) => {
-    try {
-      dispatch(value);
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const setValue = (value) => {
+  //   try {
+  //     dispatch(value);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-  return [state, setValue];
+  return [state, dispatch];
 }

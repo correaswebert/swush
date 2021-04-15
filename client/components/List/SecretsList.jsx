@@ -15,8 +15,7 @@ const SecretsList = ({data}) => {
   const classes = useStyles();
 
   return (
-      <LazyList data>
-      </LazyList>
+    <LazyList data={data} type="secrets" />
   )
 }
 

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useRouter } from 'next/router';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -16,6 +17,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Popover from '@material-ui/core/Popover';
+import GlobalContext from 'store/context';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -90,8 +92,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PrimarySearchAppBar() {
+  const { globalDispatch } = useContext(GlobalContext);
+  const router = useRouter();
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [notifAnchorEl, setNotifAnchorEl] = React.useState(null);
   const [accAnchorEl, setAccAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -123,6 +126,11 @@ export default function PrimarySearchAppBar() {
     handleMobileMenuClose();
   };
 
+  const handleLogout = () => {
+    globalDispatch({ type: 'LOGOUT' });
+    router.push('/');
+  };
+
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -130,27 +138,28 @@ export default function PrimarySearchAppBar() {
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
-      anchorEl={accAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
+      anchorEl={accAnchorEl}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      getContentAnchorEl={null}
       onClose={handleMenuClose}
+      keepMounted
     >
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
+      id={mobileMenuId}
+      open={isMobileMenuOpen}
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
+      keepMounted
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
@@ -174,29 +183,6 @@ export default function PrimarySearchAppBar() {
           </Badge>
         </IconButton>
         <p>Notifications</p>
-
-        {/* <Popover
-          id={id}
-          open={open}
-          anchorEl={notifAnchorEl}
-          onClose={handleNotifClose}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-        >
-          <Typography className={classes.typography}>
-            <List>
-              <ListItem>
-                <ListItemText primary="Single-line item" />
-              </ListItem>
-            </List>
-          </Typography>
-        </Popover> */}
       </MenuItem>
 
       <MenuItem onClick={handleProfileMenuOpen}>
@@ -254,13 +240,10 @@ export default function PrimarySearchAppBar() {
               }}
             >
               <List className={classes.notifList}>
-                {[...Array(5)].map((_item, idx) => (
-                  <>
-                    <ListItem key={idx}>
-                      <ListItemText primary="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nostrum nam quam culpa at accusamus iste dolorem qui est ut deserunt exercitationem recusandae ab ipsum suscipit aliquid, id aut fugit porro adipisci molestiae! Ipsa voluptatibus voluptatum ipsum quam, corporis porro ex in voluptates quas praesentium explicabo neque necessitatibus, nihil nesciunt fugit" />
-                    </ListItem>
-                    <Divider />
-                  </>
+                {[...Array(5)].map((_item, index) => (
+                  <ListItem key={index} divider>
+                    <ListItemText primary="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nostrum nam quam culpa at accusamus iste dolorem qui est ut deserunt exercitationem recusandae ab ipsum suscipit aliquid, id aut fugit porro adipisci molestiae! Ipsa voluptatibus voluptatum ipsum quam, corporis porro ex in voluptates quas praesentium explicabo neque necessitatibus, nihil nesciunt fugit" />
+                  </ListItem>
                 ))}
               </List>
             </Popover>

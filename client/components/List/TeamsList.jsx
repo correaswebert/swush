@@ -15,7 +15,7 @@ const TeamsList = () => {
     setTeamNames(teamNamesArr);
   }, []);
 
-  return <LazyList data={teamNames} />;
+  return <LazyList data={teamNames} type="teams" />;
 };
 
 export default TeamsList;
