@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -20,7 +20,7 @@ import AddSSHModal from 'components/Modal/AddSSH';
 import AddOAuthModal from 'components/Modal/AddOAuth';
 import AddPasswordModal from 'components/Modal/AddPassword';
 import CreateTeamModal from 'components/Modal/CreateTeam';
-import { Divider } from '@material-ui/core';
+import { Divider, Drawer } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +34,10 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
+  },
+  listContainer: {
+    maxHeight: '100vh',
+    overflow: 'auto',
   },
 }));
 
@@ -61,20 +65,24 @@ export default function Dashboard() {
     );
   }
 
+  // const container = window !== undefined ? () => window.document.body : undefined;
+
   return (
     <>
       <AppBar />
       <main className={classes.root}>
         <Grid container>
-          <Grid item xs>
+          <Grid item xs className={classes.listContainer}>
             <TeamsList />
           </Grid>
 
           <Divider orientation="vertical" light={false} flexItem />
 
-          <Grid item xs>
+          <Grid item xs className={classes.listContainer}>
             <LazyList data={['secret']} />
           </Grid>
+
+          <Divider orientation="vertical" light={false} flexItem />
 
           <Grid item xs={6}>
             <Paper className={classes.paper}>xs=6</Paper>
