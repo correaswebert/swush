@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -21,6 +20,7 @@ import AddSSHModal from 'components/Modal/AddSSH';
 import AddOAuthModal from 'components/Modal/AddOAuth';
 import AddPasswordModal from 'components/Modal/AddPassword';
 import CreateTeamModal from 'components/Modal/CreateTeam';
+import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,15 +67,13 @@ export default function Dashboard() {
       <main className={classes.root}>
         <Grid container>
           <Grid item xs>
-            <Container fixed>
-              <TeamsList />
-            </Container>
+            <TeamsList />
           </Grid>
 
+          <Divider orientation="vertical" light={false} flexItem />
+
           <Grid item xs>
-            <Container fixed>
-              <LazyList data={['secret']} />
-            </Container>
+            <LazyList data={['secret']} />
           </Grid>
 
           <Grid item xs={6}>
