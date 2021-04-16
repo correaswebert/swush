@@ -1,6 +1,6 @@
 import { Skeleton } from '@material-ui/lab';
 import SkeletonList from './SkeletonList';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,6 +11,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ClearIcon from '@material-ui/icons/Clear';
 import GlobalContext from 'store/context';
 import { useContext } from 'react';
+import axios from 'axios';
+import DataList from 'components/List/DataList';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,18 +43,40 @@ export default function LazyList({ data: listData, type: listType }) {
   const [selectedIndex, setSelectedIndex] = useState(initialIndex);
   const dataMaxIndex = listData.length - 1;
 
-  function handleListItemClick(index) {
+  async function handleListItemClick(index) {
     setSelectedIndex(index);
+
+    const jwt = localStorage.getItem('jwt');
 
     switch (listType) {
       case 'teams':
         sessionStorage.setItem('teamIndex', index);
         globalDispatch({ type: 'SELECT_TEAM', payload: selectedIndex });
+        const teamName = globalState.teams[index]._id.name;
+
+        const teamSecrets = await axios.post('/api/team/viewVault', { jwt, teamName });
+        const secretList = teamSecrets.data;
+
+        globalDispatch({ type: 'GOT_SECRET_DES', payload: secretList });
+
+        // console.log(secretList);
+        // console.log(index);
         break;
+
       case 'secrets':
         sessionStorage.setItem('secretIndex', index);
         globalDispatch({ type: 'SELECT_SECRET', payload: selectedIndex });
+
+        var change;
+        if (globalState.toggle === 0) {
+          change = 1;
+        } else {
+          change = 0;
+        }
+
+        globalDispatch({ type: 'TOGGLE', payload: change });
         break;
+
       default:
         break;
     }

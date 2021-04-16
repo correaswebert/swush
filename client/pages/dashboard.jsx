@@ -10,9 +10,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Context from 'store/context';
 import useFetch from 'hooks/useFetch';
 
-import LazyList from 'components/List/Lazy';
 import TeamsList from 'components/List/TeamsList';
+import SecretsList from 'components/List/SecretsList';
+import DataList from 'components/List/DataList';
 import AppBar from 'components/Appbar';
+import CardView from 'components/cardView';
 
 import AddMemberModal from 'components/Modal/AddMember';
 import RemoveMemberModal from 'components/Modal/RemoveMember';
@@ -79,13 +81,15 @@ export default function Dashboard() {
           <Divider orientation="vertical" light={false} flexItem />
 
           <Grid item xs className={classes.listContainer}>
-            <LazyList data={['secret']} />
+            <SecretsList />
           </Grid>
 
           <Divider orientation="vertical" light={false} flexItem />
 
-          <Grid item xs={6}>
-            <Paper className={classes.paper}>xs=6</Paper>
+          <Grid item xs={5}>
+            <Paper className={classes.paper}>
+              <DataList />
+            </Paper>
             <br></br>
             <AddMemberModal />
             <br></br>

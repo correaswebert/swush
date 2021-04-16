@@ -103,7 +103,20 @@ export default function PrimarySearchAppBar() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleNotifClick = (event) => {
-    setNotifAnchorEl(event.currentTarget);
+    async function handleNotifClick(event) {
+      const jwt = localStorage.getItem('jwt');
+
+      const res = await axios.post('/api/team/viewNotifications', { jwt });
+
+      console.log(typeof res.data.Notifications.length);
+
+      setNotifAnchorEl(event.currentTarget);
+
+      if (res.data.Notifications.length !== 0) {
+        console.log('OK');
+        setNotification(res.data.Notifications);
+      }
+    }
   };
 
   const handleNotifClose = () => {

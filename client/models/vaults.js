@@ -10,7 +10,7 @@ const VaultSchema = new Schema({
   name: String,
   ssh: [secretSchema],
   oauth: [secretSchema],
-  password: [secretSchema]
+  password: [secretSchema],
 });
 
 /**
@@ -20,26 +20,24 @@ const VaultSchema = new Schema({
  */
 VaultSchema.methods.addSecret = async function (type, name, secret) {
   const vault = this;
-  if(type == 'ssh'){
-    vault.ssh.push({name, secret});
+  if (type == 'ssh') {
+    vault.ssh.push({ name, secret });
+    await vault.save();
+    return;
+  } else if (type == 'oauth') {
+    vault.oauth.push({ name, secret });
+    await vault.save();
+    return;
+  } else if (type == 'password') {
+    vault.password.push({ name, secret });
     await vault.save();
     return;
   }
-  else if(type == 'oauth'){
-    vault.oauth.push({name, secret});
-    await vault.save();
-    return;
-  }
-  else if(type == 'password'){
-    vault.password.push({name, secret});
-    await vault.save();
-    return;
-  }
-}
+};
 
 VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
   const vault = this;
-  
+
   const publicKeysArmored = publicKeys;
 
   /* read the armored key */
@@ -49,13 +47,13 @@ VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
   /* decrypt it using passphrase */
   await privKey.decrypt(passphrase);
 
-  if(typeof vault.ssh !== undefined){
+  if (typeof vault.ssh !== undefined) {
     var ssh_secret = vault.ssh;
   }
-  if(typeof vault.oauth !== undefined){
+  if (typeof vault.oauth !== undefined) {
     var oauth_secret = vault.oauth;
   }
-  if(typeof vault.password !== undefined){
+  if (typeof vault.password !== undefined) {
     var password_secret = vault.password;
   }
 
@@ -66,65 +64,65 @@ VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
     publicKeysArmored.map((armoredKey) => openpgp.readKey({ armoredKey }))
   );
 
-  if(ssh_secret){
-    ssh_secret.forEach(async(secret) => {
+  if (ssh_secret) {
+    ssh_secret.forEach(async (secret) => {
       msg = secret.secret;
       var message = await openpgp.readMessage({ armoredMessage: msg });
 
       /* decrypt the secret */
       const decrypted = await openpgp.decrypt({
         message,
-        privateKeys: privKey
+        privateKeys: privKey,
       });
 
       /* convert decrypted data into plain text */
       const plaintext = await openpgp.stream.readToEnd(decrypted.data);
-      
+
       /* convert the decrypted secret into message object */
       message = openpgp.Message.fromText(plaintext);
 
       /* encrypt the data with the updated keyring */
       secret.secret = await openpgp.encrypt({
         message,
-        publicKeys: pubKeys
+        publicKeys: pubKeys,
       });
     });
   }
 
-  if(oauth_secret){
-    oauth_secret.forEach(async(secret) => {
+  if (oauth_secret) {
+    oauth_secret.forEach(async (secret) => {
       msg = secret.secret;
       var message = await openpgp.readMessage({ armoredMessage: msg });
 
       /* decrypt the secret */
       const decrypted = await openpgp.decrypt({
         message,
-        privateKeys: privKey
+        privateKeys: privKey,
       });
 
       /* convert decrypted data into plain text */
       const plaintext = await openpgp.stream.readToEnd(decrypted.data);
-      
+
       /* convert the decrypted secret into message object */
       message = openpgp.Message.fromText(plaintext);
-      
+
       /* encrypt the data with the updated keyring */
       secret.secret = await openpgp.encrypt({
         message,
-        publicKeys: pubKeys
+        publicKeys: pubKeys,
       });
     });
   }
 
-  if(password_secret){
-    password_secret.forEach(async(secret) => {
+  if (password_secret) {
+    password_secret.forEach(async (secret) => {
       msg = secret.secret;
       var message = await openpgp.readMessage({ armoredMessage: msg });
-      
-    /* decrypt the secret */
+
+      /* decrypt the secret */
       const decrypted = await openpgp.decrypt({
         message,
-        privateKeys: privKey
+        privateKeys: privKey,
       });
 
       /* convert decrypted data into plain text */
@@ -136,12 +134,124 @@ VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
       /* encrypt the data with the updated keyring */
       secret.secret = await openpgp.encrypt({
         message,
-        publicKeys: pubKeys
+        publicKeys: pubKeys,
       });
-     });
+    });
   }
 
   await vault.save();
+};
+
+VaultSchema.methods.decryption = async function (privateKey) {
+  const vault = this;
+
+  /* read the armored key */
+  const privKey = await openpgp.readKey({ armoredKey: privateKey });
+  const passphrase = process.env.PASSPHRASE;
+
+  /* decrypt it using passphrase */
+  await privKey.decrypt(passphrase);
+
+  if (typeof vault.ssh !== undefined) {
+    var ssh_secret = vault.ssh;
+  }
+  if (typeof vault.oauth !== undefined) {
+    var oauth_secret = vault.oauth;
+  }
+  if (typeof vault.password !== undefined) {
+    var password_secret = vault.password;
+  }
+
+  var msg;
+
+  if (ssh_secret) {
+    var ssh = [];
+    var sshDes = [];
+
+    ssh_secret.forEach((secret) => {
+      sshDes.push(secret.name);
+    });
+
+    ssh = await Promise.all(
+      ssh_secret.map(async (secret) => {
+        msg = secret.secret;
+        var message = await openpgp.readMessage({ armoredMessage: msg });
+
+        /* decrypt the secret */
+        const decrypted = await openpgp.decrypt({
+          message,
+          privateKeys: privKey,
+        });
+
+        /* convert decrypted data into plain text */
+        const plaintext = await openpgp.stream.readToEnd(decrypted.data);
+        return plaintext;
+      })
+    );
+  }
+
+  if (oauth_secret) {
+    var oauth = [];
+    var oauthDes = [];
+
+    oauth_secret.forEach((secret) => {
+      oauthDes.push(secret.name);
+    });
+
+    oauth = await Promise.all(
+      oauth_secret.map(async (secret) => {
+        msg = secret.secret;
+        var message = await openpgp.readMessage({ armoredMessage: msg });
+
+        /* decrypt the secret */
+        const decrypted = await openpgp.decrypt({
+          message,
+          privateKeys: privKey,
+        });
+
+        /* convert decrypted data into plain text */
+        const plaintext = await openpgp.stream.readToEnd(decrypted.data);
+        return plaintext;
+      })
+    );
+  }
+
+  if (password_secret) {
+    var password = [];
+    var passDes = [];
+
+    password_secret.forEach((secret) => {
+      passDes.push(secret.name);
+    });
+
+    password = await Promise.all(
+      password_secret.map(async (secret) => {
+        msg = secret.secret;
+        var message = await openpgp.readMessage({ armoredMessage: msg });
+
+        /* decrypt the secret */
+        const decrypted = await openpgp.decrypt({
+          message,
+          privateKeys: privKey,
+        });
+
+        /* convert decrypted data into plain text */
+        const plaintext = await openpgp.stream.readToEnd(decrypted.data);
+        return plaintext;
+      })
+    );
+  }
+
+  const secrets = {
+    sshDescription: sshDes,
+    SSH: ssh,
+    oauthDescription: oauthDes,
+    OAuth: oauth,
+    passwordDescription: passDes,
+    Password: password,
+  };
+
+  return secrets;
 };
 /* if TeamSchema schema already exists, don't overwrite it */
 export default models.Vault || model('Vault', VaultSchema);

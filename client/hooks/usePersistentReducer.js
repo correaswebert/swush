@@ -49,6 +49,18 @@ const reducer = (state, action) => {
         teams: action.payload,
       };
 
+    case 'GOT_SECRET_DES':
+      return {
+        ...state,
+        secretDes: action.payload,
+      };
+
+    case 'GOT_SECRET':
+      return {
+        ...state,
+        secret: action.payload,
+      };
+
     case 'SELECT_TEAM':
       // sessionStorage.setItem('teamIndex', action.payload);
       return {
@@ -61,6 +73,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         secretIndex: action.payload,
+      };
+
+    case 'TOGGLE':
+      return {
+        ...state,
+        toggle: action.payload,
       };
 
     default:
