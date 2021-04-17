@@ -16,20 +16,20 @@ export default async (req, res) => {
 
     /* if user does not exist */
     if (!user) {
-      res.status(200).json({ Error: 'User does not exist' });
+      res.status(200).json({ Info: 'User does not exist' });
       return;
     }
 
     /* if team does not exist */
     if (!team) {
-      res.status(200).json({ Error: 'Team does not exist' });
+      res.status(200).json({ Info: 'Team does not exist' });
       return;
     }
 
     var isAdmin = team.admins.id(curUser._id);
 
     if (!isAdmin) {
-      return res.status(200).json({ Error: 'Only admins can remove members!' });
+      return res.status(200).json({ Info: 'Only admins can remove members!' });
     }
 
     /* remove user's id from the member's array */
@@ -37,17 +37,17 @@ export default async (req, res) => {
 
     /* get details of all the team members */
     const teamMembers = await team.populate('members._id').execPopulate();
-    
+
     const publicKeys = [];
 
     /* get the public keys of all the team members */
-    teamMembers.members.forEach(member => {
+    teamMembers.members.forEach((member) => {
       publicKeys.push(member._id.publicKey);
     });
-    
+
     /* get the vault data */
     const vault = await Vault.findById(team.vaults[0]._id).exec();
-    
+
     /* admin private key */
     const enPrivateKey = curUser.privateKey;
 
@@ -57,7 +57,7 @@ export default async (req, res) => {
     /* decrypt the stored private key */
     const decrypted = await openpgp.decrypt({
       message: privateKey,
-      passwords: curUser.password
+      passwords: curUser.password,
     });
 
     /* re-encrypt all the secrets */
@@ -65,10 +65,10 @@ export default async (req, res) => {
 
     /* remove the team from removed member's team array */
     await user.removeTeam(team._id);
-    
+
     await user.notify(`You were removed from the team ${name}`);
 
-    return res.status(200).json({ Msg: 'Removed member successfully!' });
+    return res.status(200).json({ Info: 'Removed member successfully!' });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ Error: 'Unable to remove member' });

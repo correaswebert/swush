@@ -13,7 +13,7 @@ export default async (req, res) => {
 
     /* if team does not exist */
     if (!team) {
-      res.status(200).json({ Error: 'Team does not exist' });
+      res.status(200).json({ Info: 'Team does not exist' });
       return;
     }
 
@@ -25,7 +25,7 @@ export default async (req, res) => {
     });
     await team.save();
 
-    return res.status(200).json({ Msg: 'You left the team!' });
+    return res.status(200).json({ Info: 'You left the team!' });
   } catch (error) {
     return res.status(500).json({ Error: 'Unable to exit' });
   }

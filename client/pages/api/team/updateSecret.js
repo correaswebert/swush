@@ -18,7 +18,7 @@ export default async (req, res) => {
     var password;
 
     if (!team) {
-      return res.status(200).json({ Error: 'Team does not exist' });
+      return res.status(200).json({ Info: 'Team does not exist' });
     }
 
     // check if the user is a member of the team
@@ -100,7 +100,7 @@ export default async (req, res) => {
       );
     }
 
-    res.status(200).json('Done');
+    res.status(200).json({ Info: 'Done!' });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ Error: 'Internal server error' });

@@ -14,7 +14,7 @@ export default async (req, res) => {
     const team = await Team.findOne({ name: teamName }).exec();
 
     if (!team) {
-      return res.status(200).json({ Error: 'Team does not exist' });
+      return res.status(200).json({ Info: 'Team does not exist' });
     }
 
     /* populate the vaults property */

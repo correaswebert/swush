@@ -18,6 +18,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Popover from '@material-ui/core/Popover';
 import GlobalContext from 'store/context';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -98,24 +99,24 @@ export default function PrimarySearchAppBar() {
   const [notifAnchorEl, setNotifAnchorEl] = React.useState(null);
   const [accAnchorEl, setAccAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [notifications, setNotification] = React.useState(['No notifications']);
 
   const isMenuOpen = Boolean(accAnchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleNotifClick = (event) => {
-    async function handleNotifClick(event) {
-      const jwt = localStorage.getItem('jwt');
+  const handleNotifClick = async (event) => {
+    const jwt = localStorage.getItem('jwt');
+    setNotifAnchorEl(event.currentTarget);
 
-      const res = await axios.post('/api/team/viewNotifications', { jwt });
+    const res = await axios.post('/api/team/viewNotifications', { jwt });
 
-      console.log(typeof res.data.Notifications.length);
+    console.log(typeof res.data.Notifications.length);
 
-      setNotifAnchorEl(event.currentTarget);
-
-      if (res.data.Notifications.length !== 0) {
-        console.log('OK');
-        setNotification(res.data.Notifications);
-      }
+    if (res.data.Notifications.length !== 0) {
+      console.log('OK');
+      setNotification(res.data.Notifications);
+    } else {
+      setNotification(['No notifications']);
     }
   };
 
@@ -253,9 +254,9 @@ export default function PrimarySearchAppBar() {
               }}
             >
               <List className={classes.notifList}>
-                {[...Array(5)].map((_item, index) => (
+                {notifications.map((_item, index) => (
                   <ListItem key={index} divider>
-                    <ListItemText primary="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nostrum nam quam culpa at accusamus iste dolorem qui est ut deserunt exercitationem recusandae ab ipsum suscipit aliquid, id aut fugit porro adipisci molestiae! Ipsa voluptatibus voluptatum ipsum quam, corporis porro ex in voluptates quas praesentium explicabo neque necessitatibus, nihil nesciunt fugit" />
+                    <ListItemText primary={_item} />
                   </ListItem>
                 ))}
               </List>
