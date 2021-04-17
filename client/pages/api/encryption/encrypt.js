@@ -11,12 +11,12 @@ export default async function (req, res) {
     const { jwt, teamName, ssh, oauth, password, description } = req.body;
 
     const user = await getAuthenticatedUser(jwt);
-    
+
     var isMember = false;
 
     // check if the team exists
     const team = await TeamDetails.findOne({ name: teamName }).exec();
-    if(!team) return res.json('Team does not exists');
+    if (!team) return res.json('Team does not exists');
 
     // check if the user is a member of the team
     isMember = await team.members.id(user._id);
@@ -24,11 +24,11 @@ export default async function (req, res) {
 
     /* get details of all the team members */
     const teamMembers = await team.populate('members._id').execPopulate();
-    
+
     const publicKeys = [];
 
     /* get the public keys of all the team members */
-    teamMembers.members.forEach(member => {
+    teamMembers.members.forEach((member) => {
       publicKeys.push(member._id.publicKey);
     });
 
@@ -36,17 +36,15 @@ export default async function (req, res) {
 
     /* encrypt the secret */
     const encryptedSecret = await encryptSecret(publicKeys, ssh, oauth, password);
-    
-    if(ssh){
-      const vault = await Vault.findOne(team.vaults._id).exec();
+
+    if (ssh) {
+      const vault = await Vault.findById(team.vaults[0]._id).exec();
       await vault.addSecret('ssh', description, encryptedSecret);
-    }
-    else if(oauth){
-      const vault = await Vault.findOne(team.vaults._id).exec();
+    } else if (oauth) {
+      const vault = await Vault.findById(team.vaults[0]._id).exec();
       await vault.addSecret('oauth', description, encryptedSecret);
-    }
-    else if(password){
-      const vault = await Vault.findOne(team.vaults._id).exec();
+    } else if (password) {
+      const vault = await Vault.findById(team.vaults[0]._id).exec();
       await vault.addSecret('password', description, encryptedSecret);
     }
 
