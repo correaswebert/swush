@@ -32,6 +32,10 @@ export default async (req, res) => {
       return res.status(200).json({ Info: 'Only admins can remove members!' });
     }
 
+    const isNotRemoved = await team.members.id(user._id);
+    if (!isNotRemoved)
+      return res.status(200).json({ Info: 'User is not a member of this team' });
+
     /* remove user's id from the member's array */
     await team.removeMember(user._id);
 

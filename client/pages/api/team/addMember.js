@@ -28,6 +28,10 @@ export default async (req, res) => {
       return res.status(200).json({ Info: 'Only admins can add members!' });
     }
 
+    const isAlreadyMember = await team.members.id(user._id);
+    if (isAlreadyMember)
+      return res.status(200).json({ Info: 'Cannot add a member twice' });
+
     await team.addMember(user._id);
 
     /* get details of all the team members */

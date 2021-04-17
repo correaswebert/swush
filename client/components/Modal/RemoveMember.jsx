@@ -53,7 +53,7 @@ export default function RemoveMemberModal() {
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  
+
   function validateForm() {
     return name.length > 0 && email.length > 0;
   }
@@ -72,12 +72,9 @@ export default function RemoveMemberModal() {
 
       const jwt = localStorage.getItem('jwt');
 
-      const res = await axios.post(
-        '/api/team/removeMember',
-        { jwt, name, email }
-      );
-      
-      alert(res.data.Msg);
+      const res = await axios.post('/api/team/removeMember', { jwt, name, email });
+
+      alert(res.data.Info);
       handleClose();
     } catch (error) {
       if (error?.response?.status === 500) {
@@ -107,29 +104,33 @@ export default function RemoveMemberModal() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="modal-title" className={classes.h2}>Remove Member</h2>
+            <h2 id="modal-title" className={classes.h2}>
+              Remove Member
+            </h2>
             <form id="modal-description" onSubmit={handleSubmit}>
               <label className={classes.label}>Email</label>
               <br></br>
-              <input 
+              <input
                 className={classes.input}
-                type='email'
-                name='email'
+                type="email"
+                name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <br></br>
               <label className={classes.label}>Team Name</label>
               <br></br>
-              <input 
+              <input
                 className={classes.input}
-                type='text'
-                name='teamName'
+                type="text"
+                name="teamName"
                 value={name}
                 onChange={(e) => setTeamName(e.target.value)}
               />
               <br></br>
-              <button className={classes.button} type='submit' disabled={!validateForm()}>Remove</button>
+              <button className={classes.button} type="submit" disabled={!validateForm()}>
+                Remove
+              </button>
             </form>
           </div>
         </Fade>
