@@ -8,6 +8,7 @@ export const initialAppState = {
   allDescriptions: null,
   allSecrets: null,
   selectedSecret: null,
+  selectedSecretId: null,
   selectedDes: null,
   toggle: 0,
 };

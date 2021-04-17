@@ -163,6 +163,7 @@ VaultSchema.methods.decryption = async function (privateKey) {
   }
 
   var msg;
+  var secretId = [];
 
   if (ssh_secret) {
     var ssh = [];
@@ -170,6 +171,7 @@ VaultSchema.methods.decryption = async function (privateKey) {
 
     ssh_secret.forEach((secret) => {
       sshDes.push(secret.name);
+      secretId.push(secret._id);
     });
 
     ssh = await Promise.all(
@@ -196,6 +198,7 @@ VaultSchema.methods.decryption = async function (privateKey) {
 
     oauth_secret.forEach((secret) => {
       oauthDes.push(secret.name);
+      secretId.push(secret._id);
     });
 
     oauth = await Promise.all(
@@ -222,6 +225,7 @@ VaultSchema.methods.decryption = async function (privateKey) {
 
     password_secret.forEach((secret) => {
       passDes.push(secret.name);
+      secretId.push(secret._id);
     });
 
     password = await Promise.all(
@@ -243,6 +247,7 @@ VaultSchema.methods.decryption = async function (privateKey) {
   }
 
   const secrets = {
+    secretId,
     sshDescription: sshDes,
     SSH: ssh,
     oauthDescription: oauthDes,

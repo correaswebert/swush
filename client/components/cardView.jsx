@@ -29,17 +29,18 @@ const useStyles = makeStyles({
 export default function CardView() {
   const classes = useStyles();
   const { globalState, globalDispatch } = useContext(GlobalContext);
-
   const bull = <span className={classes.bullet}>•</span>;
 
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>
         <Typography className={classes.title} color="textSecondary" gutterBottom>
-          {globalState.selectedDes}
+          {globalState.selectedDes /*? 'Your Secret!' : globalState.selectedDes*/}
         </Typography>
         <Typography variant="h5" component="h2">
-          {globalState.selectedSecret}
+          {
+            globalState.selectedSecret /*? 'View your secret here!': globalState.selectedSecret*/
+          }
         </Typography>
       </CardContent>
       <CardActions>

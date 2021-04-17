@@ -64,10 +64,6 @@ export default function LazyList({ data: listData, type: listType }) {
         sessionStorage.setItem('secretIndex', index);
         globalDispatch({ type: 'SELECT_SECRET', payload: selectedIndex });
 
-        // console.log(index);
-        // console.log(globalState.allDescriptions[index]);
-        // console.log(globalState.allSecrets[index]);
-
         globalDispatch({
           type: 'SELECTED_SECRET',
           payload: globalState.allSecrets[index],
@@ -75,6 +71,10 @@ export default function LazyList({ data: listData, type: listType }) {
         globalDispatch({
           type: 'SELECTED_DES',
           payload: globalState.allDescriptions[index],
+        });
+        globalDispatch({
+          type: 'SELECTED_SEC_ID',
+          payload: globalState.secretDes.secretId[index],
         });
         break;
 

@@ -99,6 +99,12 @@ const reducer = (state, action) => {
         selectedDes: action.payload,
       };
 
+    case 'SELECTED_SEC_ID':
+      return {
+        ...state,
+        selectedSecretId: action.payload,
+      };
+
     default:
       return state;
   }
