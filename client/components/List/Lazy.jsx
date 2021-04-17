@@ -43,7 +43,7 @@ export default function LazyList({ data: listData, type: listType }) {
   const [selectedIndex, setSelectedIndex] = useState(initialIndex);
   const dataMaxIndex = listData.length - 1;
 
-  async function handleListItemClick(index) {
+  const handleListItemClick = async (index) => {
     setSelectedIndex(index);
 
     const jwt = localStorage.getItem('jwt');
@@ -58,29 +58,30 @@ export default function LazyList({ data: listData, type: listType }) {
         const secretList = teamSecrets.data;
 
         globalDispatch({ type: 'GOT_SECRET_DES', payload: secretList });
-
-        // console.log(secretList);
-        // console.log(index);
         break;
 
       case 'secrets':
         sessionStorage.setItem('secretIndex', index);
         globalDispatch({ type: 'SELECT_SECRET', payload: selectedIndex });
 
-        var change;
-        if (globalState.toggle === 0) {
-          change = 1;
-        } else {
-          change = 0;
-        }
+        // console.log(index);
+        // console.log(globalState.allDescriptions[index]);
+        // console.log(globalState.allSecrets[index]);
 
-        globalDispatch({ type: 'TOGGLE', payload: change });
+        globalDispatch({
+          type: 'SELECTED_SECRET',
+          payload: globalState.allSecrets[index],
+        });
+        globalDispatch({
+          type: 'SELECTED_DES',
+          payload: globalState.allDescriptions[index],
+        });
         break;
 
       default:
         break;
     }
-  }
+  };
 
   return (
     <div className={classes.root}>

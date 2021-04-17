@@ -75,10 +75,28 @@ const reducer = (state, action) => {
         secretIndex: action.payload,
       };
 
-    case 'TOGGLE':
+    case 'ALL_DESCRIPTIONS':
       return {
         ...state,
-        toggle: action.payload,
+        allDescriptions: action.payload,
+      };
+
+    case 'ALL_SECRETS':
+      return {
+        ...state,
+        allSecrets: action.payload,
+      };
+
+    case 'SELECTED_SECRET':
+      return {
+        ...state,
+        selectedSecret: action.payload,
+      };
+
+    case 'SELECTED_DES':
+      return {
+        ...state,
+        selectedDes: action.payload,
       };
 
     default:

@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { useEffect, useContext, useState } from 'react';
 import Context from 'store/context';
+import GlobalContext from 'store/context';
 
 const useStyles = makeStyles({
   root: {
@@ -25,20 +26,20 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CardView({ data, title }) {
+export default function CardView() {
   const classes = useStyles();
-  console.log(data);
-  //console.log(global)
+  const { globalState, globalDispatch } = useContext(GlobalContext);
+
   const bull = <span className={classes.bullet}>•</span>;
 
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>
         <Typography className={classes.title} color="textSecondary" gutterBottom>
-          {title}
+          {globalState.selectedDes}
         </Typography>
         <Typography variant="h5" component="h2">
-          {data}
+          {globalState.selectedSecret}
         </Typography>
       </CardContent>
       <CardActions>
