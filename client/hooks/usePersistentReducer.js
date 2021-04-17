@@ -62,14 +62,12 @@ const reducer = (state, action) => {
       };
 
     case 'SELECT_TEAM':
-      // sessionStorage.setItem('teamIndex', action.payload);
       return {
         ...state,
         teamIndex: action.payload,
       };
 
     case 'SELECT_SECRET':
-      // sessionStorage.setItem('secretIndex', action.payload);
       return {
         ...state,
         secretIndex: action.payload,
@@ -105,6 +103,12 @@ const reducer = (state, action) => {
         selectedSecretId: action.payload,
       };
 
+    case 'TOGGLE_DIALOG':
+      return {
+        ...state,
+        nameOpenDialog: action.payload,
+      };
+
     default:
       return state;
   }
@@ -112,14 +116,6 @@ const reducer = (state, action) => {
 
 export function usePersistentReducer() {
   const [state, dispatch] = useReducer(reducer, initialAppState, init);
-
-  // const setValue = (value) => {
-  //   try {
-  //     dispatch(value);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   return [state, dispatch];
 }

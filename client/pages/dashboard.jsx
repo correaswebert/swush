@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -8,21 +8,17 @@ import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Context from 'store/context';
-import useFetch from 'hooks/useFetch';
 
 import TeamsList from 'components/List/TeamsList';
 import SecretsList from 'components/List/SecretsList';
 import DataList from 'components/List/DataList';
 import AppBar from 'components/Appbar';
-import CardView from 'components/cardView';
+import SpeedDial from 'components/SpeedDial';
 
-import AddMemberModal from 'components/Modal/AddMember';
-import RemoveMemberModal from 'components/Modal/RemoveMember';
 import AddSSHModal from 'components/Modal/AddSSH';
 import AddOAuthModal from 'components/Modal/AddOAuth';
 import AddPasswordModal from 'components/Modal/AddPassword';
-import CreateTeamModal from 'components/Modal/CreateTeam';
-import { Divider, Drawer } from '@material-ui/core';
+import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,27 +44,6 @@ export default function Dashboard() {
   const router = useRouter();
   const classes = useStyles();
 
-  const { loading, data, error } = useFetch('/api/team/view');
-
-  useEffect(() => {
-    globalDispatch({ type: 'GOT_TEAM', payload: data });
-  }, [data]);
-
-  useEffect(() => {
-    if (!globalState.isLoggedIn) router.push('/auth/login');
-  }, []);
-
-  if (error) return <div>failed to load</div>;
-  if (loading) {
-    return (
-      <Backdrop className={classes.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    );
-  }
-
-  // const container = window !== undefined ? () => window.document.body : undefined;
-
   return (
     <>
       <AppBar />
@@ -78,33 +53,28 @@ export default function Dashboard() {
             <TeamsList />
           </Grid>
 
-          <Divider orientation="vertical" light={false} flexItem />
+          <Divider orientation="vertical" flexItem />
 
           <Grid item xs className={classes.listContainer}>
             <SecretsList />
           </Grid>
 
-          <Divider orientation="vertical" light={false} flexItem />
+          <Divider orientation="vertical" flexItem />
 
           <Grid item xs={5}>
             <Paper className={classes.paper}>
               <DataList />
             </Paper>
             <br></br>
-            <AddMemberModal />
-            <br></br>
-            <RemoveMemberModal />
-            <br></br>
             <AddSSHModal />
             <br></br>
             <AddOAuthModal />
             <br></br>
             <AddPasswordModal />
-            <br></br>
-            <CreateTeamModal />
           </Grid>
         </Grid>
       </main>
+      <SpeedDial />
     </>
   );
 }

@@ -22,14 +22,14 @@ export default async (req, res) => {
     });
 
     await team.save();
-    
+
     const getTeam = await Team.findOne({ name: teamName }).exec();
     await user.addTeam(getTeam._id);
 
-    res.status(201).json({ msg: `Created team: ${teamName}!` });
+    res.status(201).json({ msg: `Created team: ${teamName}!`, team: team });
   } catch (e) {
     if (e.name === 'MongoError' && e.code === 11000) {
-      return res.status(200).json({ Error: 'Team name taken!' });
+      return res.status(500).json({ Error: 'Team name taken!' });
     }
 
     console.error(e);

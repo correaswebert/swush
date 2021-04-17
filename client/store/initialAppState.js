@@ -1,6 +1,4 @@
 export const initialAppState = {
-  // isLoggedIn: false,
-  // jwt: null,
   teams: null,
   teamIndex: 0,
   secretIndex: 0,
@@ -11,4 +9,5 @@ export const initialAppState = {
   selectedSecretId: null,
   selectedDes: null,
   toggle: 0,
+  nameOpenDialog: '',
 };
