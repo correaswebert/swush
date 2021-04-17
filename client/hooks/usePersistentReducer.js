@@ -6,6 +6,8 @@ function init(initialValues) {
 
   try {
     for (const key in initialValues) {
+      if (!(initialValues[key] instanceof number)) return;
+
       const index = sessionStorage.getItem(key) ?? initialValues[key];
       initialState[key] = parseInt(index);
     }

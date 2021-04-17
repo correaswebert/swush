@@ -5,9 +5,8 @@ export const initialAppState = {
   secretDes: null,
   allDescriptions: null,
   allSecrets: null,
-  selectedSecret: null,
-  selectedSecretId: null,
-  selectedDes: null,
-  toggle: 0,
+  selectedSecret: '',
+  selectedSecretId: '',
+  selectedDes: '',
   nameOpenDialog: '',
 };

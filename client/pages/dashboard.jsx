@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import Context from 'store/context';
+import GlobalContext from 'store/context';
 
 import TeamsList from 'components/List/TeamsList';
 import SecretsList from 'components/List/SecretsList';
@@ -40,13 +40,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard() {
-  const { globalState, globalDispatch } = useContext(Context);
+  const { globalState } = useContext(GlobalContext);
   const router = useRouter();
   const classes = useStyles();
+
+  // useEffect(() => {
+  //   if (globalState.isLoggedIn) router.push('/auth/login');
+  // }, []);
 
   return (
     <>
       <AppBar />
+
       <main className={classes.root}>
         <Grid container>
           <Grid item xs className={classes.listContainer}>
@@ -74,6 +79,7 @@ export default function Dashboard() {
           </Grid>
         </Grid>
       </main>
+
       <SpeedDial />
     </>
   );

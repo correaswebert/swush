@@ -8,7 +8,7 @@ export default async function (req, res) {
   try {
     await connectToDatabase();
 
-    const { jwt, teamName, ssh, oauth, password, description } = req.body;
+    const { jwt, teamName, description, secret, secretType } = req.body;
 
     const user = await getAuthenticatedUser(jwt);
 
@@ -32,18 +32,16 @@ export default async function (req, res) {
       publicKeys.push(member._id.publicKey);
     });
 
-    console.log(publicKeys);
-
     /* encrypt the secret */
-    const encryptedSecret = await encryptSecret(publicKeys, ssh, oauth, password);
+    const encryptedSecret = await encryptSecret(publicKeys, secret);
 
-    if (ssh) {
+    if (secretType === 'ssh') {
       const vault = await Vault.findById(team.vaults[0]._id).exec();
       await vault.addSecret('ssh', description, encryptedSecret);
-    } else if (oauth) {
+    } else if (secretType === 'oauth') {
       const vault = await Vault.findById(team.vaults[0]._id).exec();
       await vault.addSecret('oauth', description, encryptedSecret);
-    } else if (password) {
+    } else if (secretType === 'password') {
       const vault = await Vault.findById(team.vaults[0]._id).exec();
       await vault.addSecret('password', description, encryptedSecret);
     }

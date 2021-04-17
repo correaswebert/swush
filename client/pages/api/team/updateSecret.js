@@ -8,7 +8,7 @@ import teams from 'models/teams';
 export default async (req, res) => {
   try {
     await connectToDatabase();
-    const { jwt, teamName, secretId, value } = req.body;
+    const { jwt, teamName, secretId, value: secret } = req.body;
 
     const user = await getAuthenticatedUser(jwt);
 
@@ -60,16 +60,8 @@ export default async (req, res) => {
       });
     }
 
-    if (ssh) {
-      ssh = value;
-    } else if (oauth) {
-      oauth = value;
-    } else if (password) {
-      password = value;
-    }
-
     /* encrypt the secret */
-    const encryptedSecret = await encryptSecret(publicKeys, ssh, oauth, password);
+    const encryptedSecret = await encryptSecret(publicKeys, secret);
 
     if (ssh) {
       await Vault.findOneAndUpdate(
