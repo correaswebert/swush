@@ -35,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
 export default function LazyList({ data: listData, type: listType }) {
   const classes = useStyles();
   const { globalState, globalDispatch } = useContext(GlobalContext);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   let initialIndex =
     listType === 'teams' ? globalState.teamIndex : globalState.secretIndex;
@@ -43,6 +45,45 @@ export default function LazyList({ data: listData, type: listType }) {
   const [selectedIndex, setSelectedIndex] = useState(initialIndex);
   const dataMaxIndex = listData.length - 1;
 
+  async function handleExitTeam() {
+    try {
+      console.log('Exit team');
+      setSuccessMessage('');
+      setErrorMessage('');
+      const jwt = localStorage.getItem('jwt');
+      const teamName = globalState.teams[teamIndex]._id.name;
+      console.log(jwt);
+      const res = await axios.post('/api/team/exitTeam', { jwt, name: teamName });
+
+      setSuccessMessage(`You left the team ${teamName}!`);
+    } catch (error) {
+      if (error?.response?.status === 500) {
+        setErrorMessage(error.response.data.Error);
+      } else {
+        setErrorMessage('Some error occurred!');
+      }
+    }
+  }
+  const handleDeleteSecret = async (index) => {
+    try {
+      console.log('Delete Secret');
+      setSuccessMessage('');
+      setErrorMessage('');
+      const jwt = localStorage.getItem('jwt');
+      const teamName = globalState.teams[teamIndex]._id.name;
+      const secretId = globalState.selectedSecretId;
+      console.log(jwt);
+      const res = await axios.post('/api/team/deleteSecret', { jwt, teamName, secretId });
+
+      setSuccessMessage(`Secret deleted`);
+    } catch (error) {
+      if (error?.response?.status === 500) {
+        setErrorMessage(error.response.data.Error);
+      } else {
+        setErrorMessage('Some error occurred!');
+      }
+    }
+  };
   const handleListItemClick = async (index) => {
     setSelectedIndex(index);
 
@@ -96,7 +137,11 @@ export default function LazyList({ data: listData, type: listType }) {
           >
             <ListItemText primary={item} />
             <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="delete">
+              <IconButton
+                onClick={listType === 'teams' ? handleExitTeam : handleDeleteSecret}
+                edge="end"
+                aria-label="delete"
+              >
                 {listType === 'teams' ? (
                   <ClearIcon fontSize="small" />
                 ) : (

@@ -25,6 +25,9 @@ export default async (req, res) => {
     });
     await team.save();
 
+    /* remove team from user's team array */
+    await curUser.removeTeam(team._id);
+
     return res.status(200).json({ Info: 'You left the team!' });
   } catch (error) {
     return res.status(500).json({ Error: 'Unable to exit' });
