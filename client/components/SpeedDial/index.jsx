@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
       right: theme.spacing(2),
     },
   },
+  speedDialFab: {
+    // backgroundColor: theme.palette.secondary.main,
+  },
 }));
 
 export default function SpeedDials() {
@@ -72,6 +75,7 @@ export default function SpeedDials() {
         onOpen={handleOpen}
         open={open}
         direction="up"
+        classes={{ fab: classes.speedDialFab }}
       >
         {actions.map((action) => (
           <SpeedDialAction

@@ -88,7 +88,6 @@ export default function DialogSelect() {
           <form className={classes.container} autoComplete="off">
             <FormControl className={classes.formControl} fullWidth>
               <TextField
-                autoFocus
                 value={description}
                 onChange={(e) => {
                   setDescription(e.target.value);
@@ -102,7 +101,6 @@ export default function DialogSelect() {
 
             <FormControl className={classes.formControl} fullWidth>
               <TextField
-                autoFocus
                 value={secret}
                 onChange={(e) => {
                   setSecret(e.target.value);

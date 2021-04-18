@@ -2,7 +2,6 @@ import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -15,9 +14,6 @@ import DataList from 'components/List/DataList';
 import AppBar from 'components/Appbar';
 import SpeedDial from 'components/SpeedDial';
 
-import AddSSHModal from 'components/Modal/AddSSH';
-import AddOAuthModal from 'components/Modal/AddOAuth';
-import AddPasswordModal from 'components/Modal/AddPassword';
 import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -43,9 +39,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     height: '100vh',
   },
-  divider: {
-    backgroundColor: '#6b6b6b',
-  },
 }));
 
 export default function Dashboard() {
@@ -60,6 +53,8 @@ export default function Dashboard() {
   return (
     <>
       <AppBar />
+
+      <Divider />
 
       <main className={classes.root}>
         <Grid container className={classes.container}>
@@ -76,9 +71,7 @@ export default function Dashboard() {
           <Divider orientation="vertical" flexItem className={classes.divider} />
 
           <Grid item xs={6}>
-            {/* <Paper className={classes.paper}> */}
             <DataList />
-            {/* </Paper> */}
           </Grid>
         </Grid>
       </main>

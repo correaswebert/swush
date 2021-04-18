@@ -1,11 +1,10 @@
-import React, { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import Menu from '@material-ui/core/Menu';
@@ -14,7 +13,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Popover from '@material-ui/core/Popover';
 import GlobalContext from 'store/context';
@@ -96,11 +94,11 @@ export default function PrimarySearchAppBar() {
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const router = useRouter();
   const classes = useStyles();
-  const [notifAnchorEl, setNotifAnchorEl] = React.useState(null);
-  const [accAnchorEl, setAccAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [notifications, setNotification] = React.useState(['No notifications']);
-  // const [username, setUsername] = React.useState('');
+  const [notifAnchorEl, setNotifAnchorEl] = useState(null);
+  const [accAnchorEl, setAccAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [notifications, setNotification] = useState(['No notifications']);
+  // const [username, setUsername] =useState('');
   const isMenuOpen = Boolean(accAnchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -178,8 +176,8 @@ export default function PrimarySearchAppBar() {
           </Typography>
           <div className={classes.grow} />
 
-          <Typography className={classes.title} variant="h6" noWrap>
-            {`Welcome ${globalState.username}`}
+          <Typography className={classes.title} variant="body1" noWrap>
+            {globalState.username}
           </Typography>
 
           <Divider orientation="vertical" flexItem />

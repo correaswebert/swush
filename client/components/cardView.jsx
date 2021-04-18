@@ -14,7 +14,8 @@ import theme from 'theme/dark';
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
-    backgroundColor: '#d2d2d2',
+    backgroundColor: '#242424',
+    // backgroundColor: '#d2d2d2',
     height: '100vh',
     padding: theme.spacing(5),
   },
@@ -24,7 +25,7 @@ const useStyles = makeStyles({
     transform: 'scale(0.8)',
   },
   title: {
-    // fontSize: 14,
+    color: theme.palette.text.main,
     fontWeight: 'normal',
   },
   pos: {
@@ -35,7 +36,6 @@ const useStyles = makeStyles({
 export default function CardView() {
   const classes = useStyles();
   const { globalState, globalDispatch } = useContext(GlobalContext);
-  const bull = <span className={classes.bullet}>•</span>;
 
   function handleUpdateSecret() {
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: 'UPDATE_SECRET' });
@@ -44,39 +44,26 @@ export default function CardView() {
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>
-        <Typography
-          variant="h6"
-          component="h3"
-          className={classes.title}
-          color="textSecondary"
-          gutterBottom
-        >
+        <Typography variant="h6" component="h3" className={classes.title} gutterBottom>
           Description
         </Typography>
-        <Typography
-          variant="h3"
-          component="h3"
-          className={classes.title}
-          color="primary"
-          gutterBottom
-        >
-          {globalState.selectedDes /*? 'Your Secret!' : globalState.selectedDes*/}
+        <Typography variant="h3" component="h3" className={classes.title} gutterBottom>
+          {globalState.selectedDes}
         </Typography>
-        <Typography variant="h6" component="h5" color="textSecondary" gutterBottom>
+
+        <Typography variant="h6" component="h5" className={classes.title} gutterBottom>
           Secret Data
         </Typography>
         <Typography variant="h4" component="h5">
-          {
-            globalState.selectedSecret /*? 'View your secret here!': globalState.selectedSecret*/
-          }
+          {globalState.selectedSecret}
         </Typography>
       </CardContent>
+
       <CardActions>
         <Button
           onClick={handleUpdateSecret}
           variant="outlined"
           size="large"
-          color="primary"
           style={{ position: 'fixed', bottom: '2em' }}
         >
           Update

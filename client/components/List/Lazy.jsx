@@ -20,8 +20,6 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     backgroundColor: theme.palette.background.paper,
     flexGrow: 1,
-    maxWidth: 752,
-    // height: '100%',
   },
   demo: {
     backgroundColor: theme.palette.background.paper,
@@ -30,13 +28,14 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(4, 0, 2),
   },
   list: {
-    padding: 0,
+    padding: theme.spacing(1.75),
+    backgroundColor: theme.palette.primary.main,
+  },
+  listItem: {
+    borderRadius: theme.spacing(1.25),
   },
   listItemText: {
-    backgroundColor: '#636363b5',
-  },
-  selected: {
-    backgroundColor: '#d2d2d2',
+    color: theme.palette.text.main,
   },
 }));
 
@@ -138,28 +137,28 @@ export default function LazyList({ data: listData, type: listType }) {
         {[...listData].map((item, index) => (
           <ListItem
             button
-            divider={index < dataMaxIndex}
             key={index}
             selected={selectedIndex === index}
             onClick={(_ev) => handleListItemClick(index)}
-            className={classes.listItemText}
-            classes={{
-              selected: classes.selected,
-            }}
+            className={classes.listItem}
           >
-            <ListItemText primary={item} />
+            <ListItemText primary={item} className={classes.listItemText} />
             <ListItemSecondaryAction>
-              <IconButton
-                onClick={listType === 'teams' ? handleExitTeam : handleDeleteSecret}
-                edge="end"
-                aria-label="delete"
-              >
-                {listType === 'teams' ? (
-                  <ClearIcon fontSize="small" />
-                ) : (
-                  <DeleteIcon fontSize="small" />
-                )}
-              </IconButton>
+              {selectedIndex === index ? (
+                <IconButton
+                  onClick={listType === 'teams' ? handleExitTeam : handleDeleteSecret}
+                  edge="end"
+                  aria-label="delete"
+                >
+                  {listType === 'teams' ? (
+                    <ClearIcon fontSize="small" />
+                  ) : (
+                    <DeleteIcon fontSize="small" />
+                  )}
+                </IconButton>
+              ) : (
+                ''
+              )}
             </ListItemSecondaryAction>
           </ListItem>
         ))}
