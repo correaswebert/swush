@@ -5,9 +5,11 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SettingsIcon from '@material-ui/icons/Settings';
 import PersonAddDisabledIcon from '@material-ui/icons/PersonAddDisabled';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import AddMemberDialog from 'components/Dialoag/AddMember';
 import RemoveMemberDialog from 'components/Dialoag/RemoveMember';
+import DeleteTeamDialog from 'components/Dialoag/DeleteTeam';
 import GlobalContext from 'store/context';
 
 const useStyles = makeStyles((theme) => ({
@@ -39,6 +41,12 @@ export default function SpeedDials() {
       name: 'Remove Member',
       type: 'TOGGLE_DIALOG',
       payload: 'REMOVE_MEMBER',
+    },
+    {
+      icon: <DeleteIcon />,
+      name: 'Delete Selected Team',
+      type: 'TOGGLE_DIALOG',
+      payload: 'DELETE_TEAM',
     },
   ];
 
@@ -77,6 +85,7 @@ export default function SpeedDials() {
 
       <AddMemberDialog />
       <RemoveMemberDialog />
+      <DeleteTeamDialog />
     </>
   );
 }

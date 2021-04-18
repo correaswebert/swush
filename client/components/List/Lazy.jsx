@@ -12,6 +12,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import GlobalContext from 'store/context';
 import { useContext } from 'react';
 import axios from 'axios';
+import StatusSnackbar from 'components/SnackBar/success';
 import DataList from 'components/List/DataList';
 
 const useStyles = makeStyles((theme) => ({
@@ -47,11 +48,10 @@ export default function LazyList({ data: listData, type: listType }) {
 
   async function handleExitTeam() {
     try {
-      console.log('Exit team');
       setSuccessMessage('');
       setErrorMessage('');
       const jwt = localStorage.getItem('jwt');
-      const teamName = globalState.teams[teamIndex]._id.name;
+      const teamName = globalState.teams[globalState.teamIndex]._id.name;
       console.log(jwt);
       const res = await axios.post('/api/team/exitTeam', { jwt, name: teamName });
 
@@ -66,15 +66,14 @@ export default function LazyList({ data: listData, type: listType }) {
   }
   const handleDeleteSecret = async (index) => {
     try {
-      console.log('Delete Secret');
       setSuccessMessage('');
       setErrorMessage('');
       const jwt = localStorage.getItem('jwt');
-      const teamName = globalState.teams[teamIndex]._id.name;
+      const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const secretId = globalState.selectedSecretId;
       console.log(jwt);
       const res = await axios.post('/api/team/deleteSecret', { jwt, teamName, secretId });
-
+      console.log(res);
       setSuccessMessage(`Secret deleted`);
     } catch (error) {
       if (error?.response?.status === 500) {
@@ -152,6 +151,8 @@ export default function LazyList({ data: listData, type: listType }) {
           </ListItem>
         ))}
       </List>
+      <StatusSnackbar message={successMessage} statusType="success" />
+      <StatusSnackbar message={errorMessage} statusType="error" />
     </div>
   );
 }
