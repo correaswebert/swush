@@ -18,7 +18,8 @@ import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
+    // flexGrow: 1,
+    flex: '1 1 auto',
     backgroundColor: theme.palette.primary.main,
     minHeight: '100%',
   },
@@ -33,11 +34,11 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
   },
   listContainer: {
-    maxHeight: '100vh',
+    // maxHeight: '100vh',
     overflow: 'auto',
   },
   container: {
-    height: '100vh',
+    height: 'calc(100vh - 4.05rem)',
   },
 }));
 

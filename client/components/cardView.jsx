@@ -9,29 +9,33 @@ import { useEffect, useContext, useState } from 'react';
 import Context from 'store/context';
 import GlobalContext from 'store/context';
 import UpdateSecretDialog from 'components/Dialoag/UpdateSecret';
-import theme from 'theme/dark';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
-    backgroundColor: '#242424',
-    // backgroundColor: '#d2d2d2',
-    height: '100vh',
+    backgroundColor: theme.palette.secondary.main,
+    height: 'calc(100vh - 4.05rem)',
     padding: theme.spacing(5),
+    borderRadius: 0,
   },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
+  description: {
+    color: theme.palette.text.accent,
   },
-  title: {
+  secretDescription: {
+    marginBottom: theme.spacing(7),
+  },
+  data: {
     color: theme.palette.text.main,
     fontWeight: 'normal',
   },
-  pos: {
-    marginBottom: 12,
+  updateButton: {
+    position: 'fixed',
+    bottom: theme.spacing(5),
+    fontSize: '1.15rem',
+    color: '#e6e6e6',
+    borderColor: '#565656',
   },
-});
+}));
 
 export default function CardView() {
   const classes = useStyles();
@@ -44,17 +48,35 @@ export default function CardView() {
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>
-        <Typography variant="h6" component="h3" className={classes.title} gutterBottom>
+        <Typography
+          variant="h6"
+          component="h3"
+          className={classes.title}
+          gutterBottom
+          classes={{ root: classes.description }}
+        >
           Description
         </Typography>
-        <Typography variant="h3" component="h3" className={classes.title} gutterBottom>
+        <Typography
+          variant="h3"
+          component="h3"
+          className={classes.data}
+          gutterBottom
+          classes={{ root: classes.secretDescription }}
+        >
           {globalState.selectedDes}
         </Typography>
 
-        <Typography variant="h6" component="h5" className={classes.title} gutterBottom>
+        <Typography
+          variant="h6"
+          component="h5"
+          className={classes.title}
+          gutterBottom
+          classes={{ root: classes.description }}
+        >
           Secret Data
         </Typography>
-        <Typography variant="h4" component="h5">
+        <Typography variant="h4" component="h5" className={classes.data} gutterBottom>
           {globalState.selectedSecret}
         </Typography>
       </CardContent>
@@ -64,7 +86,7 @@ export default function CardView() {
           onClick={handleUpdateSecret}
           variant="outlined"
           size="large"
-          style={{ position: 'fixed', bottom: '2em' }}
+          className={classes.updateButton}
         >
           Update
         </Button>

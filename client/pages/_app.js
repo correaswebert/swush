@@ -6,16 +6,15 @@ import '../styles/globals.css';
 const theme = createMuiTheme({
   palette: {
     // type: 'dark',
+
     primary: {
       main: '#151515',
-      // light: '',
     },
     secondary: {
       main: '#242424',
       // main: '#cccccc',
       // main: '#4a4a4a',
       // main: '#e6e6e6',
-      // dark: '',
     },
     accent: {
       main: '#0971f1',
@@ -26,6 +25,7 @@ const theme = createMuiTheme({
       lightContrast: '#1e1e1e',
     },
   },
+
   overrides: {
     MuiListItem: {
       root: {
@@ -69,7 +69,7 @@ function MyApp({ Component, pageProps }) {
     <GlobalStateProvider>
       <ThemeProvider theme={theme}>
         <Component {...pageProps} />
-        <style global jsx>{`
+        {/* <style global jsx>{`
           body {
             height: 100vh;
             overflow-y: hidden;
@@ -77,7 +77,7 @@ function MyApp({ Component, pageProps }) {
           #__next {
             height: 100%;
           }
-        `}</style>
+        `}</style> */}
       </ThemeProvider>
     </GlobalStateProvider>
   );
