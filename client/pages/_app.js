@@ -5,7 +5,19 @@ import '../styles/globals.css';
 
 const theme = createMuiTheme({
   palette: {
-    type: 'light',
+    // type: 'dark',
+    primary: {
+      main: '#1e1e1e',
+    },
+    // secondary: {
+    //   main: '#008891',
+    // },
+    // accent: {
+    //   main: '#00587a',
+    // },
+    // text: {
+    //   main: '#00587a',
+    // },
   },
 });
 
@@ -14,6 +26,15 @@ function MyApp({ Component, pageProps }) {
     <GlobalStateProvider>
       <ThemeProvider theme={theme}>
         <Component {...pageProps} />
+        <style global jsx>{`
+          body {
+            height: 100vh;
+            overflow-y: hidden;
+          }
+          #__next {
+            height: 100%;
+          }
+        `}</style>
       </ThemeProvider>
     </GlobalStateProvider>
   );

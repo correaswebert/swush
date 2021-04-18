@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     flexGrow: 1,
     maxWidth: 752,
+    // height: '100%',
   },
   demo: {
     backgroundColor: theme.palette.background.paper,
@@ -30,6 +31,12 @@ const useStyles = makeStyles((theme) => ({
   },
   list: {
     padding: 0,
+  },
+  listItemText: {
+    backgroundColor: '#636363b5',
+  },
+  selected: {
+    backgroundColor: '#d2d2d2',
   },
 }));
 
@@ -64,6 +71,7 @@ export default function LazyList({ data: listData, type: listType }) {
       }
     }
   }
+
   const handleDeleteSecret = async (index) => {
     try {
       setSuccessMessage('');
@@ -83,6 +91,7 @@ export default function LazyList({ data: listData, type: listType }) {
       }
     }
   };
+
   const handleListItemClick = async (index) => {
     setSelectedIndex(index);
 
@@ -133,6 +142,10 @@ export default function LazyList({ data: listData, type: listType }) {
             key={index}
             selected={selectedIndex === index}
             onClick={(_ev) => handleListItemClick(index)}
+            className={classes.listItemText}
+            classes={{
+              selected: classes.selected,
+            }}
           >
             <ListItemText primary={item} />
             <ListItemSecondaryAction>

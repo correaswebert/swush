@@ -2,10 +2,12 @@ import { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
+import GlobalContext from 'store/context';
 
 import styles from 'styles/auth/Login.module.css';
 
 export default function Login() {
+  const { globalState, globalDispatch } = useContext(GlobalContext);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +21,6 @@ export default function Login() {
   async function handleSubmit(e) {
     try {
       e.preventDefault();
-      const { globalState, globalDispatch } = useContext(Context);
 
       const res = await axios.post(
         '/api/auth/signup',
@@ -39,6 +40,7 @@ export default function Login() {
     } catch (err) {
       const errMessage = 'Some error occured!';
       setError(errMessage);
+      console.error(err);
     }
   }
 

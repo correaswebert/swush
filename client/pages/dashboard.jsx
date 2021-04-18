@@ -23,11 +23,14 @@ import { Divider } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    backgroundColor: theme.palette.primary.main,
+    minHeight: '100%',
   },
   paper: {
     padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
+    height: '100%',
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -36,6 +39,12 @@ const useStyles = makeStyles((theme) => ({
   listContainer: {
     maxHeight: '100vh',
     overflow: 'auto',
+  },
+  container: {
+    height: '100vh',
+  },
+  divider: {
+    backgroundColor: '#6b6b6b',
   },
 }));
 
@@ -53,29 +62,23 @@ export default function Dashboard() {
       <AppBar />
 
       <main className={classes.root}>
-        <Grid container>
+        <Grid container className={classes.container}>
           <Grid item xs className={classes.listContainer}>
             <TeamsList />
           </Grid>
 
-          <Divider orientation="vertical" flexItem />
+          <Divider orientation="vertical" flexItem className={classes.divider} />
 
           <Grid item xs className={classes.listContainer}>
             <SecretsList />
           </Grid>
 
-          <Divider orientation="vertical" flexItem />
+          <Divider orientation="vertical" flexItem className={classes.divider} />
 
-          <Grid item xs={5}>
-            <Paper className={classes.paper}>
-              <DataList />
-            </Paper>
-            <br></br>
-            <AddSSHModal />
-            <br></br>
-            <AddOAuthModal />
-            <br></br>
-            <AddPasswordModal />
+          <Grid item xs={6}>
+            {/* <Paper className={classes.paper}> */}
+            <DataList />
+            {/* </Paper> */}
           </Grid>
         </Grid>
       </main>

@@ -34,8 +34,10 @@ export default function Login() {
       if (res.status === 200) {
         const { jwt, name } = res.data;
         localStorage.setItem('jwt', jwt);
+        sessionStorage.setItem('username', name);
         globalDispatch({ type: 'LOGIN' });
         globalDispatch({ type: 'SET_NAME', payload: name });
+
         console.log(res.data);
         router.push('/dashboard');
       }

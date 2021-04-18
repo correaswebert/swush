@@ -10,6 +10,8 @@ export default async function (req, res) {
 
     const { jwt, teamName, description, secret, secretType } = req.body;
 
+    console.log(teamName);
+
     const user = await getAuthenticatedUser(jwt);
 
     var isMember = false;

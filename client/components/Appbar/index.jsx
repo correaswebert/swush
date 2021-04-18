@@ -142,6 +142,8 @@ export default function PrimarySearchAppBar() {
 
   const handleLogout = () => {
     globalDispatch({ type: 'LOGOUT' });
+    localStorage.clear();
+    sessionStorage.clear();
     router.push('/');
   };
 
@@ -166,52 +168,6 @@ export default function PrimarySearchAppBar() {
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      id={mobileMenuId}
-      open={isMobileMenuOpen}
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      keepMounted
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-
-      <MenuItem>
-        <IconButton
-          aria-describedby={id}
-          aria-label="show 11 new notifications"
-          color="inherit"
-          onClick={handleNotifClick}
-        >
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
 
   return (
     <div className={classes.grow}>
@@ -235,9 +191,9 @@ export default function PrimarySearchAppBar() {
               color="inherit"
               onClick={handleNotifClick}
             >
-              <Badge badgeContent={11} color="secondary">
-                <NotificationsIcon />
-              </Badge>
+              {/* <Badge badgeContent={11} color="secondary"> */}
+              <NotificationsIcon />
+              {/* </Badge> */}
             </IconButton>
             <Popover
               id={id}
@@ -286,7 +242,7 @@ export default function PrimarySearchAppBar() {
           </div>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
+
       {renderMenu}
     </div>
   );

@@ -15,9 +15,14 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1.5, 0.5, 1.5, 1.5),
     justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#b5b5b529',
+    color: '#ccc',
   },
   listHeadingText: {
     textTransform: 'uppercase',
+  },
+  addIcon: {
+    color: '#ccc',
   },
 }));
 
@@ -56,7 +61,7 @@ const SecretsList = () => {
         <Typography variant="h6" component="span" className={classes.listHeadingText}>
           Secrets
         </Typography>
-        <IconButton onClick={handleTeamAdd}>
+        <IconButton onClick={handleTeamAdd} className={classes.addIcon}>
           <AddIcon />
         </IconButton>
       </Paper>

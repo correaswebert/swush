@@ -9,10 +9,14 @@ import { useEffect, useContext, useState } from 'react';
 import Context from 'store/context';
 import GlobalContext from 'store/context';
 import UpdateSecretDialog from 'components/Dialoag/UpdateSecret';
+import theme from 'theme/dark';
 
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
+    backgroundColor: '#d2d2d2',
+    height: '100vh',
+    padding: theme.spacing(5),
   },
   bullet: {
     display: 'inline-block',
@@ -20,7 +24,8 @@ const useStyles = makeStyles({
     transform: 'scale(0.8)',
   },
   title: {
-    fontSize: 14,
+    // fontSize: 14,
+    fontWeight: 'normal',
   },
   pos: {
     marginBottom: 12,
@@ -39,10 +44,28 @@ export default function CardView() {
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>
-        <Typography className={classes.title} color="textSecondary" gutterBottom>
+        <Typography
+          variant="h6"
+          component="h3"
+          className={classes.title}
+          color="textSecondary"
+          gutterBottom
+        >
+          Description
+        </Typography>
+        <Typography
+          variant="h3"
+          component="h3"
+          className={classes.title}
+          color="primary"
+          gutterBottom
+        >
           {globalState.selectedDes /*? 'Your Secret!' : globalState.selectedDes*/}
         </Typography>
-        <Typography variant="h5" component="h2">
+        <Typography variant="h6" component="h5" color="textSecondary" gutterBottom>
+          Secret Data
+        </Typography>
+        <Typography variant="h4" component="h5">
           {
             globalState.selectedSecret /*? 'View your secret here!': globalState.selectedSecret*/
           }
@@ -52,8 +75,9 @@ export default function CardView() {
         <Button
           onClick={handleUpdateSecret}
           variant="outlined"
-          size="small"
+          size="large"
           color="primary"
+          style={{ position: 'fixed', bottom: '2em' }}
         >
           Update
         </Button>

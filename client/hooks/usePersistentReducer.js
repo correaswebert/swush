@@ -19,9 +19,11 @@ function init(initialValues) {
     const storedJwt = localStorage.getItem('jwt');
     initialState['jwt'] = storedJwt ?? null;
     initialState['isLoggedIn'] = storedJwt ? true : false;
+    initialState['username'] = sessionStorage.getItem('username') ?? '';
   } catch (error) {
     initialState['jwt'] = null;
     initialState['isLoggedIn'] = false;
+    initialState['username'] = '';
   }
 
   return initialState;
@@ -37,8 +39,6 @@ const reducer = (state, action) => {
       };
 
     case 'LOGOUT':
-      localStorage.clear();
-      sessionStorage.clear();
       return {
         ...state,
         isLoggedIn: false,

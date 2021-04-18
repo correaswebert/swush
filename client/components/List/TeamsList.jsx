@@ -7,6 +7,8 @@ import AddIcon from '@material-ui/icons/Add';
 import CreateTeamDialog from 'components/Dialoag/CreateTeam';
 import useFetch from 'hooks/useFetch';
 import SkeletonList from 'components/List/SkeletonList';
+import { useRouter } from 'next/router';
+import { set } from 'mongoose';
 
 const useStyles = makeStyles((theme) => ({
   listHeading: {
@@ -15,9 +17,15 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1.5, 0.5, 1.5, 1.5),
     justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#b5b5b529',
+    color: '#ccc',
+    // backgroundColor: theme.palette.secondary.main,
   },
   listHeadingText: {
     textTransform: 'uppercase',
+  },
+  addIcon: {
+    color: '#ccc',
   },
 }));
 
@@ -25,12 +33,23 @@ const TeamsList = () => {
   const { globalState, globalDispatch } = useContext(Context);
   const classes = useStyles();
   const [teamNames, setTeamNames] = useState([]);
+  const router = useRouter();
 
+  // const [loading, setLoading] = useState(false);
+  // const [data, setData] = useState(null);
+  // const [error, setError] = useState(null);
   const { loading, data, error } = useFetch('/api/team/view');
 
   useEffect(() => {
     if (!globalState.isLoggedIn) router.push('/auth/login');
   }, []);
+
+  // useEffect(() => {
+  //   const { loading, data, error } = useFetch('/api/team/view');
+  //   setData(data);
+  //   setError(error);
+  //   setLoading(loading);
+  // }, [globalState.teams]);
 
   useEffect(() => {
     globalDispatch({ type: 'GOT_TEAM', payload: data });
@@ -43,7 +62,7 @@ const TeamsList = () => {
       teamNamesArr.push(team._id.name);
     });
     setTeamNames(teamNamesArr);
-  }, [loading, globalState.teams]);
+  }, [loading]);
 
   if (error) return <div>failed to load</div>;
 
@@ -57,7 +76,7 @@ const TeamsList = () => {
         <Typography variant="h6" component="span" className={classes.listHeadingText}>
           Teams
         </Typography>
-        <IconButton onClick={handleTeamAdd}>
+        <IconButton onClick={handleTeamAdd} className={classes.addIcon}>
           <AddIcon />
         </IconButton>
       </Paper>
