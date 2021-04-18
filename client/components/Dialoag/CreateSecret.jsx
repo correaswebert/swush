@@ -52,7 +52,7 @@ export default function DialogSelect() {
     try {
       e.preventDefault();
       const jwt = globalState.jwt;
-      const teamName = globalState.teams[globalState.teamIndex];
+      const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const res = await axios.post('/api/encryption/encrypt', {
         jwt,
         teamName,

@@ -25,7 +25,7 @@ export default async (req, res) => {
       name,
       email,
       password,
-      publicKey
+      publicKey,
     };
     if (storePrivateKey) {
       userInfo.privateKey = privateKey;
@@ -40,11 +40,13 @@ export default async (req, res) => {
     /* send welcome email to the user */
     // sendWelcomeEmail(user.email, user.name);
 
+    console.log(name);
     res.status(200).json({
       Info: 'User successfully created!',
       publicKey,
       privateKey,
       jwt,
+      name,
     });
   } catch (e) {
     if (e.name === 'MongoError' && e.code === 11000) {

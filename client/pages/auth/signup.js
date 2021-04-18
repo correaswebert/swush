@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
@@ -19,6 +19,7 @@ export default function Login() {
   async function handleSubmit(e) {
     try {
       e.preventDefault();
+      const { globalState, globalDispatch } = useContext(Context);
 
       const res = await axios.post(
         '/api/auth/signup',
@@ -27,16 +28,16 @@ export default function Login() {
       );
 
       if (res.status === 200) {
-        const { jwt, publicKey, privateKey } = res.data;
+        const { jwt, publicKey, privateKey, name } = res.data;
 
         localStorage.setItem('jwt', jwt);
         localStorage.setItem('publicKey', publicKey);
         localStorage.setItem('privateKey', privateKey);
-
+        globalDispatch({ type: 'SET_NAME', payload: name });
         router.push('/dashboard');
       }
     } catch (err) {
-      const errMessage = err.response.data.Error ?? 'Some error occured!';
+      const errMessage = 'Some error occured!';
       setError(errMessage);
     }
   }

@@ -111,6 +111,12 @@ const reducer = (state, action) => {
         nameOpenDialog: action.payload,
       };
 
+    case 'SET_NAME':
+      return {
+        ...state,
+        username: action.payload,
+      };
+
     default:
       return state;
   }

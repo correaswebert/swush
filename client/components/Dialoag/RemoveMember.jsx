@@ -20,11 +20,11 @@ export default function FormDialog() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleDialogOpenState = () => {
-    const nameState = globalState.nameOpenDialog ? '' : 'ADD_MEMBER';
+    const nameState = globalState.nameOpenDialog ? '' : 'REMOVE_MEMBER';
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: nameState });
   };
 
-  async function handleAddMember(e) {
+  async function handleRemoveMember(e) {
     try {
       e.preventDefault();
       setSuccessMessage('');
@@ -32,8 +32,12 @@ export default function FormDialog() {
 
       const jwt = localStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
-      const res = await axios.post('/api/team/addMember', { jwt, name: teamName, email });
-      setSuccessMessage('Successfully added member!');
+      const res = await axios.post('/api/team/removeMember', {
+        jwt,
+        name: teamName,
+        email,
+      });
+      setSuccessMessage('Successfully removed member!');
     } catch (error) {
       if (error?.response?.status === 500) {
         setErrorMessage(error.response.data.Error);
@@ -48,12 +52,12 @@ export default function FormDialog() {
   return (
     <>
       <Dialog
-        open={globalState.nameOpenDialog === 'ADD_MEMBER'}
+        open={globalState.nameOpenDialog === 'REMOVE_MEMBER'}
         onClose={handleDialogOpenState}
         aria-labelledby="form-dialog-title"
         fullWidth
       >
-        <DialogTitle id="form-dialog-title">Add new member</DialogTitle>
+        <DialogTitle id="form-dialog-title">Remove member</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -66,24 +70,13 @@ export default function FormDialog() {
             }}
             fullWidth
           />
-
-          <Checkbox
-            checked={isAdmin}
-            onChange={() => {
-              setIsAdmin(!isAdmin);
-            }}
-            inputProps={{ 'aria-label': 'Make member an admin' }}
-          />
-          <Typography variant="body1" component="span">
-            Make admin?
-          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogOpenState} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleAddMember} color="primary">
-            Add
+          <Button onClick={handleRemoveMember} color="primary">
+            Remove
           </Button>
         </DialogActions>
       </Dialog>

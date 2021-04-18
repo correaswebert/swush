@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { useEffect, useContext, useState } from 'react';
 import Context from 'store/context';
 import GlobalContext from 'store/context';
+import UpdateSecretDialog from 'components/Dialoag/UpdateSecret';
 
 const useStyles = makeStyles({
   root: {
@@ -31,6 +32,10 @@ export default function CardView() {
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const bull = <span className={classes.bullet}>•</span>;
 
+  function handleUpdateSecret() {
+    globalDispatch({ type: 'TOGGLE_DIALOG', payload: 'UPDATE_SECRET' });
+  }
+
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>
@@ -44,10 +49,16 @@ export default function CardView() {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant="outlined" size="small" color="primary">
+        <Button
+          onClick={handleUpdateSecret}
+          variant="outlined"
+          size="small"
+          color="primary"
+        >
           Update
         </Button>
       </CardActions>
+      <UpdateSecretDialog />
     </Card>
   );
 }

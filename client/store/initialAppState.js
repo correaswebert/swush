@@ -9,4 +9,5 @@ export const initialAppState = {
   selectedSecretId: '',
   selectedDes: '',
   nameOpenDialog: '',
+  username: '',
 };

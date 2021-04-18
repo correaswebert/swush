@@ -8,7 +8,7 @@ export default async (req, res) => {
 
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email: email }, 'password tokens').exec();
+    const user = await User.findOne({ email: email }, 'password tokens name').exec();
     if (!user) {
       return res.status(401).json({ Error: 'User not found!' });
     }
@@ -17,8 +17,9 @@ export default async (req, res) => {
     }
 
     const jwt = generateJwt(email);
+    const name = user.name;
 
-    res.status(200).json({ Info: 'Logged in successfully!', jwt });
+    res.status(200).json({ Info: 'Logged in successfully!', jwt, name });
   } catch (error) {
     res.status(500).json({ Error: 'Internal server error.' });
     console.error(error);

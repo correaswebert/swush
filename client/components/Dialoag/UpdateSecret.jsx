@@ -14,17 +14,16 @@ import axios from 'axios';
 
 export default function FormDialog() {
   const { globalState, globalDispatch } = useContext(GlobalContext);
-  const [email, setEmail] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [value, setSecret] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleDialogOpenState = () => {
-    const nameState = globalState.nameOpenDialog ? '' : 'ADD_MEMBER';
+    const nameState = globalState.nameOpenDialog ? '' : 'UPDATE_SECRET';
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: nameState });
   };
 
-  async function handleAddMember(e) {
+  async function handleUpdateSecret(e) {
     try {
       e.preventDefault();
       setSuccessMessage('');
@@ -32,8 +31,15 @@ export default function FormDialog() {
 
       const jwt = localStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
-      const res = await axios.post('/api/team/addMember', { jwt, name: teamName, email });
-      setSuccessMessage('Successfully added member!');
+      const secretId = globalState.selectedSecretId;
+
+      const res = await axios.post('/api/team/updateSecret', {
+        jwt,
+        teamName,
+        secretId,
+        value,
+      });
+      setSuccessMessage('Successfully updated secret!');
     } catch (error) {
       if (error?.response?.status === 500) {
         setErrorMessage(error.response.data.Error);
@@ -48,42 +54,31 @@ export default function FormDialog() {
   return (
     <>
       <Dialog
-        open={globalState.nameOpenDialog === 'ADD_MEMBER'}
+        open={globalState.nameOpenDialog === 'UPDATE_SECRET'}
         onClose={handleDialogOpenState}
         aria-labelledby="form-dialog-title"
         fullWidth
       >
-        <DialogTitle id="form-dialog-title">Add new member</DialogTitle>
+        <DialogTitle id="form-dialog-title">Update Secret</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label="Enter member's email"
-            type="email"
-            value={email}
+            label="Enter new secret"
+            type="text"
+            value={value}
             onChange={(e) => {
-              setEmail(e.target.value);
+              setSecret(e.target.value);
             }}
             fullWidth
           />
-
-          <Checkbox
-            checked={isAdmin}
-            onChange={() => {
-              setIsAdmin(!isAdmin);
-            }}
-            inputProps={{ 'aria-label': 'Make member an admin' }}
-          />
-          <Typography variant="body1" component="span">
-            Make admin?
-          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogOpenState} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleAddMember} color="primary">
-            Add
+          <Button onClick={handleUpdateSecret} color="primary">
+            Update
           </Button>
         </DialogActions>
       </Dialog>

@@ -7,6 +7,7 @@ import PersonAddDisabledIcon from '@material-ui/icons/PersonAddDisabled';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 import AddMemberDialog from 'components/Dialoag/AddMember';
+import RemoveMemberDialog from 'components/Dialoag/RemoveMember';
 import GlobalContext from 'store/context';
 
 const useStyles = makeStyles((theme) => ({
@@ -75,6 +76,7 @@ export default function SpeedDials() {
       </SpeedDial>
 
       <AddMemberDialog />
+      <RemoveMemberDialog />
     </>
   );
 }

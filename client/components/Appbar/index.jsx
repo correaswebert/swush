@@ -93,17 +93,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PrimarySearchAppBar() {
-  const { globalDispatch } = useContext(GlobalContext);
+  const { globalState, globalDispatch } = useContext(GlobalContext);
   const router = useRouter();
   const classes = useStyles();
   const [notifAnchorEl, setNotifAnchorEl] = React.useState(null);
   const [accAnchorEl, setAccAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [notifications, setNotification] = React.useState(['No notifications']);
-
+  // const [username, setUsername] = React.useState('');
   const isMenuOpen = Boolean(accAnchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  // setUsername(localStorage.getItem('username'));
   const handleNotifClick = async (event) => {
     const jwt = localStorage.getItem('jwt');
     setNotifAnchorEl(event.currentTarget);
@@ -113,7 +114,6 @@ export default function PrimarySearchAppBar() {
     console.log(typeof res.data.Notifications.length);
 
     if (res.data.Notifications.length !== 0) {
-      console.log('OK');
       setNotification(res.data.Notifications);
     } else {
       setNotification(['No notifications']);
@@ -223,7 +223,7 @@ export default function PrimarySearchAppBar() {
           <div className={classes.grow} />
 
           <Typography className={classes.title} variant="h6" noWrap>
-            Hello, User
+            {`Welcome ${globalState.username}`}
           </Typography>
 
           <Divider orientation="vertical" flexItem />
