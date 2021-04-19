@@ -16,8 +16,7 @@ export default function FormDialog() {
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const [email, setEmail] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [status, setStatus] = useState({ type: '', msg: '' });
 
   const handleDialogOpenState = () => {
     const nameState = globalState.nameOpenDialog ? '' : 'REMOVE_MEMBER';
@@ -27,8 +26,6 @@ export default function FormDialog() {
   async function handleRemoveMember(e) {
     try {
       e.preventDefault();
-      setSuccessMessage('');
-      setErrorMessage('');
 
       const jwt = localStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
@@ -37,12 +34,12 @@ export default function FormDialog() {
         name: teamName,
         email,
       });
-      setSuccessMessage('Successfully removed member!');
+      setStatus({ type: 'success', msg: res.data.Info });
     } catch (error) {
       if (error?.response?.status === 500) {
-        setErrorMessage(error.response.data.Error);
+        setStatus({ type: 'error', msg: error.response.data.Error });
       } else {
-        setErrorMessage('Some error occurred!');
+        setStatus({ type: 'error', msg: 'Some error occured!' });
       }
     } finally {
       handleDialogOpenState();
@@ -81,8 +78,7 @@ export default function FormDialog() {
         </DialogActions>
       </Dialog>
 
-      <StatusSnackbar message={successMessage} statusType="success" />
-      <StatusSnackbar message={errorMessage} statusType="error" />
+      <StatusSnackbar message={status.msg} statusType={status.type} />
     </>
   );
 }
