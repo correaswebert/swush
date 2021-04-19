@@ -18,6 +18,7 @@ const theme = createMuiTheme({
     },
     accent: {
       main: '#0971f1',
+      darkContrast: '#0650ab',
     },
     text: {
       main: '#e6e6e6',
@@ -29,29 +30,11 @@ const theme = createMuiTheme({
   overrides: {
     MuiListItem: {
       root: {
-        backgroundColor: '#151515',
         '&$selected': {
           backgroundColor: '#0971f1',
           '&:hover': {
             backgroundColor: '#0650ab',
           },
-        },
-      },
-      button: {
-        '&:hover': {
-          backgroundColor: '#242424',
-        },
-      },
-      gutters: {
-        padding: '1em',
-      },
-    },
-
-    MuiListItemText: {
-      root: {
-        color: '#e6e6e6',
-        '&$selected': {
-          color: '#1e1e1e',
         },
       },
     },
@@ -69,15 +52,15 @@ function MyApp({ Component, pageProps }) {
     <GlobalStateProvider>
       <ThemeProvider theme={theme}>
         <Component {...pageProps} />
-        {/* <style global jsx>{`
+        <style global jsx>{`
           body {
-            height: 100vh;
+            // height: 100vh;
             overflow-y: hidden;
           }
-          #__next {
-            height: 100%;
-          }
-        `}</style> */}
+          // #__next {
+          //   height: 100%;
+          // }
+        `}</style>
       </ThemeProvider>
     </GlobalStateProvider>
   );

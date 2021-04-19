@@ -88,6 +88,9 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 500,
     maxHeight: 750,
   },
+  divider: {
+    margin: `0 ${theme.spacing(1.5)}px`,
+  },
 }));
 
 export default function PrimarySearchAppBar() {
@@ -180,7 +183,7 @@ export default function PrimarySearchAppBar() {
             {globalState.username}
           </Typography>
 
-          <Divider orientation="vertical" flexItem />
+          <Divider orientation="vertical" flexItem classes={{ root: classes.divider }} />
 
           <div className={classes.sectionDesktop}>
             <IconButton

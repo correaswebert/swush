@@ -1,5 +1,3 @@
-import { Skeleton } from '@material-ui/lab';
-import SkeletonList from './SkeletonList';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -13,13 +11,21 @@ import GlobalContext from 'store/context';
 import { useContext } from 'react';
 import axios from 'axios';
 import StatusSnackbar from 'components/SnackBar/success';
-import DataList from 'components/List/DataList';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     backgroundColor: theme.palette.background.paper,
     flexGrow: 1,
+    maxHeight: '100vh',
+    overflowY: 'scroll',
+    '&::-webkit-scrollbar': {
+      width: theme.spacing(1.5),
+      backgroundColor: theme.palette.primary.main,
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: theme.palette.secondary.main,
+    },
   },
   demo: {
     backgroundColor: theme.palette.background.paper,
@@ -36,6 +42,25 @@ const useStyles = makeStyles((theme) => ({
   },
   listItemText: {
     color: theme.palette.text.main,
+  },
+  // MuiListItemRoot: {
+  //   '&$selected': {
+  //     backgroundColor: theme.palette.accent.main,
+  //     '&:hover': {
+  //       backgroundColor: theme.palette.accent.darkContrast,
+  //     },
+  //   },
+  // },
+  // MuiListItemSelected: {
+  //   backgroundColor: theme.palette.accent.main,
+  // },
+  MuiListItemButton: {
+    '&:hover': {
+      backgroundColor: theme.palette.secondary.main,
+    },
+  },
+  MuiListItemGutters: {
+    padding: '1em',
   },
 }));
 
@@ -141,6 +166,12 @@ export default function LazyList({ data: listData, type: listType }) {
             selected={selectedIndex === index}
             onClick={(_ev) => handleListItemClick(index)}
             className={classes.listItem}
+            classes={{
+              // root: classes.MuiListItemRoot,
+              button: classes.MuiListItemButton,
+              gutters: classes.MuiListItemGutters,
+              // selected: classes.MuiListItemSelected,
+            }}
           >
             <ListItemText primary={item} className={classes.listItemText} />
             <ListItemSecondaryAction>
