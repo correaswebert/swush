@@ -60,7 +60,7 @@ export default function DialogSelect() {
         secret,
         secretType,
       });
-      setStatus({ type: 'success', msg: res.data.msg });
+      setStatus({ type: 'success', msg: res.data.Info });
       globalDispatch({
         type: 'GOT_SECRET',
         payload: [...globalState.teams, res.data.team],

@@ -38,7 +38,7 @@ export default async (req, res) => {
     await user.storeKeys(privateKey);
 
     /* send welcome email to the user */
-    // sendWelcomeEmail(user.email, user.name);
+    sendWelcomeEmail(user.email, user.name);
 
     console.log(name);
     res.status(200).json({

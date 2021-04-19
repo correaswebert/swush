@@ -34,6 +34,8 @@ export default function Login() {
         localStorage.setItem('jwt', jwt);
         localStorage.setItem('publicKey', publicKey);
         localStorage.setItem('privateKey', privateKey);
+        sessionStorage.setItem('username', name);
+        globalDispatch({ type: 'LOGIN' });
         globalDispatch({ type: 'SET_NAME', payload: name });
         router.push('/dashboard');
       }
