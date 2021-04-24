@@ -50,7 +50,7 @@ const TeamsList = () => {
       teamNamesArr.push(team._id.name);
     });
     setTeamNames(teamNamesArr);
-  }, [loading]);
+  }, [loading, globalState.teams]);
 
   if (error) return <div>failed to load</div>;
 
