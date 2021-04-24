@@ -17,7 +17,7 @@ export default function Home() {
           </p>
 
           <div className={styles.grid}>
-            <a href="/dashboard" className={styles.card}>
+            <a href="/user-dashboard" className={styles.card}>
               <h3>Dashboard &rarr;</h3>
               <p>Checkout your secrets hidden safely in our vaults</p>
             </a>

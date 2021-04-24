@@ -9,6 +9,8 @@ import { useEffect, useContext, useState } from 'react';
 import Context from 'store/context';
 import GlobalContext from 'store/context';
 import UpdateSecretDialog from 'components/Dialoag/UpdateSecret';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import { IconButton } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,12 +30,17 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.main,
     fontWeight: 'normal',
   },
-  updateButton: {
+  buttonContainer: {
     position: 'fixed',
     bottom: theme.spacing(5),
+  },
+  updateButton: {
     fontSize: '1.15rem',
     color: '#e6e6e6',
     borderColor: '#565656',
+  },
+  downloadIcon: {
+    color: '#e6e6e6',
   },
 }));
 
@@ -81,15 +88,18 @@ export default function CardView() {
         </Typography>
       </CardContent>
 
-      <CardActions>
+      <CardActions className={classes.buttonContainer}>
         <Button
+          className={classes.updateButton}
           onClick={handleUpdateSecret}
           variant="outlined"
           size="large"
-          className={classes.updateButton}
         >
           Update
         </Button>
+        <IconButton>
+          <CloudDownloadIcon className={classes.downloadIcon} fontSize="large" />
+        </IconButton>
       </CardActions>
       <UpdateSecretDialog />
     </Card>

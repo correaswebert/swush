@@ -82,7 +82,7 @@ export default function LazyList({ data: listData, type: listType }) {
       setSuccessMessage('');
       setErrorMessage('');
       const jwt = localStorage.getItem('jwt');
-      const teamName = globalState.teams[globalState.teamIndex]._id.name;
+      const teamName = globalState.teams[selectedIndex]._id.name;
       console.log(jwt);
       const res = await axios.post('/api/team/exitTeam', { jwt, name: teamName });
 

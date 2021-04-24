@@ -42,10 +42,30 @@ export default function DialogSelect() {
   const [secret, setSecret] = useState('');
   const [description, setDescription] = useState('');
   const [secretType, setSecretType] = useState('');
+  const [filedata, setFiledata] = useState(null);
 
   const handleDialogOpenState = () => {
     const nameState = globalState.nameOpenDialog ? '' : 'CREATE_TEAM';
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: nameState });
+  };
+
+  const handleUpload = (e) => {
+    // e.preventDefault();
+    setFiledata(e.target.files[0]);
+    console.log(filedata);
+  };
+
+  const handleCapture = (e) => {
+    const fileReader = new FileReader();
+
+    fileReader.readAsDataURL(e.target.files[0]);
+    fileReader.onload = (e) => {
+      setFiledata(e.target.result);
+      console.log(filedata);
+    };
+    fileReader.readAsText();
+
+    console.log(fileReader);
   };
 
   const handleCreateSecret = async (e) => {
@@ -53,12 +73,16 @@ export default function DialogSelect() {
       e.preventDefault();
       const jwt = globalState.jwt;
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
+      const formData = new FormData();
+      formData.append('File', filedata);
+      console.log(formData);
       const res = await axios.post('/api/encryption/encrypt', {
         jwt,
         teamName,
         description,
         secret,
         secretType,
+        formData,
       });
       setStatus({ type: 'success', msg: res.data.Info });
       globalDispatch({
@@ -128,12 +152,17 @@ export default function DialogSelect() {
                 <MenuItem value="ssh">SSH</MenuItem>
                 <MenuItem value="oauth">OAuth</MenuItem>
                 <MenuItem value="password">Password</MenuItem>
+                <MenuItem value="files">File</MenuItem>
               </Select>
             </FormControl>
           </form>
         </DialogContent>
 
         <DialogActions>
+          <Button color="primary" component="label">
+            Upload
+            <input type="file" onChange={handleCapture} hidden />
+          </Button>
           <Button onClick={handleDialogOpenState} color="primary">
             Cancel
           </Button>

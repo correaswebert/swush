@@ -7,7 +7,6 @@ import AddIcon from '@material-ui/icons/Add';
 import CreateTeamDialog from 'components/Dialoag/CreateTeam';
 import useFetch from 'hooks/useFetch';
 import SkeletonList from 'components/List/SkeletonList';
-import { useRouter } from 'next/router';
 // import useSwr from "swr"
 
 const useStyles = makeStyles((theme) => ({
@@ -28,17 +27,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TeamsList = () => {
+const MembersList = () => {
   const { globalState, globalDispatch } = useContext(Context);
   const classes = useStyles();
   const [teamNames, setTeamNames] = useState([]);
-  const router = useRouter();
 
-  const { loading, data, error } = useFetch('/api/team/view');
-
-  useEffect(() => {
-    if (!globalState.isLoggedIn) router.push('/auth/login');
-  }, []);
+  const teamId = globalState.teams[globalState.teamIndex]._id._id;
+  const { loading, data, error } = useFetch(`/api/team/${teamId}/members`);
 
   useEffect(() => {
     globalDispatch({ type: 'GOT_TEAM', payload: data });
@@ -48,7 +43,6 @@ const TeamsList = () => {
     if (!globalState.teams) return;
     const teamNamesArr = [];
     globalState.teams.forEach((team) => {
-      console.log(team._id);
       teamNamesArr.push(team._id.name);
     });
     setTeamNames(teamNamesArr);
@@ -64,7 +58,7 @@ const TeamsList = () => {
     <>
       <Paper className={classes.listHeading}>
         <Typography variant="h6" component="span" className={classes.listHeadingText}>
-          Teams
+          Members
         </Typography>
         <IconButton onClick={handleTeamAdd} className={classes.addIcon}>
           <AddIcon />
@@ -80,4 +74,4 @@ const TeamsList = () => {
   );
 };
 
-export default TeamsList;
+export default MembersList;

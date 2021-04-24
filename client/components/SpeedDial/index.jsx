@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import Link from 'next/link';
 import { makeStyles } from '@material-ui/core/styles';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
@@ -6,6 +7,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import PersonAddDisabledIcon from '@material-ui/icons/PersonAddDisabled';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 import AddMemberDialog from 'components/Dialoag/AddMember';
 import RemoveMemberDialog from 'components/Dialoag/RemoveMember';
@@ -85,8 +87,18 @@ export default function SpeedDials() {
             onClick={handleAction(action)}
           />
         ))}
+        <SpeedDialAction
+          key="Team Settings"
+          tooltipTitle="Team Settings"
+          icon={
+            <Link href="/team-dashboard">
+              <EditIcon />
+            </Link>
+          }
+        />
       </SpeedDial>
 
+      <EditIcon />
       <AddMemberDialog />
       <RemoveMemberDialog />
       <DeleteTeamDialog />
