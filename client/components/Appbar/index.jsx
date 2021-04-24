@@ -17,6 +17,8 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import Popover from '@material-ui/core/Popover';
 import GlobalContext from 'store/context';
 import axios from 'axios';
+import { Button } from '@material-ui/core';
+import HelpIcon from '@material-ui/icons/Help';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -229,6 +231,9 @@ export default function PrimarySearchAppBar() {
             >
               <AccountCircle />
             </IconButton>
+            <Button variant="contained" color="primary" href="/help">
+              <HelpIcon />
+            </Button>
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
