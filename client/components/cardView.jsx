@@ -16,9 +16,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
     backgroundColor: theme.palette.secondary.main,
-    height: 'calc(100vh - 4.05rem)',
+    height: `calc(100vh - ${theme.appbarHeight}rem)`,
     padding: theme.spacing(5),
     borderRadius: 0,
+    [theme.breakpoints.down(500)]: {
+      padding: theme.spacing(1),
+    },
   },
   description: {
     color: theme.palette.text.accent,
@@ -33,14 +36,17 @@ const useStyles = makeStyles((theme) => ({
   buttonContainer: {
     position: 'fixed',
     bottom: theme.spacing(5),
+    [theme.breakpoints.down(500)]: {
+      bottom: theme.spacing(1),
+    },
   },
   updateButton: {
     fontSize: '1.15rem',
-    color: '#e6e6e6',
-    borderColor: '#565656',
+    color: theme.palette.text.main,
+    borderColor: theme.palette.text.accent,
   },
   downloadIcon: {
-    color: '#e6e6e6',
+    color: theme.palette.text.main,
   },
 }));
 

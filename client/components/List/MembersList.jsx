@@ -32,8 +32,9 @@ const MembersList = () => {
   const classes = useStyles();
   const [teamNames, setTeamNames] = useState([]);
 
-  const teamId = globalState.teams[globalState.teamIndex]._id._id;
-  const { loading, data, error } = useFetch(`/api/team/${teamId}/members`);
+  // const teamId = globalState.teams[globalState.teamIndex]._id._id;
+  const { loading, data, error } = useFetch(`/api/team/6083e1a7873fb913a0c6b34e/members`);
+  // const { loading, data, error } = useFetch(`/api/team/${teamId}/members`);
 
   useEffect(() => {
     globalDispatch({ type: 'GOT_TEAM', payload: data });

@@ -16,7 +16,7 @@ import GlobalContext from 'store/context';
 
 const useStyles = makeStyles((theme) => ({
   speedDial: {
-    position: 'absolute',
+    position: 'fixed',
     bottom: 0,
     right: 0,
     '&.MuiSpeedDial-directionUp': {
@@ -98,7 +98,6 @@ export default function SpeedDials() {
         />
       </SpeedDial>
 
-      <EditIcon />
       <AddMemberDialog />
       <RemoveMemberDialog />
       <DeleteTeamDialog />

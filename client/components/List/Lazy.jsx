@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     backgroundColor: theme.palette.background.paper,
     flexGrow: 1,
-    maxHeight: '100vh',
+    maxHeight: `calc(100vh - ${theme.appbarHeight * 2}rem)`,
     overflowY: 'scroll',
     '&::-webkit-scrollbar': {
       width: theme.spacing(1.5),
@@ -174,6 +174,40 @@ export default function LazyList({ data: listData, type: listType }) {
             }}
           >
             <ListItemText primary={item} className={classes.listItemText} />
+            <ListItemSecondaryAction>
+              {selectedIndex === index ? (
+                <IconButton
+                  onClick={listType === 'teams' ? handleExitTeam : handleDeleteSecret}
+                  edge="end"
+                  aria-label="delete"
+                >
+                  {listType === 'teams' ? (
+                    <ClearIcon fontSize="small" />
+                  ) : (
+                    <DeleteIcon fontSize="small" />
+                  )}
+                </IconButton>
+              ) : (
+                ''
+              )}
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
+        {[...Array(30)].map((item, index) => (
+          <ListItem
+            button
+            key={index}
+            selected={selectedIndex === index}
+            onClick={(_ev) => handleListItemClick(index)}
+            className={classes.listItem}
+            classes={{
+              // root: classes.MuiListItemRoot,
+              button: classes.MuiListItemButton,
+              gutters: classes.MuiListItemGutters,
+              // selected: classes.MuiListItemSelected,
+            }}
+          >
+            <ListItemText primary={index} className={classes.listItemText} />
             <ListItemSecondaryAction>
               {selectedIndex === index ? (
                 <IconButton

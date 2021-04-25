@@ -90,4 +90,4 @@ UserSchema.methods.notify = async function (message) {
 }
 
 /* if User model already exists, don't overwrite it */
-export default models.User || model('User', UserSchema);
+export default models?.User || model('User', UserSchema);
