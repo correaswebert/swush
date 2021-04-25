@@ -87,9 +87,6 @@ export default function DialogSelect() {
       e.preventDefault();
       const jwt = globalState.jwt;
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
-      const formData = new FormData();
-      formData.append('File', filedata);
-      console.log(formData);
       const res = await axios.post('/api/encryption/encrypt', {
         jwt,
         teamName,
