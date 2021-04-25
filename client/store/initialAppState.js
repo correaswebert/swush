@@ -10,4 +10,5 @@ export const initialAppState = {
   selectedDes: '',
   nameOpenDialog: '',
   username: '',
+  selectedFileName: '',
 };

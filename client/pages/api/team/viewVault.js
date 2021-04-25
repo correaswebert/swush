@@ -26,8 +26,6 @@ export default async (req, res) => {
     /* read the encrypted pgp message */
     const privateKey = await openpgp.readMessage({ armoredMessage: enPrivateKey });
 
-    // console.log('Before password decrypted');
-
     /* decrypt the stored private key */
     const decrypted = await openpgp.decrypt({
       message: privateKey,

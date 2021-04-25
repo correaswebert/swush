@@ -117,6 +117,12 @@ const reducer = (state, action) => {
         username: action.payload,
       };
 
+    case 'SET_FILENAME':
+      return {
+        ...state,
+        selectedFileName: action.payload,
+      };
+
     default:
       return state;
   }

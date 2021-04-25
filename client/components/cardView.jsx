@@ -35,6 +35,12 @@ const useStyles = makeStyles((theme) => ({
     color: '#e6e6e6',
     borderColor: '#565656',
   },
+  download: {
+    bottom: theme.spacing(0),
+    fontSize: '1.15rem',
+    color: '#e6e6e6',
+    borderColor: '#565656',
+  },
 }));
 
 export default function CardView() {
@@ -45,6 +51,38 @@ export default function CardView() {
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: 'UPDATE_SECRET' });
   }
 
+  function handleDownload() {
+    const a = document.createElement('a');
+    var contentType;
+    const filename = globalState.selectedFileName;
+    if (globalState.selectedFileName.match(/\.png$/)) {
+      contentType = 'image/png';
+    } else if (globalState.selectedFileName.match(/\.jpg$/)) {
+      contentType = 'image/jpg';
+    } else if (globalState.selectedFileName.match(/\.jpeg$/)) {
+      contentType = 'image/jpeg';
+    } else if (globalState.selectedFileName.match(/\.txt$/)) {
+      contentType = 'text/plain';
+    }
+    var file;
+
+    if (contentType.startsWith('image/')) {
+      const imageData = atob(globalState.selectedSecret);
+      const byteNumbers = new Array(imageData.length);
+      for (let i = 0; i < imageData.length; i++) {
+        byteNumbers[i] = imageData.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      file = new Blob([byteArray], { type: contentType });
+    } else if (contentType.startsWith('text/')) {
+      file = new Blob([globalState.selectedSecret], { type: contentType });
+    }
+
+    a.href = URL.createObjectURL(file);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>
@@ -77,7 +115,11 @@ export default function CardView() {
           Secret Data
         </Typography>
         <Typography variant="h4" component="h5" className={classes.data} gutterBottom>
-          {globalState.selectedSecret}
+          {globalState.selectedFileName === 'ssh' ||
+          globalState.selectedFileName === 'oauth' ||
+          globalState.selectedFileName === 'pass'
+            ? globalState.selectedSecret
+            : globalState.selectedFileName}
         </Typography>
       </CardContent>
 
@@ -89,6 +131,14 @@ export default function CardView() {
           className={classes.updateButton}
         >
           Update
+        </Button>
+        <Button
+          onClick={handleDownload}
+          className={classes.download}
+          variant="outlined"
+          size="large"
+        >
+          Download
         </Button>
       </CardActions>
       <UpdateSecretDialog />

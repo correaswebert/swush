@@ -4,6 +4,7 @@ const openpgp = require('openpgp');
 const secretSchema = new Schema({
   name: String,
   secret: String,
+  fileName: String,
 });
 
 const VaultSchema = new Schema({
@@ -11,6 +12,7 @@ const VaultSchema = new Schema({
   ssh: [secretSchema],
   oauth: [secretSchema],
   password: [secretSchema],
+  file: [secretSchema],
 });
 
 /**
@@ -18,7 +20,7 @@ const VaultSchema = new Schema({
  * @param {*} name indicates description of the secret
  * @param {*} secret is the encrypted secret
  */
-VaultSchema.methods.addSecret = async function (type, name, secret) {
+VaultSchema.methods.addSecret = async function (type, name, secret, fileName) {
   const vault = this;
   if (type == 'ssh') {
     vault.ssh.push({ name, secret });
@@ -30,6 +32,10 @@ VaultSchema.methods.addSecret = async function (type, name, secret) {
     return;
   } else if (type == 'password') {
     vault.password.push({ name, secret });
+    await vault.save();
+    return;
+  } else if (type == 'file') {
+    vault.file.push({ name, secret, fileName });
     await vault.save();
     return;
   }
@@ -56,7 +62,9 @@ VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
   if (typeof vault.password !== undefined) {
     var password_secret = vault.password;
   }
-
+  if (typeof vault.file !== undefined) {
+    var file_secret = vault.file;
+  }
   var msg;
 
   /* read all the armored public keys */
@@ -138,6 +146,30 @@ VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
       });
     });
   }
+  if (file_secret) {
+    file_secret.forEach(async (secret) => {
+      msg = secret.secret;
+      var message = await openpgp.readMessage({ armoredMessage: msg });
+
+      /* decrypt the secret */
+      const decrypted = await openpgp.decrypt({
+        message,
+        privateKeys: privKey,
+      });
+
+      /* convert decrypted data into plain text */
+      const plaintext = await openpgp.stream.readToEnd(decrypted.data);
+
+      /* convert the decrypted secret into message object */
+      message = openpgp.Message.fromText(plaintext);
+
+      /* encrypt the data with the updated keyring */
+      secret.secret = await openpgp.encrypt({
+        message,
+        publicKeys: pubKeys,
+      });
+    });
+  }
 
   await vault.save();
 };
@@ -161,9 +193,12 @@ VaultSchema.methods.decryption = async function (privateKey) {
   if (typeof vault.password !== undefined) {
     var password_secret = vault.password;
   }
-
+  if (typeof vault.file !== undefined) {
+    var file_secret = vault.file;
+  }
   var msg;
   var secretId = [];
+  var filename = [];
 
   if (ssh_secret) {
     var ssh = [];
@@ -172,6 +207,7 @@ VaultSchema.methods.decryption = async function (privateKey) {
     ssh_secret.forEach((secret) => {
       sshDes.push(secret.name);
       secretId.push(secret._id);
+      filename.push('ssh');
     });
 
     ssh = await Promise.all(
@@ -199,6 +235,7 @@ VaultSchema.methods.decryption = async function (privateKey) {
     oauth_secret.forEach((secret) => {
       oauthDes.push(secret.name);
       secretId.push(secret._id);
+      filename.push('oauth');
     });
 
     oauth = await Promise.all(
@@ -226,6 +263,7 @@ VaultSchema.methods.decryption = async function (privateKey) {
     password_secret.forEach((secret) => {
       passDes.push(secret.name);
       secretId.push(secret._id);
+      filename.push('pass');
     });
 
     password = await Promise.all(
@@ -245,7 +283,33 @@ VaultSchema.methods.decryption = async function (privateKey) {
       })
     );
   }
+  if (file_secret) {
+    var files = [];
+    var fileDes = [];
 
+    file_secret.forEach((secret) => {
+      fileDes.push(secret.name);
+      secretId.push(secret._id);
+      filename.push(secret.fileName);
+    });
+
+    files = await Promise.all(
+      file_secret.map(async (secret) => {
+        msg = secret.secret;
+        var message = await openpgp.readMessage({ armoredMessage: msg });
+
+        /* decrypt the secret */
+        const decrypted = await openpgp.decrypt({
+          message,
+          privateKeys: privKey,
+        });
+
+        /* convert decrypted data into plain text */
+        const plaintext = await openpgp.stream.readToEnd(decrypted.data);
+        return plaintext;
+      })
+    );
+  }
   const secrets = {
     secretId,
     sshDescription: sshDes,
@@ -254,6 +318,9 @@ VaultSchema.methods.decryption = async function (privateKey) {
     OAuth: oauth,
     passwordDescription: passDes,
     Password: password,
+    Files: files,
+    filesDescription: fileDes,
+    filename,
   };
 
   return secrets;

@@ -16,6 +16,7 @@ export default async (req, res) => {
     var ssh;
     var oauth;
     var password;
+    var files;
 
     if (!team) {
       return res.status(200).json({ Info: 'Team does not exist' });
@@ -36,7 +37,6 @@ export default async (req, res) => {
     });
 
     const vault = await Vault.findById(team.vaults[0]._id).exec();
-    console.log(vault);
 
     vault.ssh.forEach((key) => {
       if (key._id.equals(secretId)) {
@@ -60,6 +60,13 @@ export default async (req, res) => {
       });
     }
 
+    if (!ssh && !oauth && !password) {
+      vault.file.forEach((key) => {
+        if (key._id.equals(secretId)) {
+          files = key;
+        }
+      });
+    }
     /* encrypt the secret */
     const encryptedSecret = await encryptSecret(publicKeys, secret);
 
@@ -87,6 +94,15 @@ export default async (req, res) => {
         {
           $set: {
             'password.$.secret': encryptedSecret,
+          },
+        }
+      );
+    } else if (files) {
+      await Vault.findOneAndUpdate(
+        { _id: team.vaults[0]._id, 'file._id': secretId },
+        {
+          $set: {
+            'file.$.secret': encryptedSecret,
           },
         }
       );
