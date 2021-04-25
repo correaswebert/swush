@@ -8,10 +8,9 @@ export default async function (req, res) {
   try {
     await connectToDatabase();
 
-    const { jwt, teamName, description, secret, secretType } = req.body;
+    const { jwt, teamName, description, secret, secretType, filename } = req.body;
 
     console.log(teamName);
-
     const user = await getAuthenticatedUser(jwt);
 
     var isMember = false;
@@ -39,13 +38,16 @@ export default async function (req, res) {
 
     if (secretType === 'ssh') {
       const vault = await Vault.findById(team.vaults[0]._id).exec();
-      await vault.addSecret('ssh', description, encryptedSecret);
+      await vault.addSecret('ssh', description, encryptedSecret, filename);
     } else if (secretType === 'oauth') {
       const vault = await Vault.findById(team.vaults[0]._id).exec();
-      await vault.addSecret('oauth', description, encryptedSecret);
+      await vault.addSecret('oauth', description, encryptedSecret, filename);
     } else if (secretType === 'password') {
       const vault = await Vault.findById(team.vaults[0]._id).exec();
-      await vault.addSecret('password', description, encryptedSecret);
+      await vault.addSecret('password', description, encryptedSecret, filename);
+    } else if (secretType === 'file') {
+      const vault = await Vault.findById(team.vaults[0]._id).exec();
+      await vault.addSecret('file', description, encryptedSecret, filename);
     }
 
     return res.json('Done!');

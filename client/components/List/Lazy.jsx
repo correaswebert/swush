@@ -149,6 +149,10 @@ export default function LazyList({ data: listData, type: listType }) {
           type: 'SELECTED_SEC_ID',
           payload: globalState.secretDes.secretId[index],
         });
+        globalDispatch({
+          type: 'SET_FILENAME',
+          payload: globalState.secretDes.filename[index],
+        });
         break;
 
       default:

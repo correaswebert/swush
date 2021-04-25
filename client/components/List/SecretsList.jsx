@@ -38,12 +38,15 @@ const SecretsList = () => {
     const sshDes = globalState.secretDes.sshDescription;
     const oauthDes = globalState.secretDes.oauthDescription;
     const passDes = globalState.secretDes.passwordDescription;
+    const fileDes = globalState.secretDes.filesDescription;
+
     const ssh = globalState.secretDes.SSH;
     const oauth = globalState.secretDes.OAuth;
     const pass = globalState.secretDes.Password;
+    const files = globalState.secretDes.Files;
 
-    const allSec = [...ssh, ...oauth, ...pass];
-    const allDes = [...sshDes, ...oauthDes, ...passDes];
+    const allSec = [...ssh, ...oauth, ...pass, ...files];
+    const allDes = [...sshDes, ...oauthDes, ...passDes, ...fileDes];
 
     globalDispatch({ type: 'ALL_DESCRIPTIONS', payload: allDes });
     globalDispatch({ type: 'ALL_SECRETS', payload: allSec });

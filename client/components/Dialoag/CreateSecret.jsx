@@ -42,31 +42,45 @@ export default function DialogSelect() {
   const [secret, setSecret] = useState('');
   const [description, setDescription] = useState('');
   const [secretType, setSecretType] = useState('');
-  const [filedata, setFiledata] = useState(null);
+  const [filename, setFileName] = useState('');
 
   const handleDialogOpenState = () => {
     const nameState = globalState.nameOpenDialog ? '' : 'CREATE_TEAM';
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: nameState });
   };
 
-  const handleUpload = (e) => {
-    // e.preventDefault();
-    setFiledata(e.target.files[0]);
-    console.log(filedata);
-  };
+  async function handleCapture(event) {
+    const inputFile = document.getElementById('inputFile');
+    const file = inputFile.files[0];
+    const reader = new FileReader();
 
-  const handleCapture = (e) => {
-    const fileReader = new FileReader();
-
-    fileReader.readAsDataURL(e.target.files[0]);
-    fileReader.onload = (e) => {
-      setFiledata(e.target.result);
-      console.log(filedata);
-    };
-    fileReader.readAsText();
-
-    console.log(fileReader);
-  };
+    if (file.type.startsWith('text/')) {
+      reader.onload = (e) => {
+        const textContent = e.target.result;
+        console.log(`The content of ${file.name} is ${textContent}`);
+        setSecret(textContent);
+        setFileName(file.name);
+      };
+      reader.onerror = (e) => {
+        const error = e.target.error;
+        console.error(`Error occured while reading ${file.name}`, error);
+      };
+      reader.readAsText(file);
+    } else if (file.type.startsWith('image/')) {
+      reader.onload = (e) => {
+        const imageContent = e.target.result;
+        const imageData = imageContent.slice(imageContent.indexOf(',') + 1);
+        console.log(`The content of ${file.name} is ${imageContent}`);
+        setSecret(imageData);
+        setFileName(file.name);
+      };
+      reader.onerror = (e) => {
+        const error = e.target.error;
+        console.error(`Error occured while reading ${file.name}`, error);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
   const handleCreateSecret = async (e) => {
     try {
@@ -82,7 +96,7 @@ export default function DialogSelect() {
         description,
         secret,
         secretType,
-        formData,
+        filename,
       });
       setStatus({ type: 'success', msg: res.data.Info });
       globalDispatch({
@@ -152,7 +166,7 @@ export default function DialogSelect() {
                 <MenuItem value="ssh">SSH</MenuItem>
                 <MenuItem value="oauth">OAuth</MenuItem>
                 <MenuItem value="password">Password</MenuItem>
-                <MenuItem value="files">File</MenuItem>
+                <MenuItem value="file">File</MenuItem>
               </Select>
             </FormControl>
           </form>
@@ -161,7 +175,13 @@ export default function DialogSelect() {
         <DialogActions>
           <Button color="primary" component="label">
             Upload
-            <input type="file" onChange={handleCapture} hidden />
+            <input
+              type="file"
+              id="inputFile"
+              name="file"
+              onChange={handleCapture}
+              hidden
+            />
           </Button>
           <Button onClick={handleDialogOpenState} color="primary">
             Cancel
