@@ -182,7 +182,7 @@ VaultSchema.methods.decryption = async function (privateKey) {
   const passphrase = process.env.PASSPHRASE;
 
   /* decrypt it using passphrase */
-  await privKey.decrypt(passphrase);
+  // await privKey.decrypt(passphrase);
 
   if (typeof vault.ssh !== undefined) {
     var ssh_secret = vault.ssh;

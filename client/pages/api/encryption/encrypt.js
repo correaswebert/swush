@@ -46,6 +46,7 @@ export default async function (req, res) {
       const vault = await Vault.findById(team.vaults[0]._id).exec();
       await vault.addSecret('password', description, encryptedSecret, filename);
     } else if (secretType === 'file') {
+      console.log(filename);
       const vault = await Vault.findById(team.vaults[0]._id).exec();
       await vault.addSecret('file', description, encryptedSecret, filename);
     }

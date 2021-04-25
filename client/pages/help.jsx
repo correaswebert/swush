@@ -1,10 +1,17 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import MuiAccordion from '@material-ui/core/Accordion';
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import AppBar from 'components/Appbar';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+    backgroundColor: theme.palette.primary.main,
+  },
+}));
 
 const Accordion = withStyles((theme) => ({
   root: {
@@ -52,6 +59,7 @@ const AccordionDetails = withStyles((theme) => ({
 }))(MuiAccordionDetails);
 
 export default function Help() {
+  const classes = useStyles();
   const [expanded, setExpanded] = React.useState('panel1');
 
   const handleChange = (panel) => (event, newExpanded) => {
@@ -61,7 +69,7 @@ export default function Help() {
   return (
     <>
       <AppBar />
-      <div>
+      <div className={classes.root}>
         <Accordion
           square
           expanded={expanded === 'panel1'}
