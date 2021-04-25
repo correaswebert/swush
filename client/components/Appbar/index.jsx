@@ -148,6 +148,10 @@ export default function PrimarySearchAppBar() {
     router.push('/');
   };
 
+  const handleProfile = () => {
+    router.push('/user/profile');
+  };
+
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -164,6 +168,7 @@ export default function PrimarySearchAppBar() {
       onClose={handleMenuClose}
       keepMounted
     >
+      <MenuItem onClick={handleProfile}>Profile</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
