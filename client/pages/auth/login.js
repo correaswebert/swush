@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Link from 'next/link';
 import axios from 'axios';
 
@@ -8,14 +9,17 @@ import styles from 'styles/auth/Login.module.css';
 
 export default function Login() {
   const { globalState, globalDispatch } = useContext(Context);
+  const matches = useMediaQuery('(max-width:500px)');
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const router = useRouter();
+  const [dashboardLink, setDashboardLink] = useState('/dashboard');
 
   useEffect(() => {
-    if (globalState.isLoggedIn) router.push('/dashboard');
-  }, []);
+    if (matches) setDashboardLink('/m/teams');
+    else setDashboardLink('/dashboard');
+  }, [matches]);
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
@@ -43,7 +47,7 @@ export default function Login() {
         globalDispatch({ type: 'SET_NAME', payload: name });
 
         console.log(res.data);
-        router.push('/dashboard');
+        router.push(dashboardLink);
       }
     } catch (error) {
       if (error?.response?.status === 401) {

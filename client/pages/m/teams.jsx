@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: '1 1 auto',
     backgroundColor: theme.palette.primary.main,
-    height: 'calc(100vh - 4.05rem)',
+    height: `calc(100vh - ${theme.appbarHeight}rem)`,
   },
 }));
 
@@ -34,8 +34,10 @@ export default function Dashboard() {
   const classes = useStyles();
 
   useEffect(() => {
-    if (!globalState.teamIndex) return;
-    router.push('/m/secrets');
+    if (!globalState.teams) return;
+    if (globalState.teamIndex == -1) return;
+    const teamName = globalState.teams[globalState.teamIndex]._id.name;
+    router.push(`/m/secrets/${teamName}`);
   }, [globalState.teamIndex]);
 
   return (

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import withSession from 'utils/withSession';
 
@@ -6,8 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import GlobalContext from 'store/context';
-
-import DataList from 'components/List/DataList';
+import SecretsList from 'components/List/SecretsList';
 import AppBar from 'components/Appbar';
 import SpeedDial from 'components/SpeedDial';
 
@@ -19,20 +18,15 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     flex: '1 1 auto',
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
     height: `calc(100vh - ${theme.appbarHeight}rem)`,
   },
 }));
 
-export default function Dashboard() {
+export default function Dashboard({ teamName }) {
   const { globalState } = useContext(GlobalContext);
   const router = useRouter();
   const classes = useStyles();
-
-  useEffect(() => {
-    if (globalState.teamIndex == -1) return;
-    router.push('/m/secrets');
-  }, [globalState.teamIndex]);
 
   return (
     <>
@@ -42,7 +36,7 @@ export default function Dashboard() {
 
       <Grid container className={classes.container}>
         <Grid item xs className={classes.listContainer}>
-          <DataList />
+          <SecretsList teamName={teamName} />
         </Grid>
       </Grid>
 
@@ -51,8 +45,9 @@ export default function Dashboard() {
   );
 }
 
-export const getServerSideProps = withSession(async function ({ req }) {
+export const getServerSideProps = withSession(async function ({ req, query }) {
   const user = req.session.get('user');
+  const { teamName } = query;
 
   if (!user) {
     return {
@@ -64,6 +59,8 @@ export const getServerSideProps = withSession(async function ({ req }) {
   }
 
   return {
-    props: {},
+    props: {
+      teamName,
+    },
   };
 });

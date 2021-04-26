@@ -4,14 +4,9 @@ import withSession from 'utils/withSession';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 import GlobalContext from 'store/context';
-
-import TeamsList from 'components/List/TeamsList';
 import SecretsList from 'components/List/SecretsList';
-import DataList from 'components/List/DataList';
 import AppBar from 'components/Appbar';
 import SpeedDial from 'components/SpeedDial';
 
@@ -24,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: '1 1 auto',
     backgroundColor: theme.palette.primary.main,
-    height: 'calc(100vh - 4.05rem)',
+    height: `calc(100vh - ${theme.appbarHeight}rem)`,
   },
 }));
 
