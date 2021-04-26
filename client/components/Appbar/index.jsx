@@ -233,7 +233,6 @@ export default function PrimarySearchAppBar({ name }) {
             </Popover>
 
             <IconButton
-              edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
@@ -242,9 +241,9 @@ export default function PrimarySearchAppBar({ name }) {
             >
               <AccountCircle />
             </IconButton>
-            <Button variant="contained" color="primary" href="/help">
+            <IconButton edge="end" variant="contained" color="inherit" href="/help">
               <HelpIcon />
-            </Button>
+            </IconButton>
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
