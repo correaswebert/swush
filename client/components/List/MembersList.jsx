@@ -1,6 +1,7 @@
 import { useEffect, useContext, useState } from 'react';
 import useSwr from 'swr';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
 
 import LazyList from './Lazy';
 import Context from 'store/context';
@@ -57,8 +58,33 @@ const MembersList = ({ teamName }) => {
     setMembers(updatedMembersArr);
   }, [data, globalState.members]);
 
-  function handleMemberAdd() {
+  function handleAddMember() {
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: 'ADD_MEMBER' });
+  }
+
+  async function handleRemoveMember() {
+    try {
+      const jwt = localStorage.getItem('jwt');
+      const email = globalState.members[globalState.memberIndex]?._id.email;
+
+      console.log(teamName, email);
+
+      const res = await axios.post('/api/team/removeMember', {
+        jwt,
+        name: teamName,
+        email,
+      });
+
+      console.log(res.data);
+      // setStatus({ type: 'success', msg: res.data.Info });
+    } catch (error) {
+      console.log(error);
+      if (error?.response?.status === 500) {
+        // setStatus({ type: 'error', msg: error.response.data.Error });
+      } else {
+        // setStatus({ type: 'error', msg: 'Some error occured!' });
+      }
+    }
   }
 
   return (
@@ -67,7 +93,7 @@ const MembersList = ({ teamName }) => {
         <Typography variant="h6" component="span" className={classes.listHeadingText}>
           Members
         </Typography>
-        <IconButton onClick={handleMemberAdd} className={classes.addIcon}>
+        <IconButton onClick={handleAddMember} className={classes.addIcon}>
           <AddIcon />
         </IconButton>
       </Paper>
@@ -75,7 +101,11 @@ const MembersList = ({ teamName }) => {
       <Divider />
 
       {error ? 'Some error occurred!' : ''}
-      {!data && !error ? <SkeletonList /> : <LazyList data={members} type="members" />}
+      {!data && !error ? (
+        <SkeletonList />
+      ) : (
+        <LazyList data={members} type="members" handler={handleRemoveMember} />
+      )}
 
       <CreateTeamDialog />
     </>

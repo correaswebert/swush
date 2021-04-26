@@ -11,7 +11,6 @@ import MembersList from 'components/List/MembersList';
 import SecretsList from 'components/List/SecretsList';
 import DataList from 'components/List/DataList';
 import AppBar from 'components/Appbar';
-import SpeedDial from 'components/SpeedDial';
 import ProfileCard from 'components/CardView/ProfileCard';
 
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +43,7 @@ export default function Dashboard({ teamName }) {
 
   return (
     <>
-      <AppBar />
+      <AppBar name={teamName} />
 
       <Divider />
 
@@ -68,8 +67,6 @@ export default function Dashboard({ teamName }) {
                 name={globalState.members[globalState.memberIndex]?._id.name}
                 publicKey={globalState.members[globalState.memberIndex]?._id.publicKey}
                 email={globalState.members[globalState.memberIndex]?._id.email}
-                // publicKey={sessionStorage.getItem('publicKey')}
-                // email={sessionStorage.getItem('email')}
                 numTeams={globalState.teams?.length}
               />
             ) : (
@@ -78,8 +75,6 @@ export default function Dashboard({ teamName }) {
           </Grid>
         </Grid>
       </main>
-
-      <SpeedDial />
     </>
   );
 }

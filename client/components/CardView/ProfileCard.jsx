@@ -108,7 +108,7 @@ const ProfileCard = ({ name, publicKey, email, showActions }) => {
             Public Key
           </Typography>
           <Typography
-            variant="pre"
+            variant="inherit"
             component="pre"
             className={classes.data}
             style={{ overflowX: 'auto' }}

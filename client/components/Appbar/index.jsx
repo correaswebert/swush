@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar({ name }) {
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const router = useRouter();
   const classes = useStyles();
@@ -192,7 +192,8 @@ export default function PrimarySearchAppBar() {
           <div className={classes.grow} />
 
           <Typography className={classes.title} variant="body1" noWrap>
-            {globalState.username}
+            {name}
+            {/* {globalState.username} */}
           </Typography>
 
           <Divider orientation="vertical" flexItem classes={{ root: classes.divider }} />

@@ -53,6 +53,25 @@ const TeamsList = () => {
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: 'CREATE_TEAM' });
   }
 
+  async function handleRemoveMember() {
+    try {
+      setSuccessMessage('');
+      setErrorMessage('');
+      const jwt = localStorage.getItem('jwt');
+      const teamName = globalState.teams[selectedIndex]._id.name;
+      console.log(jwt);
+      const res = await axios.post('/api/team/exitTeam', { jwt, name: teamName });
+
+      // setSuccessMessage(`You left the team ${teamName}!`);
+    } catch (error) {
+      if (error?.response?.status === 500) {
+        // setErrorMessage(error.response.data.Error);
+      } else {
+        // setErrorMessage('Some error occurred!');
+      }
+    }
+  }
+
   return (
     <>
       <Paper className={classes.listHeading}>
@@ -66,8 +85,12 @@ const TeamsList = () => {
 
       <Divider />
 
-      { error ? "Some error occurred" : "" }
-      {loading ? <SkeletonList /> : <LazyList data={teamNames} type="teams" />}
+      {error ? 'Some error occurred' : ''}
+      {loading ? (
+        <SkeletonList />
+      ) : (
+        <LazyList data={teamNames} type="teams" handler={handleRemoveMember} />
+      )}
 
       <CreateTeamDialog />
     </>
