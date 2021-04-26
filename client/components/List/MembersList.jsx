@@ -1,13 +1,16 @@
 import { useEffect, useContext, useState } from 'react';
+import useSwr from 'swr';
 import { makeStyles } from '@material-ui/core/styles';
+
 import LazyList from './Lazy';
 import Context from 'store/context';
-import { Typography, Paper, IconButton, Divider } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
+import Divider from '@material-ui/core/Divider';
 import AddIcon from '@material-ui/icons/Add';
 import CreateTeamDialog from 'components/Dialoag/CreateTeam';
-import useFetch from 'hooks/useFetch';
 import SkeletonList from 'components/List/SkeletonList';
-import useSwr from "swr"
 
 const useStyles = makeStyles((theme) => ({
   listHeading: {
@@ -27,21 +30,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const fetcher = url => fetch(url).then(r => r.json())
+const fetcher = (url) => fetch(url).then((r) => r.json());
 
-const MembersList = () => {
+const MembersList = ({ teamName }) => {
   const { globalState, globalDispatch } = useContext(Context);
   const classes = useStyles();
   const [members, setMembers] = useState([]);
-  const [teamName, setTeamName] = useState('')
 
-  // const { loading, data, error } = useFetch(`/api/team//members`);
-  const { data, error } = useSwr(() => '/api/team/' + teamName + '/members', fetcher);
-
-  useEffect(() => {
-    if (!globalState.teams) return
-    setTeamName(globalState.teams[globalState.teamIndex]._id.name)
-  }, [globalState.teamIndex])
+  const { data, error } = useSwr(() => '/api/team/' + teamName + '/members', fetcher, {
+    refreshInterval: 1000,
+  });
 
   useEffect(() => {
     console.log(data);
@@ -49,18 +47,18 @@ const MembersList = () => {
   }, [data]);
 
   useEffect(() => {
-    if (!globalState.teams) return;
+    if (!globalState.members) return;
+
     const updatedMembersArr = [];
     globalState.members.forEach((member) => {
       updatedMembersArr.push(member._id.name);
     });
+
     setMembers(updatedMembersArr);
   }, [data, globalState.members]);
 
-  if (error) return <div>failed to load</div>;
-
   function handleMemberAdd() {
-    globalDispatch({ type: 'TOGGLE_DIALOG', payload: 'CREATE_TEAM' });
+    globalDispatch({ type: 'TOGGLE_DIALOG', payload: 'ADD_MEMBER' });
   }
 
   return (
@@ -76,7 +74,8 @@ const MembersList = () => {
 
       <Divider />
 
-      {!data ? <SkeletonList /> : <LazyList data={members} type="members" />}
+      {error ? 'Some error occurred!' : ''}
+      {!data && !error ? <SkeletonList /> : <LazyList data={members} type="members" />}
 
       <CreateTeamDialog />
     </>

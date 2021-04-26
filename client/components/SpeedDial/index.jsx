@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { makeStyles } from '@material-ui/core/styles';
 import SpeedDial from '@material-ui/lab/SpeedDial';
@@ -31,8 +31,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SpeedDials() {
   const classes = useStyles();
-  const { globalDispatch } = useContext(GlobalContext);
-  const [open, setOpen] = React.useState(false);
+  const { globalState, globalDispatch } = useContext(GlobalContext);
+  const [open, setOpen] = useState(false);
+  const [teamName, setTeamName] = useState('');
+
+  useEffect(() => {
+    if (!globalState.teams) return;
+    setTeamName(globalState.teams[globalState.teamIndex]._id.name);
+  }, [globalState.teamIndex]);
 
   const actions = [
     {
@@ -91,7 +97,7 @@ export default function SpeedDials() {
           key="Team Settings"
           tooltipTitle="Team Settings"
           icon={
-            <Link href="/team-dashboard">
+            <Link href={`/dashboard/team/${teamName}`}>
               <EditIcon />
             </Link>
           }
