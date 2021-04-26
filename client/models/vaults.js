@@ -135,7 +135,6 @@ VaultSchema.methods.reEncrypt = async function (publicKeys, privateKey) {
 
       /* convert decrypted data into plain text */
       const plaintext = await openpgp.stream.readToEnd(decrypted.data);
-      console.log(plaintext);
       /* convert the decrypted secret into message object */
       message = openpgp.Message.fromText(plaintext);
 

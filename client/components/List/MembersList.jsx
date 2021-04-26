@@ -43,7 +43,6 @@ const MembersList = ({ teamName }) => {
   });
 
   useEffect(() => {
-    console.log(data);
     globalDispatch({ type: 'GOT_MEMBER', payload: data?.members });
   }, [data]);
 
@@ -67,15 +66,12 @@ const MembersList = ({ teamName }) => {
       const jwt = localStorage.getItem('jwt');
       const email = globalState.members[globalState.memberIndex]?._id.email;
 
-      console.log(teamName, email);
-
       const res = await axios.post('/api/team/removeMember', {
         jwt,
         name: teamName,
         email,
       });
 
-      console.log(res.data);
       // setStatus({ type: 'success', msg: res.data.Info });
     } catch (error) {
       console.log(error);

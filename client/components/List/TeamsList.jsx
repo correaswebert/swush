@@ -43,7 +43,6 @@ const TeamsList = () => {
     if (!globalState.teams) return;
     const teamNamesArr = [];
     globalState.teams.forEach((team) => {
-      console.log(team._id);
       teamNamesArr.push(team._id.name);
     });
     setTeamNames(teamNamesArr);
@@ -59,7 +58,6 @@ const TeamsList = () => {
       setErrorMessage('');
       const jwt = localStorage.getItem('jwt');
       const teamName = globalState.teams[selectedIndex]._id.name;
-      console.log(jwt);
       const res = await axios.post('/api/team/exitTeam', { jwt, name: teamName });
 
       // setSuccessMessage(`You left the team ${teamName}!`);

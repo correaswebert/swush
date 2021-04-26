@@ -46,7 +46,6 @@ export default function Login() {
         globalDispatch({ type: 'LOGIN' });
         globalDispatch({ type: 'SET_NAME', payload: name });
 
-        console.log(res.data);
         router.push(dashboardLink);
       }
     } catch (error) {

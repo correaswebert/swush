@@ -114,8 +114,6 @@ export default function PrimarySearchAppBar({ name }) {
 
     const res = await axios.post('/api/team/viewNotifications', { jwt });
 
-    console.log(typeof res.data.Notifications.length);
-
     if (res.data.Notifications.length !== 0) {
       setNotification(res.data.Notifications);
     } else {

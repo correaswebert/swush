@@ -13,6 +13,5 @@ export default async function encryptSecret(publicKeys, secret) {
     publicKeys: pubKeys,
   });
 
-  console.log(encrypted);
   return encrypted;
 }

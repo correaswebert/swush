@@ -79,9 +79,7 @@ const SecretsList = ({ teamName }) => {
       const jwt = localStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const secretId = globalState.selectedSecretId;
-      console.log(jwt);
       const res = await axios.post('/api/team/deleteSecret', { jwt, teamName, secretId });
-      console.log(res);
       // setSuccessMessage(`Secret deleted`);
     } catch (error) {
       if (error?.response?.status === 500) {

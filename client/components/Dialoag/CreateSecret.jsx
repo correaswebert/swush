@@ -49,7 +49,6 @@ export default function DialogSelect() {
     if (file.type.startsWith('text/')) {
       reader.onload = (e) => {
         const textContent = e.target.result;
-        console.log(`The content of ${file.name} is ${textContent}`);
         setSecret(textContent);
         setFileName(file.name);
       };
@@ -62,7 +61,6 @@ export default function DialogSelect() {
       reader.onload = (e) => {
         const imageContent = e.target.result;
         const imageData = imageContent.slice(imageContent.indexOf(',') + 1);
-        console.log(`The content of ${file.name} is ${imageContent}`);
         setSecret(imageData);
         setFileName(file.name);
       };

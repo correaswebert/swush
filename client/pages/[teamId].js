@@ -26,7 +26,6 @@ export const getServerSideProps = withSession(async function ({ query, req, res 
 
   await connectToDatabase();
   const team = await Team.findById(teamId).exec();
-  console.log(team);
 
   return {
     props: {
