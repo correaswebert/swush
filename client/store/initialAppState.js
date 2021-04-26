@@ -1,5 +1,6 @@
 export const initialAppState = {
   teams: null,
+  members: null,
   teamIndex: 0,
   secretIndex: 0,
   secretDes: null,

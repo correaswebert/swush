@@ -7,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CreateTeamDialog from 'components/Dialoag/CreateTeam';
 import useFetch from 'hooks/useFetch';
 import SkeletonList from 'components/List/SkeletonList';
-// import useSwr from "swr"
+import useSwr from "swr"
 
 const useStyles = makeStyles((theme) => ({
   listHeading: {
@@ -27,31 +27,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const fetcher = url => fetch(url).then(r => r.json())
+
 const MembersList = () => {
   const { globalState, globalDispatch } = useContext(Context);
   const classes = useStyles();
-  const [teamNames, setTeamNames] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [teamName, setTeamName] = useState('')
 
-  // const teamId = globalState.teams[globalState.teamIndex]._id._id;
-  const { loading, data, error } = useFetch(`/api/team/6083e1a7873fb913a0c6b34e/members`);
-  // const { loading, data, error } = useFetch(`/api/team/${teamId}/members`);
+  // const { loading, data, error } = useFetch(`/api/team//members`);
+  const { data, error } = useSwr(() => '/api/team/' + teamName + '/members', fetcher);
 
   useEffect(() => {
-    globalDispatch({ type: 'GOT_TEAM', payload: data });
+    if (!globalState.teams) return
+    setTeamName(globalState.teams[globalState.teamIndex]._id.name)
+  }, [globalState.teamIndex])
+
+  useEffect(() => {
+    console.log(data);
+    globalDispatch({ type: 'GOT_MEMBER', payload: data?.members });
   }, [data]);
 
   useEffect(() => {
     if (!globalState.teams) return;
-    const teamNamesArr = [];
-    globalState.teams.forEach((team) => {
-      teamNamesArr.push(team._id.name);
+    const updatedMembersArr = [];
+    globalState.members.forEach((member) => {
+      updatedMembersArr.push(member._id.name);
     });
-    setTeamNames(teamNamesArr);
-  }, [loading, globalState.teams]);
+    setMembers(updatedMembersArr);
+  }, [data, globalState.members]);
 
   if (error) return <div>failed to load</div>;
 
-  function handleTeamAdd() {
+  function handleMemberAdd() {
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: 'CREATE_TEAM' });
   }
 
@@ -61,14 +69,14 @@ const MembersList = () => {
         <Typography variant="h6" component="span" className={classes.listHeadingText}>
           Members
         </Typography>
-        <IconButton onClick={handleTeamAdd} className={classes.addIcon}>
+        <IconButton onClick={handleMemberAdd} className={classes.addIcon}>
           <AddIcon />
         </IconButton>
       </Paper>
 
       <Divider />
 
-      {loading ? <SkeletonList /> : <LazyList data={teamNames} type="teams" />}
+      {!data ? <SkeletonList /> : <LazyList data={members} type="members" />}
 
       <CreateTeamDialog />
     </>

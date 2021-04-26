@@ -32,13 +32,8 @@ const TeamsList = () => {
   const { globalState, globalDispatch } = useContext(Context);
   const classes = useStyles();
   const [teamNames, setTeamNames] = useState([]);
-  const router = useRouter();
 
   const { loading, data, error } = useFetch('/api/team/view');
-
-  useEffect(() => {
-    if (!globalState.isLoggedIn) router.push('/auth/login');
-  }, []);
 
   useEffect(() => {
     globalDispatch({ type: 'GOT_TEAM', payload: data });
@@ -53,8 +48,6 @@ const TeamsList = () => {
     });
     setTeamNames(teamNamesArr);
   }, [loading, globalState.teams]);
-
-  if (error) return <div>failed to load</div>;
 
   function handleTeamAdd() {
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: 'CREATE_TEAM' });
@@ -73,6 +66,7 @@ const TeamsList = () => {
 
       <Divider />
 
+      { error ? "Some error occurred" : "" }
       {loading ? <SkeletonList /> : <LazyList data={teamNames} type="teams" />}
 
       <CreateTeamDialog />

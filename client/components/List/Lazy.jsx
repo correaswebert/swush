@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     flexGrow: 1,
     maxHeight: `calc(100vh - ${theme.appbarHeight * 2}rem)`,
-    overflowY: 'scroll',
+    overflowY: 'auto',
     '&::-webkit-scrollbar': {
       width: theme.spacing(1.5),
       backgroundColor: theme.palette.primary.main,
@@ -75,7 +75,6 @@ export default function LazyList({ data: listData, type: listType }) {
   initialIndex = initialIndex ?? 0;
 
   const [selectedIndex, setSelectedIndex] = useState(initialIndex);
-  const dataMaxIndex = listData.length - 1;
 
   async function handleExitTeam() {
     try {
@@ -127,10 +126,10 @@ export default function LazyList({ data: listData, type: listType }) {
         globalDispatch({ type: 'SELECT_TEAM', payload: selectedIndex });
         const teamName = globalState.teams[index]._id.name;
 
-        const teamSecrets = await axios.post('/api/team/viewVault', { jwt, teamName });
-        const secretList = teamSecrets.data;
+        // const teamSecrets = await axios.post('/api/team/viewVault', { jwt, teamName });
+        // const secretList = teamSecrets.data;
 
-        globalDispatch({ type: 'GOT_SECRET_DES', payload: secretList });
+        // globalDispatch({ type: 'GOT_SECRET_DES', payload: secretList });
         break;
 
       case 'secrets':

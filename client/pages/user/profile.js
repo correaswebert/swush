@@ -7,6 +7,7 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import { useEffect, useContext, useState } from 'react';
 import Context from 'store/context';
@@ -16,15 +17,23 @@ import AppBar from 'components/Appbar';
 import UpdateProfileDialog from 'components/Dialoag/UpdateProfile';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    minWidth: 275,
-    backgroundColor: theme.palette.secondary.main,
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     height: `calc(100vh - ${theme.appbarHeight}rem)`,
+    minWidth: 275,
+    backgroundColor: theme.palette.primary.main,
     padding: theme.spacing(5),
-    borderRadius: 0,
     [theme.breakpoints.down(500)]: {
       padding: theme.spacing(1),
     },
+  },
+  root: {
+    height: '100%',
+    maxWidth: '90vw',
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: 0,
   },
   description: {
     color: theme.palette.text.accent,
@@ -62,78 +71,91 @@ export default function UserProfile({ name, publicKey, email, teams }) {
   return (
     <>
       <AppBar />
-      <Card className={classes.root} variant="outlined">
-        <CardContent>
-          <Typography
-            variant="h6"
-            component="h6"
-            className={classes.title}
-            gutterBottom
-            classes={{ root: classes.description }}
-          >
-            Name
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h6"
-            className={classes.data}
-            gutterBottom
-            classes={{ root: classes.secretDescription }}
-          >
-            {globalState.username}
-          </Typography>
+      <Divider />
 
-          <Typography
-            variant="h6"
-            component="h6"
-            className={classes.title}
-            gutterBottom
-            classes={{ root: classes.description }}
-          >
-            Email
-          </Typography>
-          <Typography variant="h6" component="h6" className={classes.data} gutterBottom>
-            {email}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h6"
-            className={classes.title}
-            gutterBottom
-            classes={{ root: classes.description }}
-          >
-            Teams you are a part of
-          </Typography>
-          <Typography variant="h6" component="h6" className={classes.data} gutterBottom>
-            {teams}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h3"
-            className={classes.title}
-            gutterBottom
-            classes={{ root: classes.description }}
-          >
-            Public Key
-          </Typography>
-          <Typography variant="h6" component="h3" className={classes.data} gutterBottom>
-            {publicKey}
-          </Typography>
-        </CardContent>
+      <div className={classes.wrapper}>
+        <Card className={classes.root} variant="outlined">
+          <CardContent>
+            <Typography
+              variant="h6"
+              component="h6"
+              className={classes.title}
+              gutterBottom
+              classes={{ root: classes.description }}
+            >
+              Name
+            </Typography>
+            <Typography
+              variant="h6"
+              component="h6"
+              className={classes.data}
+              gutterBottom
+              classes={{ root: classes.secretDescription }}
+            >
+              {globalState.username}
+            </Typography>
 
-        <CardActions className={classes.buttonContainer}>
-          <Button
-            className={classes.updateButton}
-            onClick={handleUpdateSecret}
-            variant="outlined"
-            size="large"
-          >
-            Update
-          </Button>
-        </CardActions>
-        <UpdateSecretDialog />
-      </Card>
-      <UpdateProfileDialog />
+            <Typography
+              variant="h6"
+              component="h6"
+              className={classes.title}
+              gutterBottom
+              classes={{ root: classes.description }}
+            >
+              Email
+            </Typography>
+            <Typography variant="h6" component="h6" className={classes.data} gutterBottom>
+              {email}
+            </Typography>
+
+            <Typography
+              variant="h6"
+              component="h6"
+              className={classes.title}
+              gutterBottom
+              classes={{ root: classes.description }}
+            >
+              Teams you are a part of
+            </Typography>
+            <Typography variant="h6" component="h6" className={classes.data} gutterBottom>
+              {teams}
+            </Typography>
+
+            <Typography
+              variant="h6"
+              component="h3"
+              className={classes.title}
+              gutterBottom
+              classes={{ root: classes.description }}
+            >
+              Public Key
+            </Typography>
+            <Typography
+              variant="pre"
+              component="pre"
+              className={classes.data}
+              style={{ overflowX: 'auto' }}
+              gutterBottom
+            >
+              {publicKey}
+            </Typography>
+          </CardContent>
+
+          <CardActions className={classes.buttonContainer}>
+            <Button
+              className={classes.updateButton}
+              onClick={handleUpdateSecret}
+              variant="outlined"
+              size="large"
+            >
+              Update
+            </Button>
+          </CardActions>
+          <UpdateSecretDialog />
+        </Card>
+
+        <UpdateProfileDialog />
+      </div>
     </>
   );
 }

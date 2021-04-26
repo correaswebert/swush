@@ -11,8 +11,11 @@ async function handleUser(req, res) {
     const { _id: userId } = await getAuthenticatedUser(jwt);
     let isAdmin = false;
 
-    const { id: teamId } = req.query;
-    const team = await Team.findById(teamId).exec();
+    const { name: teamName } = req.query;
+    const team = await Team.findOne({ name: teamName }).exec();
+
+    if (!team)
+      return res.json({ admins: [], members: [] })
 
     for (const key of team.admins) {
       if (key._id.toString() === userId.toString()) {
@@ -31,6 +34,7 @@ async function handleUser(req, res) {
 
     res.status(200).json({ admins, members });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ Error: 'Internal server error!' });
   }
 }

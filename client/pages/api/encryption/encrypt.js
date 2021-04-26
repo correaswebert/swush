@@ -15,43 +15,27 @@ export default async function (req, res) {
 
     var isMember = false;
 
-    // check if the team exists
     const team = await TeamDetails.findOne({ name: teamName }).exec();
     if (!team) return res.json('Team does not exists');
 
-    // check if the user is a member of the team
     isMember = await team.members.id(user._id);
     if (!isMember) return res.json('Not a team member');
 
-    /* get details of all the team members */
     const teamMembers = await team.populate('members._id').execPopulate();
 
     const publicKeys = [];
-
-    /* get the public keys of all the team members */
     teamMembers.members.forEach((member) => {
       publicKeys.push(member._id.publicKey);
     });
 
-    /* encrypt the secret */
     const encryptedSecret = await encryptSecret(publicKeys, secret);
 
-    if (secretType === 'ssh') {
-      const vault = await Vault.findById(team.vaults[0]._id).exec();
-      await vault.addSecret('ssh', description, encryptedSecret, filename);
-    } else if (secretType === 'oauth') {
-      const vault = await Vault.findById(team.vaults[0]._id).exec();
-      await vault.addSecret('oauth', description, encryptedSecret, filename);
-    } else if (secretType === 'password') {
-      const vault = await Vault.findById(team.vaults[0]._id).exec();
-      await vault.addSecret('password', description, encryptedSecret, filename);
-    } else if (secretType === 'file') {
-      console.log(filename);
-      const vault = await Vault.findById(team.vaults[0]._id).exec();
-      await vault.addSecret('file', description, encryptedSecret, filename);
-    }
+    // check if valid secretType
 
-    return res.json('Done!');
+    const vault = await Vault.findById(team.vaults[0]._id).exec();
+    await vault.addSecret(secretType, description, encryptedSecret, filename);
+
+    return res.json({ Info: 'Successfully added new secret!' , secret });
   } catch (error) {
     console.error(error);
     res.status(500).json('Internal server error.');
