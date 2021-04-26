@@ -154,6 +154,9 @@ export default function LazyList({ data: listData, type: listType }) {
         });
         break;
 
+      case 'members':
+        globalDispatch({ type: 'SELECT_MEMBER', payload: selectedIndex });
+
       default:
         break;
     }

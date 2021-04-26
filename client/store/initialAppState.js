@@ -3,6 +3,7 @@ export const initialAppState = {
   members: null,
   teamIndex: -1,
   secretIndex: -1,
+  memberIndex: -1,
   secretDes: null,
   allDescriptions: null,
   allSecrets: null,

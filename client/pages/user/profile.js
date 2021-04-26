@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function UserProfile({ publicKey, email, teams }) {
+export default function UserProfile({ publicKey, email }) {
   const classes = useStyles();
   const { globalState } = useContext(GlobalContext);
 
@@ -67,7 +67,6 @@ export default function UserProfile({ publicKey, email, teams }) {
         name={globalState.username}
         publicKey={publicKey}
         email={email}
-        numTeams={teams}
         showActions
       />
       <UpdateProfileDialog />
@@ -95,7 +94,6 @@ export const getServerSideProps = withSession(async function ({ query, req, res 
     props: {
       publicKey: user.publicKey,
       email: user.email,
-      teams: user.teams.length,
     },
   };
 });

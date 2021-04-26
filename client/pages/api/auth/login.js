@@ -9,7 +9,10 @@ const LoginApi = async (req, res) => {
 
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email: email }, 'password tokens name').exec();
+    const user = await User.findOne(
+      { email: email },
+      'password tokens name publicKey privateKey'
+    ).exec();
     if (!user) {
       return res.status(401).json({ Error: 'User not found!' });
     }
@@ -18,11 +21,13 @@ const LoginApi = async (req, res) => {
     }
 
     const jwt = generateJwt(email);
-    const name = user.name;
+    const { name, publicKey } = user;
 
     req.session.set('user', { jwt: jwt });
     await req.session.save();
-    res.status(200).json({ Info: 'Logged in successfully!', jwt, name });
+    res
+      .status(200)
+      .json({ Info: 'Logged in successfully!', jwt, name, email, publicKey });
   } catch (error) {
     res.status(500).json({ Error: 'Internal server error.' });
     console.error(error);

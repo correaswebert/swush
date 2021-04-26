@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProfileCard = ({ name, publicKey, email, numTeams, showActions }) => {
+const ProfileCard = ({ name, publicKey, email, showActions }) => {
   const classes = useStyles();
   const { globalDispatch } = useContext(GlobalContext);
 
@@ -96,19 +96,6 @@ const ProfileCard = ({ name, publicKey, email, numTeams, showActions }) => {
           </Typography>
           <Typography variant="h6" component="h6" className={classes.data} gutterBottom>
             {email}
-          </Typography>
-
-          <Typography
-            variant="h6"
-            component="h6"
-            className={classes.title}
-            gutterBottom
-            classes={{ root: classes.description }}
-          >
-            Teams you are a part of
-          </Typography>
-          <Typography variant="h6" component="h6" className={classes.data} gutterBottom>
-            {numTeams}
           </Typography>
 
           <Typography

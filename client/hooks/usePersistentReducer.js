@@ -82,6 +82,12 @@ const reducer = (state, action) => {
         secretIndex: action.payload,
       };
 
+    case 'SELECT_MEMBER':
+      return {
+        ...state,
+        memberIndex: action.payload,
+      };
+
     case 'ALL_DESCRIPTIONS':
       return {
         ...state,
