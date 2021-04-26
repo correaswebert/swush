@@ -154,6 +154,10 @@ export default function PrimarySearchAppBar() {
     router.push('/user/profile');
   };
 
+  const handleDashboard = () => {
+    router.push('/user-dashboard');
+  };
+
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -170,6 +174,7 @@ export default function PrimarySearchAppBar() {
       onClose={handleMenuClose}
       keepMounted
     >
+      <MenuItem onClick={handleDashboard}>Dashboard</MenuItem>
       <MenuItem onClick={handleProfile}>Profile</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>

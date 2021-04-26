@@ -57,7 +57,7 @@ export default function FormDialog() {
         aria-labelledby="form-dialog-title"
         fullWidth
       >
-        <DialogTitle id="form-dialog-title">Update Secret</DialogTitle>
+        <DialogTitle id="form-dialog-title">Update Profile</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
