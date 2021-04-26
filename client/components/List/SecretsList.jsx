@@ -7,7 +7,7 @@ import { Typography, Paper, IconButton, Divider } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import CreateSecretDialog from 'components/Dialoag/CreateSecret';
 import useFetch from 'hooks/useFetch';
-import useSwr from 'swr'
+import useSwr from 'swr';
 
 const useStyles = makeStyles((theme) => ({
   listHeading: {
@@ -32,33 +32,28 @@ const useStyles = makeStyles((theme) => ({
 //   return (res => (res.json))
 // }
 
-const fetcher = url => fetch(url).then(r => r.json())
+const fetcher = (url) => fetch(url).then((r) => r.json());
 
-
-const SecretsList = () => {
+const SecretsList = ({ teamName }) => {
   const classes = useStyles();
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const [descriptions, setDescriptions] = useState([]);
-  const [teamName, setTeamName] = useState('')
-  
-  const { data, error } = useSwr(() => '/api/vault/' + teamName, fetcher, { refreshInterval: 1000 })
-  
-  useEffect(() => {
-    if (!globalState.teams) return
-    setTeamName(globalState.teams[globalState.teamIndex]?._id.name)
-  }, [globalState.teamIndex])
+
+  const { data, error } = useSwr(() => '/api/vault/' + teamName, fetcher, {
+    refreshInterval: 1000,
+  });
 
   useEffect(() => {
     globalDispatch({ type: 'GOT_SECRET_DES', payload: data });
   }, [data]);
-  
+
   useEffect(() => {
     if (!globalState.secretDes) return;
     const sshDes = globalState.secretDes.sshDescription ?? [];
     const oauthDes = globalState.secretDes.oauthDescription ?? [];
     const passDes = globalState.secretDes.passwordDescription ?? [];
     const fileDes = globalState.secretDes.filesDescription ?? [];
-    
+
     const ssh = globalState.secretDes.SSH ?? [];
     const oauth = globalState.secretDes.OAuth ?? [];
     const pass = globalState.secretDes.Password ?? [];
@@ -90,8 +85,11 @@ const SecretsList = () => {
 
       <Divider />
 
-      { error ? "Some error occurred" : "" }
-      {(!data && !error) ? <SkeletonList /> : <LazyList data={descriptions} type="secrets" />}
+      {!data && !error ? (
+        <SkeletonList />
+      ) : (
+        <LazyList data={descriptions} type="secrets" />
+      )}
 
       <CreateSecretDialog />
     </>

@@ -3,7 +3,7 @@ import styles from 'styles/Home.module.css';
 
 export default function Home() {
   const matches = useMediaQuery('(max-width:500px)');
-  const dashboardLink = matches ? '/m/teams' : 'user-dashboard';
+  const dashboardLink = matches ? '/m/teams' : 'dashboard';
 
   return (
     <>

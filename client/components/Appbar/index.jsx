@@ -155,7 +155,7 @@ export default function PrimarySearchAppBar() {
   };
 
   const handleDashboard = () => {
-    router.push('/user-dashboard');
+    router.push('/dashboard');
   };
 
   const handleMobileMenuOpen = (event) => {

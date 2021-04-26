@@ -9,6 +9,7 @@ function init(initialValues) {
       if (!(initialValues[key] instanceof number)) return;
 
       const index = sessionStorage.getItem(key) ?? initialValues[key];
+      // const index = sessionStorage.getItem(key) ?? 0;
       initialState[key] = parseInt(index);
     }
   } catch (error) {

@@ -1,20 +1,14 @@
-import withSession from 'utils/withSession';
+import { useContext } from 'react';
 import { connectToDatabase } from 'utils/connectDb';
-import getAuthenticatedUser from 'utils/auth';
-import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-import { useEffect, useContext, useState } from 'react';
-import Context from 'store/context';
+import withSession from 'utils/withSession';
+import getAuthenticatedUser from 'utils/auth';
 import GlobalContext from 'store/context';
-import UpdateSecretDialog from 'components/Dialoag/UpdateSecret';
+
+import Divider from '@material-ui/core/Divider';
 import AppBar from 'components/Appbar';
 import UpdateProfileDialog from 'components/Dialoag/UpdateProfile';
+import ProfileCard from 'components/CardView/ProfileCard';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -60,107 +54,26 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '5px',
   },
 }));
-export default function UserProfile({ name, publicKey, email, teams }) {
-  const classes = useStyles();
-  const { globalState, globalDispatch } = useContext(GlobalContext);
 
-  function handleUpdateSecret() {
-    globalDispatch({ type: 'TOGGLE_DIALOG', payload: 'UPDATE_PROFILE' });
-  }
+export default function UserProfile({ publicKey, email, teams }) {
+  const classes = useStyles();
+  const { globalState } = useContext(GlobalContext);
 
   return (
     <>
       <AppBar />
       <Divider />
-
-      <div className={classes.wrapper}>
-        <Card className={classes.root} variant="outlined">
-          <CardContent>
-            <Typography
-              variant="h6"
-              component="h6"
-              className={classes.title}
-              gutterBottom
-              classes={{ root: classes.description }}
-            >
-              Name
-            </Typography>
-            <Typography
-              variant="h6"
-              component="h6"
-              className={classes.data}
-              gutterBottom
-              classes={{ root: classes.secretDescription }}
-            >
-              {globalState.username}
-            </Typography>
-
-            <Typography
-              variant="h6"
-              component="h6"
-              className={classes.title}
-              gutterBottom
-              classes={{ root: classes.description }}
-            >
-              Email
-            </Typography>
-            <Typography variant="h6" component="h6" className={classes.data} gutterBottom>
-              {email}
-            </Typography>
-
-            <Typography
-              variant="h6"
-              component="h6"
-              className={classes.title}
-              gutterBottom
-              classes={{ root: classes.description }}
-            >
-              Teams you are a part of
-            </Typography>
-            <Typography variant="h6" component="h6" className={classes.data} gutterBottom>
-              {teams}
-            </Typography>
-
-            <Typography
-              variant="h6"
-              component="h3"
-              className={classes.title}
-              gutterBottom
-              classes={{ root: classes.description }}
-            >
-              Public Key
-            </Typography>
-            <Typography
-              variant="pre"
-              component="pre"
-              className={classes.data}
-              style={{ overflowX: 'auto' }}
-              gutterBottom
-            >
-              {publicKey}
-            </Typography>
-          </CardContent>
-
-          <CardActions className={classes.buttonContainer}>
-            <Button
-              className={classes.updateButton}
-              onClick={handleUpdateSecret}
-              variant="outlined"
-              size="large"
-            >
-              Update
-            </Button>
-          </CardActions>
-          <UpdateSecretDialog />
-        </Card>
-
-        <UpdateProfileDialog />
-      </div>
+      <ProfileCard
+        name={globalState.username}
+        publicKey={publicKey}
+        email={email}
+        numTeams={teams}
+        showActions
+      />
+      <UpdateProfileDialog />
     </>
   );
 }
-
-// localhost:3000/6083e1a7873fb913a0c6b34e
 
 export const getServerSideProps = withSession(async function ({ query, req, res }) {
   const sessionUser = req.session.get('user');
@@ -180,7 +93,6 @@ export const getServerSideProps = withSession(async function ({ query, req, res 
 
   return {
     props: {
-      name: user.name,
       publicKey: user.publicKey,
       email: user.email,
       teams: user.teams.length,

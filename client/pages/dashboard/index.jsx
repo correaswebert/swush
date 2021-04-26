@@ -1,5 +1,4 @@
-import { useContext } from 'react';
-import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
 import withSession from 'utils/withSession';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -45,8 +44,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
   const { globalState } = useContext(GlobalContext);
-  const router = useRouter();
   const classes = useStyles();
+  const [teamName, setTeamName] = useState('');
+
+  useEffect(() => {
+    if (!globalState.teams) return;
+    setTeamName(globalState.teams[globalState.teamIndex]._id.name);
+  }, [globalState.teamIndex]);
 
   return (
     <>
@@ -63,7 +67,7 @@ export default function Dashboard() {
           <Divider orientation="vertical" flexItem className={classes.divider} />
 
           <Grid item xs className={classes.listContainer}>
-            <SecretsList />
+            <SecretsList teamName={teamName} />
           </Grid>
 
           <Divider orientation="vertical" flexItem className={classes.divider} />

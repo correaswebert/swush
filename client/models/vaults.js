@@ -326,4 +326,4 @@ VaultSchema.methods.decryption = async function (privateKey) {
   return secrets;
 };
 /* if TeamSchema schema already exists, don't overwrite it */
-export default models.Vault || model('Vault', VaultSchema);
+export default models?.Vault || model('Vault', VaultSchema);

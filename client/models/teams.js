@@ -54,6 +54,6 @@ TeamSchema.methods.removeMember = async function (userId) {
     }
   });
   await team.save();
-}
+};
 /* if TeamSchema schema already exists, don't overwrite it */
-export default models.Team || model('Team', TeamSchema);
+export default models?.Team || model('Team', TeamSchema);

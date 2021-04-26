@@ -14,7 +14,7 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-    if (globalState.isLoggedIn) router.push('/user-dashboard');
+    if (globalState.isLoggedIn) router.push('/dashboard');
   }, []);
 
   function validateForm() {
@@ -39,7 +39,7 @@ export default function Login() {
         globalDispatch({ type: 'SET_NAME', payload: name });
 
         console.log(res.data);
-        router.push('/user-dashboard');
+        router.push('/dashboard');
       }
     } catch (error) {
       if (error?.response?.status === 401) {
