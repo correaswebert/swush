@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import withSession from 'utils/withSession';
 
@@ -27,6 +27,10 @@ export default function Dashboard({ teamName }) {
   const { globalState } = useContext(GlobalContext);
   const router = useRouter();
   const classes = useStyles();
+
+  useEffect(() => {
+    router.push('/m/data');
+  }, [globalState.secretIndex]);
 
   return (
     <>

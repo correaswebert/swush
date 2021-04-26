@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import withSession from 'utils/withSession';
 
@@ -26,13 +26,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
   const { globalState } = useContext(GlobalContext);
-  const router = useRouter();
   const classes = useStyles();
+  const [description, setDescription] = useState(null);
+  const [secret, setSecret] = useState(null);
 
   useEffect(() => {
-    if (globalState.teamIndex == -1) return;
-    router.push('/m/secrets');
-  }, [globalState.teamIndex]);
+    setSecret(globalState?.selectedSecret);
+  }, [globalState.selectedSecret]);
+
+  useEffect(() => {
+    setDescription(globalState?.selectedDes);
+  }, [globalState.selectedDes]);
 
   return (
     <>
@@ -42,7 +46,7 @@ export default function Dashboard() {
 
       <Grid container className={classes.container}>
         <Grid item xs className={classes.listContainer}>
-          <DataList />
+          <DataList description={description} secret={secret} />
         </Grid>
       </Grid>
 

@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CardView() {
+export default function CardView({ description, secret }) {
   const classes = useStyles();
   const { globalState, globalDispatch } = useContext(GlobalContext);
 
@@ -115,7 +115,7 @@ export default function CardView() {
           gutterBottom
           classes={{ root: classes.secretDescription }}
         >
-          {globalState.selectedDes}
+          {description ?? globalState.selectedDes}
         </Typography>
 
         <Typography
@@ -128,11 +128,12 @@ export default function CardView() {
           Secret Data
         </Typography>
         <Typography variant="h4" component="h5" className={classes.data} gutterBottom>
-          {globalState.selectedFileName === 'ssh' ||
-          globalState.selectedFileName === 'oauth' ||
-          globalState.selectedFileName === 'pass'
-            ? globalState.selectedSecret
-            : globalState.selectedFileName}
+          {secret ??
+            (globalState.selectedFileName === 'ssh' ||
+            globalState.selectedFileName === 'oauth' ||
+            globalState.selectedFileName === 'pass'
+              ? globalState.selectedSecret
+              : globalState.selectedFileName)}
         </Typography>
       </CardContent>
 
