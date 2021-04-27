@@ -36,12 +36,13 @@ export default function Login() {
       );
 
       if (res.status === 200) {
-        const { jwt, name, email, publicKey } = res.data;
+        const { jwt, name, email, publicKey, userid } = res.data;
 
         localStorage.setItem('jwt', jwt);
         sessionStorage.setItem('username', name);
         sessionStorage.setItem('email', email);
         sessionStorage.setItem('publicKey', publicKey);
+        sessionStorage.setItem('userid', userid);
 
         globalDispatch({ type: 'LOGIN' });
         globalDispatch({ type: 'SET_NAME', payload: name });

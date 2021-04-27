@@ -37,7 +37,7 @@ export default function Login() {
         sessionStorage.setItem('username', name);
         globalDispatch({ type: 'LOGIN' });
         globalDispatch({ type: 'SET_NAME', payload: name });
-        router.push('/dashboard');
+        router.push('/auth/login');
       }
     } catch (err) {
       const errMessage = 'Some error occured!';

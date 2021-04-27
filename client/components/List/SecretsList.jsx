@@ -6,8 +6,8 @@ import SkeletonList from 'components/List/SkeletonList';
 import { Typography, Paper, IconButton, Divider } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import CreateSecretDialog from 'components/Dialoag/CreateSecret';
-import useFetch from 'hooks/useFetch';
 import useSwr from 'swr';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   listHeading: {
@@ -26,11 +26,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.accent,
   },
 }));
-
-// const fetcher = url => {
-//   console.log(url);
-//   return (res => (res.json))
-// }
 
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -74,14 +69,18 @@ const SecretsList = ({ teamName }) => {
 
   const handleSecretDelete = async () => {
     try {
-      setSuccessMessage('');
-      setErrorMessage('');
+      // setSuccessMessage('');
+      // setErrorMessage('');
       const jwt = localStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const secretId = globalState.selectedSecretId;
+
+      console.log(jwt, teamName, secretId);
+
       const res = await axios.post('/api/team/deleteSecret', { jwt, teamName, secretId });
       // setSuccessMessage(`Secret deleted`);
     } catch (error) {
+      console.error(error);
       if (error?.response?.status === 500) {
         // setErrorMessage(error.response.data.Error);
       } else {
