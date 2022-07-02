@@ -45,6 +45,8 @@ const theme = createMuiTheme({
       },
     },
   },
+
+  appbarHeight: 3.5,
 });
 
 function MyApp({ Component, pageProps }) {

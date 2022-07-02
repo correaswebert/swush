@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
+import Link from 'next/link';
 import { makeStyles } from '@material-ui/core/styles';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
@@ -6,6 +7,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import PersonAddDisabledIcon from '@material-ui/icons/PersonAddDisabled';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 import AddMemberDialog from 'components/Dialoag/AddMember';
 import RemoveMemberDialog from 'components/Dialoag/RemoveMember';
@@ -14,7 +16,7 @@ import GlobalContext from 'store/context';
 
 const useStyles = makeStyles((theme) => ({
   speedDial: {
-    position: 'absolute',
+    position: 'fixed',
     bottom: 0,
     right: 0,
     '&.MuiSpeedDial-directionUp': {
@@ -29,8 +31,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SpeedDials() {
   const classes = useStyles();
-  const { globalDispatch } = useContext(GlobalContext);
-  const [open, setOpen] = React.useState(false);
+  const { globalState, globalDispatch } = useContext(GlobalContext);
+  const [open, setOpen] = useState(false);
+  const [teamName, setTeamName] = useState('');
+
+  useEffect(() => {
+    if (!globalState.teams) return;
+    setTeamName(globalState.teams[globalState.teamIndex]._id.name);
+  }, [globalState.teamIndex]);
 
   const actions = [
     {
@@ -85,6 +93,15 @@ export default function SpeedDials() {
             onClick={handleAction(action)}
           />
         ))}
+        <SpeedDialAction
+          key="Team Settings"
+          tooltipTitle="Team Settings"
+          icon={
+            <Link href={`/dashboard/team/${teamName}`}>
+              <EditIcon />
+            </Link>
+          }
+        />
       </SpeedDial>
 
       <AddMemberDialog />

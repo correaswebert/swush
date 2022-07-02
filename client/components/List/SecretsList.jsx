@@ -7,6 +7,7 @@ import { Typography, Paper, IconButton, Divider } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import CreateSecretDialog from 'components/Dialoag/CreateSecret';
 import useFetch from 'hooks/useFetch';
+import useSwr from 'swr';
 
 const useStyles = makeStyles((theme) => ({
   listHeading: {
@@ -26,24 +27,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SecretsList = () => {
+// const fetcher = url => {
+//   console.log(url);
+//   return (res => (res.json))
+// }
+
+const fetcher = (url) => fetch(url).then((r) => r.json());
+
+const SecretsList = ({ teamName }) => {
   const classes = useStyles();
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const [descriptions, setDescriptions] = useState([]);
 
-  const { loading, data, error } = useFetch('/api/team/viewVault');
+  const { data, error } = useSwr(() => '/api/vault/' + teamName, fetcher, {
+    refreshInterval: 1000,
+  });
+
+  useEffect(() => {
+    globalDispatch({ type: 'GOT_SECRET_DES', payload: data });
+  }, [data]);
 
   useEffect(() => {
     if (!globalState.secretDes) return;
-    const sshDes = globalState.secretDes.sshDescription;
-    const oauthDes = globalState.secretDes.oauthDescription;
-    const passDes = globalState.secretDes.passwordDescription;
-    const fileDes = globalState.secretDes.filesDescription;
+    const sshDes = globalState.secretDes.sshDescription ?? [];
+    const oauthDes = globalState.secretDes.oauthDescription ?? [];
+    const passDes = globalState.secretDes.passwordDescription ?? [];
+    const fileDes = globalState.secretDes.filesDescription ?? [];
 
-    const ssh = globalState.secretDes.SSH;
-    const oauth = globalState.secretDes.OAuth;
-    const pass = globalState.secretDes.Password;
-    const files = globalState.secretDes.Files;
+    const ssh = globalState.secretDes.SSH ?? [];
+    const oauth = globalState.secretDes.OAuth ?? [];
+    const pass = globalState.secretDes.Password ?? [];
+    const files = globalState.secretDes.Files ?? [];
 
     const allSec = [...ssh, ...oauth, ...pass, ...files];
     const allDes = [...sshDes, ...oauthDes, ...passDes, ...fileDes];
@@ -52,11 +66,29 @@ const SecretsList = () => {
     globalDispatch({ type: 'ALL_SECRETS', payload: allSec });
 
     setDescriptions(allDes);
-  }, [globalState.secretDes]);
+  }, [data, globalState.secretDes]);
 
-  function handleTeamAdd() {
+  function handleSecretAdd() {
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: 'CREATE_SECRET' });
   }
+
+  const handleSecretDelete = async () => {
+    try {
+      setSuccessMessage('');
+      setErrorMessage('');
+      const jwt = localStorage.getItem('jwt');
+      const teamName = globalState.teams[globalState.teamIndex]._id.name;
+      const secretId = globalState.selectedSecretId;
+      const res = await axios.post('/api/team/deleteSecret', { jwt, teamName, secretId });
+      // setSuccessMessage(`Secret deleted`);
+    } catch (error) {
+      if (error?.response?.status === 500) {
+        // setErrorMessage(error.response.data.Error);
+      } else {
+        // setErrorMessage('Some error occurred!');
+      }
+    }
+  };
 
   return (
     <>
@@ -64,14 +96,18 @@ const SecretsList = () => {
         <Typography variant="h6" component="span" className={classes.listHeadingText}>
           Secrets
         </Typography>
-        <IconButton onClick={handleTeamAdd} className={classes.addIcon}>
+        <IconButton onClick={handleSecretAdd} className={classes.addIcon}>
           <AddIcon />
         </IconButton>
       </Paper>
 
       <Divider />
 
-      {loading ? <SkeletonList /> : <LazyList data={descriptions} type="secrets" />}
+      {!data && !error ? (
+        <SkeletonList />
+      ) : (
+        <LazyList data={descriptions} type="secrets" handler={handleSecretDelete} />
+      )}
 
       <CreateSecretDialog />
     </>

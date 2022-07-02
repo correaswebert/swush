@@ -40,7 +40,6 @@ export default async (req, res) => {
     /* send welcome email to the user */
     sendWelcomeEmail(user.email, user.name);
 
-    console.log(name);
     res.status(200).json({
       Info: 'User successfully created!',
       publicKey,

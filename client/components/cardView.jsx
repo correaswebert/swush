@@ -9,14 +9,19 @@ import { useEffect, useContext, useState } from 'react';
 import Context from 'store/context';
 import GlobalContext from 'store/context';
 import UpdateSecretDialog from 'components/Dialoag/UpdateSecret';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import { IconButton } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
     backgroundColor: theme.palette.secondary.main,
-    height: 'calc(100vh - 4.05rem)',
+    height: `calc(100vh - ${theme.appbarHeight}rem)`,
     padding: theme.spacing(5),
     borderRadius: 0,
+    [theme.breakpoints.down(500)]: {
+      padding: theme.spacing(1),
+    },
   },
   description: {
     color: theme.palette.text.accent,
@@ -28,12 +33,20 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.main,
     fontWeight: 'normal',
   },
-  updateButton: {
+  buttonContainer: {
     position: 'fixed',
     bottom: theme.spacing(5),
+    [theme.breakpoints.down(500)]: {
+      bottom: theme.spacing(1),
+    },
+  },
+  updateButton: {
     fontSize: '1.15rem',
-    color: '#e6e6e6',
-    borderColor: '#565656',
+    color: theme.palette.text.main,
+    borderColor: theme.palette.text.accent,
+  },
+  downloadIcon: {
+    color: theme.palette.text.main,
   },
   download: {
     bottom: theme.spacing(0),
@@ -43,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CardView() {
+export default function CardView({ description, secret }) {
   const classes = useStyles();
   const { globalState, globalDispatch } = useContext(GlobalContext);
 
@@ -102,7 +115,7 @@ export default function CardView() {
           gutterBottom
           classes={{ root: classes.secretDescription }}
         >
-          {globalState.selectedDes}
+          {description ?? globalState.selectedDes}
         </Typography>
 
         <Typography
@@ -115,31 +128,27 @@ export default function CardView() {
           Secret Data
         </Typography>
         <Typography variant="h4" component="h5" className={classes.data} gutterBottom>
-          {globalState.selectedFileName === 'ssh' ||
-          globalState.selectedFileName === 'oauth' ||
-          globalState.selectedFileName === 'pass'
-            ? globalState.selectedSecret
-            : globalState.selectedFileName}
+          {secret ??
+            (globalState.selectedFileName === 'ssh' ||
+            globalState.selectedFileName === 'oauth' ||
+            globalState.selectedFileName === 'pass'
+              ? globalState.selectedSecret
+              : globalState.selectedFileName)}
         </Typography>
       </CardContent>
 
-      <CardActions>
+      <CardActions className={classes.buttonContainer}>
         <Button
+          className={classes.updateButton}
           onClick={handleUpdateSecret}
           variant="outlined"
           size="large"
-          className={classes.updateButton}
         >
           Update
         </Button>
-        <Button
-          onClick={handleDownload}
-          className={classes.download}
-          variant="outlined"
-          size="large"
-        >
-          Download
-        </Button>
+        <IconButton onClick={handleDownload}>
+          <CloudDownloadIcon className={classes.downloadIcon} fontSize="large" />
+        </IconButton>
       </CardActions>
       <UpdateSecretDialog />
     </Card>

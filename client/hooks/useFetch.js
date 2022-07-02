@@ -15,7 +15,7 @@ const useFetch = (url, data) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const res = await axios.post(url, { jwt });
+        const res = await axios.post(url, { jwt, ...data });
         setResponse(res.data);
       } catch (err) {
         setError(err);

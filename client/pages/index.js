@@ -1,6 +1,10 @@
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styles from 'styles/Home.module.css';
 
 export default function Home() {
+  const matches = useMediaQuery('(max-width:500px)');
+  const dashboardLink = matches ? '/m/teams' : 'dashboard';
+
   return (
     <>
       <a className={styles.card2} href="/auth/login">
@@ -17,7 +21,7 @@ export default function Home() {
           </p>
 
           <div className={styles.grid}>
-            <a href="/dashboard" className={styles.card}>
+            <a href={dashboardLink} className={styles.card}>
               <h3>Dashboard &rarr;</h3>
               <p>Checkout your secrets hidden safely in our vaults</p>
             </a>

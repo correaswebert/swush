@@ -26,7 +26,7 @@ export default async (req, res) => {
     const getTeam = await Team.findOne({ name: teamName }).exec();
     await user.addTeam(getTeam._id);
 
-    res.status(201).json({ msg: `Created team: ${teamName}!`, team: team });
+    res.status(201).json({ msg: `Created team: ${teamName}!`, team: { _id: team } });
   } catch (e) {
     if (e.name === 'MongoError' && e.code === 11000) {
       return res.status(500).json({ Error: 'Team name taken!' });

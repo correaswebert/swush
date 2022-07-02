@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 
-const { MONGODB_URI, MONGODB_DB } = process.env;
+const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_DB = process.env.MONGODB_DB;
+
 const ERR_DB_CONN = 'Error connecting to database!';
 
 if (!MONGODB_URI) {
@@ -22,7 +24,7 @@ export async function connectToDatabase() {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
-      useCreateIndex: true
+      useCreateIndex: true,
     });
     console.log('Database connected!');
   } catch (error) {

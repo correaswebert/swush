@@ -1,16 +1,8 @@
 import React, { useContext, useState } from 'react';
-// import Button from '@material-ui/core/Button';
-// import TextField from '@material-ui/core/TextField';
-// import Dialog from '@material-ui/core/Dialog';
-// import DialogActions from '@material-ui/core/DialogActions';
-// import DialogContent from '@material-ui/core/DialogContent';
-// import DialogTitle from '@material-ui/core/DialogTitle';
-
 import GlobalContext from 'store/context';
-// import StatusSnackbar from 'components/SnackBar/success';
 import axios from 'axios';
-
 import { makeStyles } from '@material-ui/core/styles';
+
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -57,7 +49,6 @@ export default function DialogSelect() {
     if (file.type.startsWith('text/')) {
       reader.onload = (e) => {
         const textContent = e.target.result;
-        console.log(`The content of ${file.name} is ${textContent}`);
         setSecret(textContent);
         setFileName(file.name);
       };
@@ -70,7 +61,6 @@ export default function DialogSelect() {
       reader.onload = (e) => {
         const imageContent = e.target.result;
         const imageData = imageContent.slice(imageContent.indexOf(',') + 1);
-        console.log(`The content of ${file.name} is ${imageContent}`);
         setSecret(imageData);
         setFileName(file.name);
       };

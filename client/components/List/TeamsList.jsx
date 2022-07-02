@@ -8,6 +8,7 @@ import CreateTeamDialog from 'components/Dialoag/CreateTeam';
 import useFetch from 'hooks/useFetch';
 import SkeletonList from 'components/List/SkeletonList';
 import { useRouter } from 'next/router';
+// import useSwr from "swr"
 
 const useStyles = makeStyles((theme) => ({
   listHeading: {
@@ -31,13 +32,8 @@ const TeamsList = () => {
   const { globalState, globalDispatch } = useContext(Context);
   const classes = useStyles();
   const [teamNames, setTeamNames] = useState([]);
-  const router = useRouter();
 
   const { loading, data, error } = useFetch('/api/team/view');
-
-  useEffect(() => {
-    if (!globalState.isLoggedIn) router.push('/auth/login');
-  }, []);
 
   useEffect(() => {
     globalDispatch({ type: 'GOT_TEAM', payload: data });
@@ -50,12 +46,28 @@ const TeamsList = () => {
       teamNamesArr.push(team._id.name);
     });
     setTeamNames(teamNamesArr);
-  }, [loading]);
-
-  if (error) return <div>failed to load</div>;
+  }, [loading, globalState.teams]);
 
   function handleTeamAdd() {
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: 'CREATE_TEAM' });
+  }
+
+  async function handleRemoveMember() {
+    try {
+      setSuccessMessage('');
+      setErrorMessage('');
+      const jwt = localStorage.getItem('jwt');
+      const teamName = globalState.teams[selectedIndex]._id.name;
+      const res = await axios.post('/api/team/exitTeam', { jwt, name: teamName });
+
+      // setSuccessMessage(`You left the team ${teamName}!`);
+    } catch (error) {
+      if (error?.response?.status === 500) {
+        // setErrorMessage(error.response.data.Error);
+      } else {
+        // setErrorMessage('Some error occurred!');
+      }
+    }
   }
 
   return (
@@ -71,7 +83,12 @@ const TeamsList = () => {
 
       <Divider />
 
-      {loading ? <SkeletonList /> : <LazyList data={teamNames} type="teams" />}
+      {error ? 'Some error occurred' : ''}
+      {loading ? (
+        <SkeletonList />
+      ) : (
+        <LazyList data={teamNames} type="teams" handler={handleRemoveMember} />
+      )}
 
       <CreateTeamDialog />
     </>

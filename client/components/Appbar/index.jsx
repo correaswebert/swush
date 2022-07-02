@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar({ name }) {
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const router = useRouter();
   const classes = useStyles();
@@ -113,8 +113,6 @@ export default function PrimarySearchAppBar() {
     setNotifAnchorEl(event.currentTarget);
 
     const res = await axios.post('/api/team/viewNotifications', { jwt });
-
-    console.log(typeof res.data.Notifications.length);
 
     if (res.data.Notifications.length !== 0) {
       setNotification(res.data.Notifications);
@@ -150,6 +148,14 @@ export default function PrimarySearchAppBar() {
     router.push('/');
   };
 
+  const handleProfile = () => {
+    router.push('/user/profile');
+  };
+
+  const handleDashboard = () => {
+    router.push('/dashboard');
+  };
+
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -166,6 +172,8 @@ export default function PrimarySearchAppBar() {
       onClose={handleMenuClose}
       keepMounted
     >
+      <MenuItem onClick={handleDashboard}>Dashboard</MenuItem>
+      <MenuItem onClick={handleProfile}>Profile</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
@@ -182,7 +190,8 @@ export default function PrimarySearchAppBar() {
           <div className={classes.grow} />
 
           <Typography className={classes.title} variant="body1" noWrap>
-            {globalState.username}
+            {name}
+            {/* {globalState.username} */}
           </Typography>
 
           <Divider orientation="vertical" flexItem classes={{ root: classes.divider }} />
@@ -222,7 +231,6 @@ export default function PrimarySearchAppBar() {
             </Popover>
 
             <IconButton
-              edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
@@ -231,9 +239,9 @@ export default function PrimarySearchAppBar() {
             >
               <AccountCircle />
             </IconButton>
-            <Button variant="contained" color="primary" href="/help">
+            <IconButton edge="end" variant="contained" color="inherit" href="/help">
               <HelpIcon />
-            </Button>
+            </IconButton>
           </div>
           <div className={classes.sectionMobile}>
             <IconButton

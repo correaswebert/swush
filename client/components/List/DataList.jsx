@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CardView from 'components/cardView';
 import GlobalContext from 'store/context';
 
-const DataList = ({ data }) => {
+const DataList = ({ description, secret }) => {
   const { globalState, globalDispatch } = useContext(GlobalContext);
 
   // useEffect(() => {
@@ -23,7 +23,7 @@ const DataList = ({ data }) => {
     }
   }, []);
 
-  return <CardView />;
+  return <CardView description={description} secret={secret} />;
 };
 
 export default DataList;

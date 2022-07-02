@@ -17,8 +17,8 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     backgroundColor: theme.palette.background.paper,
     flexGrow: 1,
-    maxHeight: '100vh',
-    overflowY: 'scroll',
+    maxHeight: `calc(100vh - ${theme.appbarHeight * 2}rem)`,
+    overflowY: 'auto',
     '&::-webkit-scrollbar': {
       width: theme.spacing(1.5),
       backgroundColor: theme.palette.primary.main,
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LazyList({ data: listData, type: listType }) {
+export default function LazyList({ data: listData, type: listType, handler }) {
   const classes = useStyles();
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const [successMessage, setSuccessMessage] = useState('');
@@ -75,46 +75,6 @@ export default function LazyList({ data: listData, type: listType }) {
   initialIndex = initialIndex ?? 0;
 
   const [selectedIndex, setSelectedIndex] = useState(initialIndex);
-  const dataMaxIndex = listData.length - 1;
-
-  async function handleExitTeam() {
-    try {
-      setSuccessMessage('');
-      setErrorMessage('');
-      const jwt = localStorage.getItem('jwt');
-      const teamName = globalState.teams[globalState.teamIndex]._id.name;
-      console.log(jwt);
-      const res = await axios.post('/api/team/exitTeam', { jwt, name: teamName });
-
-      setSuccessMessage(`You left the team ${teamName}!`);
-    } catch (error) {
-      if (error?.response?.status === 500) {
-        setErrorMessage(error.response.data.Error);
-      } else {
-        setErrorMessage('Some error occurred!');
-      }
-    }
-  }
-
-  const handleDeleteSecret = async (index) => {
-    try {
-      setSuccessMessage('');
-      setErrorMessage('');
-      const jwt = localStorage.getItem('jwt');
-      const teamName = globalState.teams[globalState.teamIndex]._id.name;
-      const secretId = globalState.selectedSecretId;
-      console.log(jwt);
-      const res = await axios.post('/api/team/deleteSecret', { jwt, teamName, secretId });
-      console.log(res);
-      setSuccessMessage(`Secret deleted`);
-    } catch (error) {
-      if (error?.response?.status === 500) {
-        setErrorMessage(error.response.data.Error);
-      } else {
-        setErrorMessage('Some error occurred!');
-      }
-    }
-  };
 
   const handleListItemClick = async (index) => {
     setSelectedIndex(index);
@@ -127,10 +87,10 @@ export default function LazyList({ data: listData, type: listType }) {
         globalDispatch({ type: 'SELECT_TEAM', payload: selectedIndex });
         const teamName = globalState.teams[index]._id.name;
 
-        const teamSecrets = await axios.post('/api/team/viewVault', { jwt, teamName });
-        const secretList = teamSecrets.data;
+        // const teamSecrets = await axios.post('/api/team/viewVault', { jwt, teamName });
+        // const secretList = teamSecrets.data;
 
-        globalDispatch({ type: 'GOT_SECRET_DES', payload: secretList });
+        // globalDispatch({ type: 'GOT_SECRET_DES', payload: secretList });
         break;
 
       case 'secrets':
@@ -154,6 +114,9 @@ export default function LazyList({ data: listData, type: listType }) {
           payload: globalState.secretDes.filename[index],
         });
         break;
+
+      case 'members':
+        globalDispatch({ type: 'SELECT_MEMBER', payload: selectedIndex });
 
       default:
         break;
@@ -181,7 +144,8 @@ export default function LazyList({ data: listData, type: listType }) {
             <ListItemSecondaryAction>
               {selectedIndex === index ? (
                 <IconButton
-                  onClick={listType === 'teams' ? handleExitTeam : handleDeleteSecret}
+                  onClick={() => handler()}
+                  // onClick={listType === 'teams' ? handleExitTeam : handleDeleteSecret}
                   edge="end"
                   aria-label="delete"
                 >

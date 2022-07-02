@@ -9,6 +9,7 @@ function init(initialValues) {
       if (!(initialValues[key] instanceof number)) return;
 
       const index = sessionStorage.getItem(key) ?? initialValues[key];
+      // const index = sessionStorage.getItem(key) ?? 0;
       initialState[key] = parseInt(index);
     }
   } catch (error) {
@@ -51,6 +52,12 @@ const reducer = (state, action) => {
         teams: action.payload,
       };
 
+    case 'GOT_MEMBER':
+      return {
+        ...state,
+        members: action.payload,
+      };
+
     case 'GOT_SECRET_DES':
       return {
         ...state,
@@ -73,6 +80,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         secretIndex: action.payload,
+      };
+
+    case 'SELECT_MEMBER':
+      return {
+        ...state,
+        memberIndex: action.payload,
       };
 
     case 'ALL_DESCRIPTIONS':
