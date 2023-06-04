@@ -8,7 +8,7 @@ export default async (req, res) => {
   try {
     await connectToDatabase();
 
-    let { name, email, password, store_priv: storePrivateKey } = req.body;
+    let { name, email, password } = req.body;
     if (!name || !email || !password) {
       return res.status(200).json({ Error: 'Enter all fields!' });
     }
@@ -26,10 +26,8 @@ export default async (req, res) => {
       email,
       password,
       publicKey,
+      privateKey,
     };
-    if (storePrivateKey) {
-      userInfo.privateKey = privateKey;
-    }
 
     const user = new User(userInfo);
     await user.save();
@@ -38,7 +36,7 @@ export default async (req, res) => {
     await user.storeKeys(privateKey);
 
     /* send welcome email to the user */
-    sendWelcomeEmail(user.email, user.name);
+    // sendWelcomeEmail(user.email, user.name);
 
     res.status(200).json({
       Info: 'User successfully created!',

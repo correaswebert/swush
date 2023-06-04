@@ -38,7 +38,7 @@ export default function Login() {
       if (res.status === 200) {
         const { jwt, name, email, publicKey } = res.data;
 
-        localStorage.setItem('jwt', jwt);
+        sessionStorage.setItem('jwt', jwt);
         sessionStorage.setItem('username', name);
         sessionStorage.setItem('email', email);
         sessionStorage.setItem('publicKey', publicKey);
@@ -46,7 +46,15 @@ export default function Login() {
         globalDispatch({ type: 'LOGIN' });
         globalDispatch({ type: 'SET_NAME', payload: name });
 
-        router.push(dashboardLink);
+        router.push(
+          {
+            pathname: dashboardLink,
+            query: {
+              jwtToken: jwt,
+            },
+          },
+          dashboardLink
+        );
       }
     } catch (error) {
       if (error?.response?.status === 401) {

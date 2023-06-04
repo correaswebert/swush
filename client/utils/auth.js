@@ -20,11 +20,3 @@ export default async function getAuthenticatedUser(token) {
     throw new Error('Authentication error!');
   }
 }
-
-// export async function isAdmin(userId) {
-//   try {
-//     const
-//   } catch (e) {
-
-//   }
-// }

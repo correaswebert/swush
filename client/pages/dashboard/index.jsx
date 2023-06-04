@@ -34,7 +34,7 @@ export default function Dashboard({ username }) {
   const [teamName, setTeamName] = useState('');
 
   useEffect(() => {
-    if (!globalState.teams) return;
+    if (!globalState.teams || !globalState.teams[globalState.teamIndex]) return;
     setTeamName(globalState.teams[globalState.teamIndex]._id.name);
   }, [globalState.teamIndex]);
 
@@ -82,7 +82,7 @@ export const getServerSideProps = withSession(async function ({ req }) {
   }
 
   await connectToDatabase();
-  const user = await getAuthenticatedUser(sessionUser.jwt);
+  const user = await getAuthenticatedUser(req.__NEXT_INIT_QUERY.jwtToken);
 
   return {
     props: {

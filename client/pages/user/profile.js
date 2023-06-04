@@ -87,8 +87,7 @@ export const getServerSideProps = withSession(async function ({ query, req, res 
   }
 
   await connectToDatabase();
-
-  const user = await getAuthenticatedUser(sessionUser.jwt);
+  const user = await getAuthenticatedUser(req.__NEXT_INIT_QUERY.jwtToken);
 
   return {
     props: {
