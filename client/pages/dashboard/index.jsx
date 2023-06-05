@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
   },
   container: {
-    height: 'calc(100vh - 4.05rem)',
+    height: '100%',
   },
 }));
 
