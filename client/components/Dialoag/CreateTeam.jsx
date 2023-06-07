@@ -23,13 +23,15 @@ export default function FormDialog() {
   const handleCreateTeam = async (e) => {
     try {
       e.preventDefault();
-      const jwt = globalState.jwt;
+      const jwt = sessionStorage.getItem('jwt');
       const res = await axios.post('/api/team/create', { name: teamName, jwt });
+
       setStatus({ type: 'success', msg: res.data.msg });
       globalDispatch({
         type: 'GOT_TEAM',
         payload: [...globalState.teams, res.data.team],
       });
+
       handleDialogOpenState();
     } catch (error) {
       if (error?.response?.status === 500) {
