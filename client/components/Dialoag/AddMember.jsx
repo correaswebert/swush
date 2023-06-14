@@ -16,8 +16,6 @@ export default function FormDialog() {
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const [email, setEmail] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [status, setStatus] = useState({ type: '', msg: '' });
 
   const handleDialogOpenState = () => {
@@ -28,20 +26,14 @@ export default function FormDialog() {
   async function handleAddMember(e) {
     try {
       e.preventDefault();
-      setSuccessMessage('');
-      setErrorMessage('');
-
-      const jwt = localStorage.getItem('jwt');
+      const jwt = sessionStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const res = await axios.post('/api/team/addMember', { jwt, name: teamName, email });
-      // setSuccessMessage('Successfully added member!');
       setStatus({ type: 'success', msg: res.data.Info });
     } catch (error) {
       if (error?.response?.status === 500) {
-        // setErrorMessage(error.response.data.Error);
         setStatus({ type: 'error', msg: error.response.data.Error });
       } else {
-        // setErrorMessage('Some error occurred!');
         setStatus({ type: 'error', msg: 'Some error occured!' });
       }
     } finally {

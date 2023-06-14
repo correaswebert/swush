@@ -15,7 +15,6 @@ import axios from 'axios';
 export default function FormDialog() {
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const [email, setEmail] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
   const [status, setStatus] = useState({ type: '', msg: '' });
 
   const handleDialogOpenState = () => {
@@ -26,8 +25,7 @@ export default function FormDialog() {
   async function handleRemoveMember(e) {
     try {
       e.preventDefault();
-
-      const jwt = localStorage.getItem('jwt');
+      const jwt = sessionStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const res = await axios.post('/api/team/removeMember', {
         jwt,

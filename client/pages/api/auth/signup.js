@@ -47,9 +47,8 @@ export default async (req, res) => {
     });
   } catch (e) {
     if (e.name === 'MongoError' && e.code === 11000) {
-      return res.status(409).json({ Error: 'User already exists!' });
+      return res.status(400).json({ Error: 'User already exists!' });
     }
-
     console.error(e);
     res.status(500).json({ Error: 'Internal server error.' });
   }

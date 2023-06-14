@@ -49,9 +49,7 @@ export default function Login() {
         );
       }
     } catch (err) {
-      const errMessage = 'Some error occured!';
-      setError(errMessage);
-      console.error(err);
+      setError(err.response.data.Error);
     }
   }
 

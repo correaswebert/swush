@@ -27,11 +27,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const fetcher = url => {
-//   console.log(url);
-//   return (res => (res.json))
-// }
-
 const fetcher = (url) => fetch(url).then((r) => r.json());
 
 const SecretsList = ({ teamName }) => {
@@ -76,7 +71,7 @@ const SecretsList = ({ teamName }) => {
     try {
       setSuccessMessage('');
       setErrorMessage('');
-      const jwt = localStorage.getItem('jwt');
+      const jwt = sessionStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const secretId = globalState.selectedSecretId;
       const res = await axios.post('/api/team/deleteSecret', { jwt, teamName, secretId });
