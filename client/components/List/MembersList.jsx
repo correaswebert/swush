@@ -38,9 +38,7 @@ const MembersList = ({ teamName }) => {
   const classes = useStyles();
   const [members, setMembers] = useState([]);
 
-  const { data, error } = useSwr(() => '/api/team/' + teamName + '/members', fetcher, {
-    refreshInterval: 1000,
-  });
+  const { data, error } = useSwr(() => '/api/team/' + teamName + '/members', fetcher);
 
   useEffect(() => {
     globalDispatch({ type: 'GOT_MEMBER', payload: data?.members });

@@ -10,10 +10,9 @@ import { AuthenticationError } from 'utils/errors';
 export default async function getAuthenticatedUser(token) {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
     const user = await User.findOne({ email: decoded.email }).exec();
-    if (!user) throw AuthenticationError('Invalid JWT!');
 
+    if (!user) throw AuthenticationError('Invalid JWT!');
     return user;
   } catch (e) {
     if (e instanceof AuthenticationError) throw new Error(e.message);
