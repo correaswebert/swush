@@ -145,18 +145,14 @@ export default function LazyList({ data: listData, type: listType, handler }) {
           >
             <ListItemText primary={item} className={classes.listItemText} />
             <ListItemSecondaryAction>
-              {selectedIndex === index ? (
+              {selectedIndex === index && listType !== 'members' ? (
                 <IconButton
                   onClick={() => handler()}
                   // onClick={listType === 'teams' ? handleExitTeam : handleDeleteSecret}
                   edge="end"
                   aria-label="delete"
                 >
-                  {listType === 'teams' ? (
-                    <ClearIcon fontSize="small" />
-                  ) : (
-                    <DeleteIcon fontSize="small" />
-                  )}
+                  {listType === 'secrets' ? <DeleteIcon fontSize="small" /> : ''}
                 </IconButton>
               ) : (
                 ''
