@@ -28,7 +28,12 @@ export default function FormDialog() {
       e.preventDefault();
       const jwt = sessionStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
-      const res = await axios.post('/api/team/addMember', { jwt, name: teamName, email });
+      const res = await axios.post('/api/team/addMember', {
+        jwt,
+        name: teamName,
+        email,
+        makeAdmin: isAdmin,
+      });
       setStatus({ type: 'success', msg: res.data.Info });
     } catch (error) {
       if (error?.response?.status === 500) {

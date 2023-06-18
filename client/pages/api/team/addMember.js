@@ -9,7 +9,7 @@ export default async (req, res) => {
   try {
     await connectToDatabase();
 
-    const { jwt, name, email } = req.body;
+    const { jwt, name, email, makeAdmin } = req.body;
 
     const admin = await getAuthenticatedUser(jwt);
     const team = await Team.findOne({ name }).exec();
@@ -32,7 +32,7 @@ export default async (req, res) => {
     if (isAlreadyMember)
       return res.status(200).json({ Info: 'Cannot add a member twice' });
 
-    await team.addMember(user._id);
+    makeAdmin ? await team.assignAdmin(user._id) : await team.addMember(user._id);
 
     /* get details of all the team members */
     const teamMembers = await team.populate('members._id').execPopulate();
