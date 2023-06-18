@@ -43,7 +43,9 @@ export default function Login() {
         sessionStorage.setItem('email', email);
         sessionStorage.setItem('publicKey', publicKey);
 
-        globalDispatch({ type: 'LOGIN' });
+        const notifications = await axios.post('/api/team/viewNotifications', { jwt });
+
+        globalDispatch({ type: 'LOGIN', payload: notifications.data.Notifications });
         globalDispatch({ type: 'SET_NAME', payload: name });
 
         router.push(

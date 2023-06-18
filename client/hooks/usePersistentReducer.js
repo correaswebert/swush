@@ -37,6 +37,7 @@ const reducer = (state, action) => {
         ...state,
         isLoggedIn: true,
         jwt: sessionStorage.getItem('jwt'),
+        notifications: action.payload,
       };
 
     case 'LOGOUT':
@@ -134,6 +135,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         selectedFileName: action.payload,
+      };
+
+    case 'RESET_NOTIFICATIONS':
+      return {
+        ...state,
+        notifications: [],
       };
 
     default:
