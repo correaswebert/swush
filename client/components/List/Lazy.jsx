@@ -76,6 +76,9 @@ export default function LazyList({ data: listData, type: listType, handler }) {
     switch (listType) {
       case 'teams':
         globalDispatch({ type: 'SELECT_TEAM', payload: selectedIndex });
+        globalDispatch({ type: 'SELECT_SECRET', payload: -1 });
+        globalDispatch({ type: 'SELECTED_SECRET', payload: null });
+        globalDispatch({ type: 'SELECTED_DES', payload: null });
         break;
       case 'secrets':
         globalDispatch({ type: 'SELECT_SECRET', payload: selectedIndex });
@@ -93,7 +96,7 @@ export default function LazyList({ data: listData, type: listType, handler }) {
       listType === 'teams' ? globalState.teamIndex : globalState.secretIndex;
     initialIndex = initialIndex ?? 0;
     setSelectedIndex(initialIndex);
-  }, []);
+  }, [globalState.teamIndex]);
 
   const handleListItemClick = async (index) => {
     setSelectedIndex(index);

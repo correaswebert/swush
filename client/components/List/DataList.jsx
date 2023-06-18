@@ -8,12 +8,6 @@ import GlobalContext from 'store/context';
 const DataList = ({ description, secret }) => {
   const { globalState, globalDispatch } = useContext(GlobalContext);
 
-  // useEffect(() => {
-  //   if (!globalState.secretDes) return null;
-  //   console.log(globalState.selectedSecret);
-  //   console.log(globalState.selectedDes);
-  // }, [globalState.selectedSecret]);
-
   useEffect(() => {
     if (!globalState.selectedSecret) {
       globalDispatch({ type: 'SELECTED_SECRET', payload: 'Your Secret' });
@@ -21,7 +15,7 @@ const DataList = ({ description, secret }) => {
     if (!globalState.selectedDes) {
       globalDispatch({ type: 'SELECTED_DES', payload: 'View your secret here!' });
     }
-  }, []);
+  }, [globalState.teamIndex]);
 
   return <CardView description={description} secret={secret} />;
 };
