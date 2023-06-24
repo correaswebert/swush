@@ -105,6 +105,18 @@ export default function LazyList({ data: listData, type: listType, handler }) {
   }, [globalState.teamIndex]);
 
   useEffect(() => {
+    if (listType === 'secrets' && globalState.memberIndex !== -1) {
+      setSelectedIndex(-1);
+    }
+  }, [globalState.memberIndex]);
+
+  useEffect(() => {
+    if (listType === 'members' && globalState.secretIndex !== -1) {
+      setSelectedIndex(-1);
+    }
+  }, [globalState.secretIndex]);
+
+  useEffect(() => {
     if (globalState.teams) {
       if (
         listType === 'teams' &&
