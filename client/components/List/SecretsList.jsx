@@ -83,6 +83,7 @@ const SecretsList = ({ teamName }) => {
         header: { 'Content-type': 'application/json' },
       });
 
+      globalDispatch({ type: 'SELECT_SECRET', payload: -1 });
       setSuccessMessage(`Secret deleted`);
     } catch (error) {
       if (error?.response?.status === 500) {
