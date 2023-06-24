@@ -26,10 +26,12 @@ export default function FormDialog() {
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const res = await axios.post('/api/team/delete', { name: teamName, jwt });
       setStatus({ type: 'success', msg: res.data.Info });
-      //   globalDispatch({
-      //     type: 'GOT_TEAM',
-      //     payload: [...globalState.teams, res.data.team],
-      //   });
+
+      const teams = await axios.post('/api/team/view', {
+        jwt: sessionStorage.getItem('jwt'),
+      });
+      globalDispatch({ type: 'GOT_TEAM', payload: teams.data });
+
       handleDialogOpenState();
     } catch (error) {
       if (error?.response?.status === 500) {

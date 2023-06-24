@@ -104,6 +104,19 @@ export default function LazyList({ data: listData, type: listType, handler }) {
     }
   }, [globalState.teamIndex]);
 
+  useEffect(() => {
+    if (globalState.teams) {
+      if (
+        listType === 'teams' &&
+        globalState.numTeams !== -1 &&
+        globalState.numTeams > globalState.teams.length
+      ) {
+        setSelectedIndex(-1);
+      }
+      globalDispatch({ type: 'UPDATE_NUM_TEAMS', payload: globalState.teams });
+    }
+  }, [globalState.teams]);
+
   const handleListItemClick = async (index) => {
     setSelectedIndex(index);
     switch (listType) {

@@ -53,6 +53,12 @@ const reducer = (state, action) => {
         teams: action.payload,
       };
 
+    case 'UPDATE_NUM_TEAMS':
+      return {
+        ...state,
+        numTeams: action.payload.length,
+      };
+
     case 'GOT_MEMBER':
       return {
         ...state,
