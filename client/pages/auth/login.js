@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Link from 'next/link';
 import axios from 'axios';
+import withSession from 'utils/withSession';
+import { connectToDatabase } from 'utils/connectDb';
 
 import Context from 'store/context';
 import styles from 'styles/auth/Login.module.css';
@@ -103,3 +105,10 @@ export default function Login() {
     </div>
   );
 }
+
+export const getServerSideProps = withSession(async function () {
+  await connectToDatabase();
+  return {
+    props: {},
+  };
+});

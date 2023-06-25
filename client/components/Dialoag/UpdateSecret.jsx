@@ -26,7 +26,7 @@ export default function FormDialog() {
     try {
       e.preventDefault();
 
-      const jwt = localStorage.getItem('jwt');
+      const jwt = sessionStorage.getItem('jwt');
       const teamName = globalState.teams[globalState.teamIndex]._id.name;
       const secretId = globalState.selectedSecretId;
 
@@ -36,6 +36,7 @@ export default function FormDialog() {
         secretId,
         value,
       });
+      globalDispatch({ type: 'SELECTED_SECRET', payload: value });
 
       setStatus({ type: 'success', msg: res.data.Info });
     } catch (error) {
@@ -75,7 +76,11 @@ export default function FormDialog() {
           <Button onClick={handleDialogOpenState} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleUpdateSecret} color="primary">
+          <Button
+            disabled={globalState.secretIndex === -1}
+            onClick={handleUpdateSecret}
+            color="primary"
+          >
             Update
           </Button>
         </DialogActions>
