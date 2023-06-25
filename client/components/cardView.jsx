@@ -146,7 +146,14 @@ export default function CardView({ description, secret }) {
         >
           Update
         </Button>
-        <IconButton onClick={handleDownload}>
+        <IconButton
+          disabled={
+            globalState.selectedFileName === 'ssh' ||
+            globalState.selectedFileName === 'oauth' ||
+            globalState.selectedFileName === 'pass'
+          }
+          onClick={handleDownload}
+        >
           <CloudDownloadIcon className={classes.downloadIcon} fontSize="large" />
         </IconButton>
       </CardActions>

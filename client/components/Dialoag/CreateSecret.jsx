@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import GlobalContext from 'store/context';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
@@ -36,6 +36,13 @@ export default function DialogSelect() {
   const [secretType, setSecretType] = useState('');
   const [filename, setFileName] = useState('');
 
+  useEffect(() => {
+    if (filename !== '' && secretType !== 'file') {
+      setSecret('');
+      setFileName('');
+    }
+  }, [secretType]);
+
   const handleDialogOpenState = () => {
     const nameState = globalState.nameOpenDialog ? '' : 'CREATE_TEAM';
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: nameState });
@@ -51,6 +58,7 @@ export default function DialogSelect() {
         const textContent = e.target.result;
         setSecret(textContent);
         setFileName(file.name);
+        setSecretType('file');
       };
       reader.onerror = (e) => {
         const error = e.target.error;
@@ -63,12 +71,15 @@ export default function DialogSelect() {
         const imageData = imageContent.slice(imageContent.indexOf(',') + 1);
         setSecret(imageData);
         setFileName(file.name);
+        setSecretType('file');
       };
       reader.onerror = (e) => {
         const error = e.target.error;
         console.error(`Error occured while reading ${file.name}`, error);
       };
       reader.readAsDataURL(file);
+    } else {
+      setStatus({ type: 'error', msg: 'Only text and image files are supported!' });
     }
   }
 
@@ -126,7 +137,7 @@ export default function DialogSelect() {
 
             <FormControl className={classes.formControl} fullWidth>
               <TextField
-                value={secret}
+                value={secretType === 'file' ? filename : secret}
                 onChange={(e) => {
                   setSecret(e.target.value);
                 }}
@@ -153,7 +164,9 @@ export default function DialogSelect() {
                 <MenuItem value="ssh">SSH</MenuItem>
                 <MenuItem value="oauth">OAuth</MenuItem>
                 <MenuItem value="password">Password</MenuItem>
-                <MenuItem value="file">File</MenuItem>
+                <MenuItem disabled={true} value="file">
+                  File
+                </MenuItem>
               </Select>
             </FormControl>
           </form>
@@ -173,7 +186,11 @@ export default function DialogSelect() {
           <Button onClick={handleDialogOpenState} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleCreateSecret} color="primary">
+          <Button
+            disabled={secret === '' || secretType === ''}
+            onClick={handleCreateSecret}
+            color="primary"
+          >
             Create
           </Button>
         </DialogActions>
