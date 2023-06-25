@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -13,6 +13,12 @@ import axios from 'axios';
 export default function FormDialog() {
   const { globalState, globalDispatch } = useContext(GlobalContext);
   const [status, setStatus] = useState({ type: '', msg: '' });
+
+  useEffect(() => {
+    if (globalState.nameOpenDialog === 'DELETE_TEAM') {
+      setStatus({ type: '', msg: '' });
+    }
+  }, [globalState.nameOpenDialog]);
 
   const handleDialogOpenState = () => {
     const nameState = globalState.nameOpenDialog ? '' : 'DELETE_TEAM';

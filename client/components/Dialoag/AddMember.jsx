@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,8 +18,16 @@ export default function FormDialog() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [status, setStatus] = useState({ type: '', msg: '' });
 
+  useEffect(() => {
+    if (globalState.nameOpenDialog === 'ADD_MEMBER') {
+      setStatus({ type: '', msg: '' });
+    }
+  }, [globalState.nameOpenDialog]);
+
   const handleDialogOpenState = () => {
     const nameState = globalState.nameOpenDialog ? '' : 'ADD_MEMBER';
+    setEmail('');
+    setIsAdmin(false);
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: nameState });
   };
 

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -15,8 +15,15 @@ export default function FormDialog() {
   const [status, setStatus] = useState({ type: '', msg: '' });
   const [teamName, setTeamName] = useState('');
 
+  useEffect(() => {
+    if (globalState.nameOpenDialog === 'CREATE_TEAM') {
+      setStatus({ type: '', msg: '' });
+    }
+  }, [globalState.nameOpenDialog]);
+
   const handleDialogOpenState = () => {
     const nameState = globalState.nameOpenDialog ? '' : 'CREATE_TEAM';
+    setTeamName('');
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: nameState });
   };
 

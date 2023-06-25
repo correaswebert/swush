@@ -43,8 +43,18 @@ export default function DialogSelect() {
     }
   }, [secretType]);
 
+  useEffect(() => {
+    if (globalState.nameOpenDialog === 'CREATE_SECRET') {
+      setStatus({ type: '', msg: '' });
+    }
+  }, [globalState.nameOpenDialog]);
+
   const handleDialogOpenState = () => {
-    const nameState = globalState.nameOpenDialog ? '' : 'CREATE_TEAM';
+    const nameState = globalState.nameOpenDialog ? '' : 'CREATE_SECRET';
+    setSecret('');
+    setDescription('');
+    setSecretType('');
+    setFileName('');
     globalDispatch({ type: 'TOGGLE_DIALOG', payload: nameState });
   };
 
