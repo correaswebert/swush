@@ -15,6 +15,7 @@ import { IconButton } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
+    overflowY: 'auto',
     backgroundColor: theme.palette.secondary.main,
     height: `calc(100vh - ${theme.appbarHeight}rem)`,
     padding: theme.spacing(5),
@@ -34,8 +35,8 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'normal',
   },
   buttonContainer: {
-    position: 'fixed',
-    bottom: theme.spacing(5),
+    paddingTop: theme.spacing(12),
+    bottom: 0,
     [theme.breakpoints.down(500)]: {
       bottom: theme.spacing(1),
     },
